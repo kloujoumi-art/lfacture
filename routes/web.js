@@ -32,6 +32,13 @@ router.get('/about', (req, res) => res.renderLayout('about', {
   metaDesc: 'LFacture, le logiciel de facturation français pensé pour les indépendants et PME. Simple, rapide, sans installation.',
   canonicalPath: '/about',
 }));
+router.get('/contact', (req, res) => res.renderLayout('contact', {
+  title: 'Contactez-nous — LFacture',
+  metaDesc: 'Contactez l\'équipe LFacture pour toute question, bug ou suggestion. Réponse sous 24h.',
+  canonicalPath: '/contact',
+  query: req.query,
+}));
+router.post('/contact', AdminController.submitContact);
 
 // ---- Pages légales ----
 router.get('/mentions-legales', (req, res) => res.renderLayout('legal/mentions-legales', {
@@ -148,6 +155,10 @@ router.get('/admin/blog/:id/edit', requireAdmin, BlogAdminController.showEdit);
 router.post('/admin/blog/:id', requireAdmin, BlogAdminController.update);
 router.post('/admin/blog/:id/toggle', requireAdmin, BlogAdminController.togglePublish);
 router.post('/admin/blog/:id/delete', requireAdmin, BlogAdminController.delete);
+
+// ---- Admin support ----
+router.get('/admin/support', requireAdmin, AdminController.listSupport);
+router.post('/admin/support/:id/delete', requireAdmin, AdminController.deleteSupport);
 
 // ---- Admin blog campaigns (JSON API) ----
 router.get('/api/admin/campaigns', requireAdmin, BlogAdminController.getCampaigns);

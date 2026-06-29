@@ -325,6 +325,63 @@ class AdminController {
       totalQuotes: all.filter(i => i.type === 'quote').length,
     });
   }
+
+  // ── Support / Contact ──────────────────────────────────────────
+  static submitContact(req, res) {
+    const { name, email, subject, message } = req.body;
+    if (!name || !email || !message) {
+      return res.redirect('/contact?error=1');
+    }
+    const { db, nextId } = require('../database/db');
+    const id = nextId('support_message');
+    db.get('support_messages').push({
+      id, name: name.trim(), email: email.trim().toLowerCase(),
+      subject: subject || 'autre', message: message.trim(),
+      created_at: new Date().toISOString(), read_at: null,
+    }).write();
+
+    // Notif admin par email (non-bloquant)
+    try {
+      const EmailService = require('../services/EmailService');
+      EmailService.sendEmail({
+        to: process.env.ADMIN_EMAIL || 'khalidlouj520@gmail.com',
+        subject: `[LFacture Contact] ${subject || 'Nouveau message'} — ${name}`,
+        html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;">
+          <h2 style="color:#4F46E5;">Nouveau message de contact</h2>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;">
+            <tr><td style="padding:6px 0;color:#64748b;width:100px;">De</td><td style="padding:6px 0;font-weight:700;">${name} &lt;${email}&gt;</td></tr>
+            <tr><td style="padding:6px 0;color:#64748b;">Sujet</td><td style="padding:6px 0;">${subject || 'non précisé'}</td></tr>
+          </table>
+          <div style="margin-top:16px;padding:16px;background:#f8fafc;border-left:4px solid #4F46E5;border-radius:0 8px 8px 0;">
+            <p style="margin:0;color:#374151;line-height:1.6;">${message.replace(/\n/g,'<br>')}</p>
+          </div>
+          <p style="margin-top:16px;"><a href="mailto:${email}?subject=Re: ${subject}" style="background:#4F46E5;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;">Répondre →</a></p>
+          <p style="color:#94a3b8;font-size:12px;margin-top:20px;">Voir tous les messages : <a href="https://lfacture.com/admin/support">admin/support</a></p>
+        </div>`,
+      }).catch(() => {});
+    } catch {}
+
+    res.redirect('/contact?sent=1');
+  }
+
+  static listSupport(req, res) {
+    const { db } = require('../database/db');
+    const messages = (db.get('support_messages').value() || [])
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    adm(res, 'admin/support', {
+      title: 'Support — Admin',
+      pageTitle: 'Messages de support',
+      activePage: 'support',
+      messages,
+    });
+  }
+
+  static deleteSupport(req, res) {
+    const { db } = require('../database/db');
+    const id = parseInt(req.params.id);
+    db.get('support_messages').remove({ id }).write();
+    res.redirect('/admin/support');
+  }
 }
 
 module.exports = AdminController;

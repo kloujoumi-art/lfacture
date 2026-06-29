@@ -13,6 +13,14 @@ class EmailService {
     });
   }
 
+  static async sendEmail({ to, subject, html }) {
+    const transporter = this.getTransporter();
+    await transporter.sendMail({
+      from: `"${process.env.MAIL_FROM_NAME || 'LFacture'}" <${process.env.MAIL_FROM_EMAIL || process.env.MAIL_USER}>`,
+      to, subject, html,
+    });
+  }
+
   static async sendWelcomeEmail(user, password) {
     const appUrl = process.env.APP_URL || 'http://localhost:3000';
     const trialDays = parseInt(process.env.TRIAL_DAYS) || 7;
