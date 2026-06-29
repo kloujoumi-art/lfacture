@@ -98,6 +98,10 @@ app.listen(PORT, () => {
   // Démarre le scheduler funnel (emails automatiques)
   const { startFunnelScheduler } = require('./services/FunnelService');
   startFunnelScheduler();
+
+  // Démarre le scheduler campagnes blog (génération articles IA)
+  const { startCampaignScheduler } = require('./services/BlogCampaignService');
+  startCampaignScheduler();
   // Auto-seed blog articles SEO si la collection est vide
   const Post = require('./models/Post');
   if (Post.all().length === 0) {

@@ -149,4 +149,12 @@ router.post('/admin/blog/:id', requireAdmin, BlogAdminController.update);
 router.post('/admin/blog/:id/toggle', requireAdmin, BlogAdminController.togglePublish);
 router.post('/admin/blog/:id/delete', requireAdmin, BlogAdminController.delete);
 
+// ---- Admin blog campaigns (JSON API) ----
+router.get('/api/admin/campaigns', requireAdmin, BlogAdminController.getCampaigns);
+router.post('/api/admin/campaigns', requireAdmin, express.json(), BlogAdminController.createCampaign);
+router.post('/api/admin/campaigns/:id/toggle', requireAdmin, BlogAdminController.toggleCampaign);
+router.post('/api/admin/campaigns/:id/run', requireAdmin, BlogAdminController.runCampaignNow);
+router.post('/api/admin/campaigns/:id/update', requireAdmin, express.json(), BlogAdminController.updateCampaign);
+router.post('/api/admin/campaigns/:id/delete', requireAdmin, BlogAdminController.deleteCampaign);
+
 module.exports = router;

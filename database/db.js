@@ -15,9 +15,10 @@ const DEFAULTS = {
   contacts: [],        // liste mailing
   funnel_logs: [],     // historique emails funnel
   posts: [],           // articles du blog
+  blog_campaigns: [],  // campagnes auto blog
   page_views: [],      // analytics visiteurs
   payments: [],        // paiements Paddle
-  _counters: { user: 1, client: 1, invoice: 1, settings: 1, contact: 1, funnel_log: 1, post: 1, page_view: 1, payment: 1 },
+  _counters: { user: 1, client: 1, invoice: 1, settings: 1, contact: 1, funnel_log: 1, post: 1, page_view: 1, payment: 1, blog_campaign: 1 },
 };
 
 // Load or initialize

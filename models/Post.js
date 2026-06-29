@@ -22,7 +22,7 @@ function uniqueSlug(base) {
 }
 
 class Post {
-  static create({ title, excerpt, content, cover_image, tags, meta_desc, published }) {
+  static create({ title, excerpt, content, cover_image, tags, meta_desc, published, source }) {
     const slug = uniqueSlug(slugify(title));
     const post = {
       id: nextId('post'),
@@ -33,6 +33,7 @@ class Post {
       cover_image: cover_image || '',
       tags: tags || '',
       meta_desc: meta_desc || '',
+      source: source || 'admin',
       published: !!published,
       published_at: published ? new Date().toISOString() : null,
       created_at: new Date().toISOString(),

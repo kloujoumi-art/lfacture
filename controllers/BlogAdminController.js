@@ -1,4 +1,6 @@
 const Post = require('../models/Post');
+const BlogCampaign = require('../models/BlogCampaign');
+const BlogCampaignService = require('../services/BlogCampaignService');
 
 const adm = (res, view, data = {}) => res.renderLayout(view, data, 'admin');
 
@@ -7,13 +9,73 @@ class BlogAdminController {
   static index(req, res) {
     const posts = Post.all();
     const stats = Post.stats();
+    const campaigns = BlogCampaign.all();
     adm(res, 'admin/blog/index', {
       title: 'Blog — Admin',
-      pageTitle: 'Blog',
+      pageTitle: 'Blog & Automatisation',
       activePage: 'blog',
       posts,
       stats,
+      campaigns,
     });
+  }
+
+  // ── Campaigns JSON API ──
+
+  static getCampaigns(req, res) {
+    res.json(BlogCampaign.all());
+  }
+
+  static async createCampaign(req, res) {
+    try {
+      const { name, keywords_raw, language, frequency } = req.body;
+      if (!name || !keywords_raw) return res.status(400).json({ error: 'Nom et keywords requis' });
+      const keywords = keywords_raw.split(/[,\n]+/).map(k => k.trim()).filter(Boolean);
+      if (!keywords.length) return res.status(400).json({ error: 'Au moins un keyword requis' });
+      const campaign = BlogCampaign.create({ name, keywords, language: language || 'fr', frequency: frequency || 'daily' });
+      res.status(201).json(campaign);
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static toggleCampaign(req, res) {
+    const campaign = BlogCampaign.toggleActive(req.params.id);
+    if (!campaign) return res.status(404).json({ error: 'Campagne introuvable' });
+    res.json(campaign);
+  }
+
+  static async runCampaignNow(req, res) {
+    const campaign = BlogCampaign.findById(req.params.id);
+    if (!campaign) return res.status(404).json({ error: 'Campagne introuvable' });
+    try {
+      const result = await BlogCampaignService.runCampaign(campaign);
+      res.json({ ok: true, title: result.post.title, slug: result.post.slug, keyword: result.keyword });
+    } catch (e) {
+      res.status(500).json({ error: e.message });
+    }
+  }
+
+  static updateCampaign(req, res) {
+    const campaign = BlogCampaign.findById(req.params.id);
+    if (!campaign) return res.status(404).json({ error: 'Campagne introuvable' });
+    const { name, keywords_raw, language, frequency } = req.body;
+    const keywords = (keywords_raw || '').split(/[,\n]+/).map(k => k.trim()).filter(Boolean);
+    if (!name || !keywords.length) return res.status(400).json({ error: 'Nom et keywords requis' });
+    const updated = BlogCampaign.update(campaign.id, {
+      name: name.trim(),
+      keywords: JSON.stringify(keywords),
+      language: language || campaign.language,
+      frequency: frequency || campaign.frequency,
+    });
+    res.json(updated);
+  }
+
+  static deleteCampaign(req, res) {
+    const campaign = BlogCampaign.findById(req.params.id);
+    if (!campaign) return res.status(404).json({ error: 'Campagne introuvable' });
+    BlogCampaign.delete(campaign.id);
+    res.json({ ok: true });
   }
 
   static showCreate(req, res) {
