@@ -99,6 +99,21 @@ router.delete('/dashboard/invoices/:id', requireAccess, DashboardController.dele
 router.get('/dashboard/settings', requireAuth, DashboardController.showSettings);
 router.post('/dashboard/settings', requireAuth, upload.single('company_logo_file'), DashboardController.updateSettings);
 
+// ---- Lien de connexion secret admin (URL unique via env ADMIN_SECRET_TOKEN) ----
+router.get('/admin/access/:token', (req, res) => {
+  const secret = process.env.ADMIN_SECRET_TOKEN;
+  if (!secret || req.params.token !== secret) {
+    return res.status(404).renderLayout('errors/404', { title: 'Page introuvable — LFacture' });
+  }
+  const { db } = require('../database/db');
+  const admin = db.get('users').find({ is_admin: 1 }).value();
+  if (!admin) {
+    return res.redirect('/admin/setup');
+  }
+  req.session.userId = admin.id;
+  res.redirect('/admin');
+});
+
 // ---- Admin setup (sans auth — seulement si 0 admin existe) ----
 router.get('/admin/setup', AdminController.showSetup);
 router.post('/admin/setup', AdminController.createSetup);
