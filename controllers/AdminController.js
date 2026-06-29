@@ -291,6 +291,91 @@ class AdminController {
   }
 
   // ---- Payments (Paddle) ----
+  static async manualPayment(req, res) {
+    const { email, name, plan_months, amount, transaction_id } = req.body;
+    if (!email) {
+      req.flash('error', 'Email requis.');
+      return res.redirect('/admin/payments');
+    }
+
+    const months = Math.max(1, parseInt(plan_months) || 12);
+    const subEnd = new Date();
+    subEnd.setDate(subEnd.getDate() + months * 30);
+    const subEndISO = subEnd.toISOString();
+    const cleanEmail = email.toLowerCase().trim();
+
+    let user = db.get('users').find(u => u.email === cleanEmail).value();
+    let isNew = false;
+    let plainPassword = null;
+
+    if (user) {
+      db.get('users').find({ id: user.id }).assign({
+        plan: 'active',
+        subscription_ends_at: subEndISO,
+        email_verified: 1,
+      }).write();
+      user = db.get('users').find({ id: user.id }).value();
+    } else {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      plainPassword = Array.from({ length: 12 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      const newUser = {
+        id: nextId('user'),
+        uuid: uuidv4(),
+        name: name || cleanEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+        email: cleanEmail,
+        password: bcrypt.hashSync(plainPassword, 12),
+        plan: 'active',
+        is_admin: 0,
+        email_verified: 1,
+        subscription_ends_at: subEndISO,
+        created_at: new Date().toISOString(),
+      };
+      db.get('users').push(newUser).write();
+      user = newUser;
+      isNew = true;
+
+      db.get('settings').push({
+        id: nextId('settings'),
+        user_id: user.id,
+        invoice_prefix: 'FAC',
+        quote_prefix: 'DEV',
+        invoice_counter: 1,
+        quote_counter: 1,
+        default_tva: 20,
+        payment_terms: 'Paiement à 30 jours',
+      }).write();
+    }
+
+    const planLabel = months === 1 ? 'LFACTURE_MONTHLY' : months === 6 ? 'LFACTURE_SEMI' : 'LFACTURE_ANNUAL';
+    db.get('payments').push({
+      id: nextId('payment'),
+      user_email: cleanEmail,
+      user_id: user.id,
+      transaction_id: transaction_id || `manual-${Date.now()}`,
+      amount: parseFloat(amount) || 0,
+      currency: 'EUR',
+      plan_label: planLabel,
+      plan_months: months,
+      created_at: new Date().toISOString(),
+    }).write();
+
+    // Envoyer email de bienvenue avec magic link
+    try {
+      const token = User.generateMagicToken(user.id);
+      db.get('users').find({ id: user.id }).assign({
+        magic_token_expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+      }).write();
+      const APP_URL = process.env.APP_URL || 'https://lfacture.com';
+      const magicLink = `${APP_URL}/auth/magic/${token}`;
+      await FunnelService.sendSubscriptionActivated(user, isNew, magicLink, plainPassword);
+    } catch (e) {
+      console.error('[Admin manualPayment] email error:', e.message);
+    }
+
+    req.flash('success', `✅ Compte ${cleanEmail} activé (${months} mois). Email envoyé.`);
+    res.redirect('/admin/payments');
+  }
+
   static listPayments(req, res) {
     const payments = (db.get('payments').value() || [])
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));

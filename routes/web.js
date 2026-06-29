@@ -145,6 +145,7 @@ router.get('/admin/invoices', requireAdmin, AdminController.listInvoices);
 router.get('/admin/trial', requireAdmin, AdminController.listTrialUsers);
 router.get('/admin/mailing', requireAdmin, AdminController.listMailing);
 router.get('/admin/payments', requireAdmin, AdminController.listPayments);
+router.post('/admin/payments/manual', requireAdmin, AdminController.manualPayment);
 
 // ---- Admin analytics ----
 router.get('/admin/analytics', requireAdmin, AdminAnalyticsController.index);

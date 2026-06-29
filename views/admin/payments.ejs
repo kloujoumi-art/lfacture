@@ -1,3 +1,42 @@
+<!-- Récupération manuelle de commande -->
+<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:20px 24px;margin-bottom:24px;">
+  <h3 style="font-size:14px;font-weight:800;color:#92400e;margin:0 0 4px;">⚠️ Récupérer une commande manquée</h3>
+  <p style="font-size:12px;color:#78350f;margin:0 0 14px;">Si un client a payé via Paddle mais n'apparaît pas dans la liste, activez son compte manuellement :</p>
+  <form action="/admin/payments/manual" method="POST" style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;">
+    <div>
+      <label style="display:block;font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px;">Email client *</label>
+      <input type="email" name="email" required placeholder="client@email.com"
+        style="padding:8px 12px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;outline:none;background:#fff;width:220px;">
+    </div>
+    <div>
+      <label style="display:block;font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px;">Nom</label>
+      <input type="text" name="name" placeholder="Prénom Nom"
+        style="padding:8px 12px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;outline:none;background:#fff;width:160px;">
+    </div>
+    <div>
+      <label style="display:block;font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px;">Plan</label>
+      <select name="plan_months" style="padding:8px 12px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;outline:none;background:#fff;">
+        <option value="1">Mensuel — 1 mois</option>
+        <option value="6">Semestriel — 6 mois</option>
+        <option value="12" selected>Annuel — 12 mois</option>
+      </select>
+    </div>
+    <div>
+      <label style="display:block;font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px;">Montant (€)</label>
+      <input type="number" name="amount" placeholder="50" min="0" step="0.01"
+        style="padding:8px 12px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;outline:none;background:#fff;width:90px;">
+    </div>
+    <div>
+      <label style="display:block;font-size:11px;font-weight:700;color:#92400e;margin-bottom:4px;">Transaction ID</label>
+      <input type="text" name="transaction_id" placeholder="txn_xxx (optionnel)"
+        style="padding:8px 12px;border:1.5px solid #fde68a;border-radius:8px;font-size:13px;outline:none;background:#fff;width:180px;">
+    </div>
+    <button type="submit" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;font-weight:800;font-size:13px;padding:9px 18px;border:none;border-radius:8px;cursor:pointer;">
+      ✅ Activer le compte
+    </button>
+  </form>
+</div>
+
 <!-- Résumé -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
   <div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:14px;padding:20px 24px;">
