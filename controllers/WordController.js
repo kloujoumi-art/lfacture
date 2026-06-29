@@ -44,12 +44,12 @@ function accentForTemplate(tpl) {
 function infoCell(label, lines) {
   const children = [
     new Paragraph({
-      children: [new TextRun({ text: label, bold: true, size: 18, color: '94a3b8', allCaps: true })],
+      children: [new TextRun({ text: label, bold: true, size: 18, color: '374151', allCaps: true })],
       spacing: { after: 40 },
     }),
     ...lines.filter(Boolean).map((l, i) =>
       new Paragraph({
-        children: [new TextRun({ text: l, size: i === 0 ? 22 : 18, bold: i === 0, color: i === 0 ? '1e293b' : '64748b' })],
+        children: [new TextRun({ text: l, size: i === 0 ? 22 : 18, bold: i === 0, color: '1e293b' })],
         spacing: { after: 20 },
       })
     ),
@@ -100,15 +100,15 @@ class WordController {
                   spacing: { after: 60 },
                 }),
                 ...(settings.company_address ? [new Paragraph({
-                  children: [new TextRun({ text: settings.company_address, size: 18, color: 'FFFFFFB3' })],
+                  children: [new TextRun({ text: settings.company_address, size: 18, color: 'D0D4F8' })],
                   spacing: { after: 30 },
                 })] : []),
                 ...(settings.company_city ? [new Paragraph({
-                  children: [new TextRun({ text: (settings.company_postal || '') + ' ' + settings.company_city, size: 18, color: 'FFFFFFB3' })],
+                  children: [new TextRun({ text: (settings.company_postal || '') + ' ' + settings.company_city, size: 18, color: 'D0D4F8' })],
                   spacing: { after: 30 },
                 })] : []),
                 ...(settings.company_siret ? [new Paragraph({
-                  children: [new TextRun({ text: 'SIRET : ' + settings.company_siret, size: 16, color: 'FFFFFF80' })],
+                  children: [new TextRun({ text: 'SIRET : ' + settings.company_siret, size: 16, color: 'B0B4E8' })],
                 })] : []),
               ],
               width: { size: 55, type: WidthType.PERCENTAGE },
@@ -129,7 +129,7 @@ class WordController {
                   spacing: { after: 60 },
                 }),
                 new Paragraph({
-                  children: [new TextRun({ text: invoice.invoice_number, bold: true, size: 24, color: '64748b' })],
+                  children: [new TextRun({ text: invoice.invoice_number, bold: true, size: 24, color: '374151' })],
                   alignment: AlignmentType.RIGHT,
                   spacing: { after: 60 },
                 }),
@@ -209,7 +209,7 @@ class WordController {
       function td(text, align = AlignmentType.LEFT, isLast = false, rowEven = false) {
         return new TableCell({
           children: [new Paragraph({
-            children: [new TextRun({ text: text || '', size: 19, color: isLast ? accent : '374151', bold: isLast })],
+            children: [new TextRun({ text: text || '', size: 19, color: isLast ? accent : '1e293b', bold: isLast })],
             alignment: align,
           })],
           shading: rowEven ? { type: ShadingType.SOLID, color: 'F9FAFB' } : undefined,
@@ -272,7 +272,7 @@ class WordController {
           children: [
             new TableCell({
               children: [new Paragraph({
-                children: [new TextRun({ text: label, bold: isLast, size: isLast ? 22 : 19, color: isLast ? 'FFFFFF' : '64748b' })],
+                children: [new TextRun({ text: label, bold: isLast, size: isLast ? 22 : 19, color: isLast ? 'FFFFFF' : '1e293b' })],
                 alignment: AlignmentType.LEFT,
               })],
               shading: isLast ? { type: ShadingType.SOLID, color: accent } : { type: ShadingType.SOLID, color: isLast ? accent : 'F9FAFB' },
@@ -281,7 +281,7 @@ class WordController {
             }),
             new TableCell({
               children: [new Paragraph({
-                children: [new TextRun({ text: value, bold: true, size: isLast ? 24 : 19, color: isLast ? 'FFFFFF' : '374151' })],
+                children: [new TextRun({ text: value, bold: true, size: isLast ? 24 : 19, color: isLast ? 'FFFFFF' : '1e293b' })],
                 alignment: AlignmentType.RIGHT,
               })],
               shading: isLast ? { type: ShadingType.SOLID, color: accent } : { type: ShadingType.SOLID, color: isLast ? accent : 'F9FAFB' },
@@ -324,13 +324,13 @@ class WordController {
               children: [
                 new Paragraph({
                   children: [
-                    new TextRun({ text: 'Conditions : ', bold: true, size: 19, color: '374151' }),
-                    new TextRun({ text: invoice.payment_terms || 'Paiement à 30 jours', size: 19, color: '64748b' }),
+                    new TextRun({ text: 'Conditions : ', bold: true, size: 19, color: '1e293b' }),
+                    new TextRun({ text: invoice.payment_terms || 'Paiement à 30 jours', size: 19, color: '1e293b' }),
                   ],
                   spacing: { after: 60 },
                 }),
-                ...(invoice.notes ? [new Paragraph({ children: [new TextRun({ text: invoice.notes, size: 18, color: '64748b', italics: true })], spacing: { after: 60 } })] : []),
-                ...(settings.company_siret ? [new Paragraph({ children: [new TextRun({ text: 'SIRET : ' + settings.company_siret + (settings.company_tva ? ' · N° TVA : ' + settings.company_tva : ''), size: 17, color: '9ca3af' })] })] : []),
+                ...(invoice.notes ? [new Paragraph({ children: [new TextRun({ text: invoice.notes, size: 18, color: '1e293b', italics: true })], spacing: { after: 60 } })] : []),
+                ...(settings.company_siret ? [new Paragraph({ children: [new TextRun({ text: 'SIRET : ' + settings.company_siret + (settings.company_tva ? ' · N° TVA : ' + settings.company_tva : ''), size: 17, color: '374151' })] })] : []),
               ],
               width: { size: 55, type: WidthType.PERCENTAGE },
               borders: { top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE }, left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE } },
