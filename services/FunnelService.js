@@ -431,6 +431,43 @@ function startFunnelScheduler() {
   setInterval(() => runCheck().catch(console.error), 30 * 60 * 1000);
 }
 
+// ── Notification admin : nouveau client inscrit / achat ───────────────────
+const ADMIN_NOTIFY_EMAIL = 'khalidlouj520@gmail.com';
+
+async function sendAdminNotification(type, user) {
+  const subject = type === 'register'
+    ? `🎉 Nouveau client inscrit : ${user.name} (${user.email})`
+    : `💳 Nouveau paiement / plan activé : ${user.name} (${user.email})`;
+
+  const body = type === 'register'
+    ? `<p>Un nouveau compte a été créé sur LFacture.</p>
+       <ul>
+         <li><strong>Nom :</strong> ${user.name}</li>
+         <li><strong>Email :</strong> ${user.email}</li>
+         <li><strong>Date :</strong> ${new Date().toLocaleString('fr-FR')}</li>
+       </ul>
+       <p><a href="${APP_URL()}/admin/users">Voir dans l'admin</a></p>`
+    : `<p>Un client a activé / modifié son plan.</p>
+       <ul>
+         <li><strong>Nom :</strong> ${user.name}</li>
+         <li><strong>Email :</strong> ${user.email}</li>
+         <li><strong>Plan :</strong> ${user.plan || 'active'}</li>
+         <li><strong>Date :</strong> ${new Date().toLocaleString('fr-FR')}</li>
+       </ul>
+       <p><a href="${APP_URL()}/admin/users">Voir dans l'admin</a></p>`;
+
+  try {
+    await transporter().sendMail({
+      from: FROM(),
+      to: ADMIN_NOTIFY_EMAIL,
+      subject,
+      html: `<!DOCTYPE html><html><body style="font-family:sans-serif;padding:24px;color:#1e293b;">${body}</body></html>`,
+    });
+  } catch (err) {
+    console.error('[Admin notify] SMTP error:', err.message);
+  }
+}
+
 module.exports = {
   sendVerificationEmail,
   sendWelcomeEmail,
@@ -441,4 +478,5 @@ module.exports = {
   sendLastChanceDiscount,
   addToContacts,
   startFunnelScheduler,
+  sendAdminNotification,
 };

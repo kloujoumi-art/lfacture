@@ -248,6 +248,7 @@ const companyName = settings && settings.company_name ? settings.company_name : 
   tpl==='classic'?'#4F46E5':tpl==='blue'?'#2563eb':tpl==='green'?'#059669':tpl==='orange'?'#f97316':tpl==='red'?'#dc2626':tpl==='navy'?'#f59e0b':tpl==='slate'?'#475569':tpl==='creative'?'#9333ea':'#94a3b8'
 %>;max-width:320px;">
   <p style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin:0 0 5px;">Facturé à</p>
+  <% if(invoice.client_logo){ %><img src="<%=invoice.client_logo%>" style="max-height:38px;max-width:110px;object-fit:contain;margin-bottom:6px;display:block;"/><% } %>
   <p style="font-size:13px;font-weight:800;color:#1e293b;margin:0 0 2px;"><%=invoice.client_name%></p>
   <% if(invoice.client_company){ %><p style="font-size:11px;color:#374151;margin:0 0 2px;"><%=invoice.client_company%></p><% } %>
   <% if(invoice.client_address){ %><p style="font-size:11px;color:#64748b;margin:0 0 2px;"><%=invoice.client_address%></p><% } %>
@@ -257,6 +258,7 @@ const companyName = settings && settings.company_name ? settings.company_name : 
 <% if(tpl==='modern' && invoice.client_name){ %>
 <div style="margin-bottom:20px;padding:14px 18px;background:#f1f5f9;border-radius:8px;max-width:280px;">
   <p style="font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin:0 0 5px;">Client</p>
+  <% if(invoice.client_logo){ %><img src="<%=invoice.client_logo%>" style="max-height:38px;max-width:110px;object-fit:contain;margin-bottom:6px;display:block;"/><% } %>
   <p style="font-size:13px;font-weight:800;color:#1e293b;margin:0 0 2px;"><%=invoice.client_name%></p>
   <% if(invoice.client_company){ %><p style="font-size:11px;color:#374151;margin:0 0 2px;"><%=invoice.client_company%></p><% } %>
   <% if(invoice.client_address){ %><p style="font-size:11px;color:#64748b;margin:0 0 2px;"><%=invoice.client_address%></p><% } %>

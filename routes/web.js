@@ -80,9 +80,9 @@ router.get('/dashboard', requireAuth, (req, res, next) => { res.locals.pageTitle
 // Clients
 router.get('/dashboard/clients', requireAccess, DashboardController.listClients);
 router.get('/dashboard/clients/create', requireAccess, DashboardController.showCreateClient);
-router.post('/dashboard/clients', requireAccess, DashboardController.createClient);
+router.post('/dashboard/clients', requireAccess, upload.single('client_logo_file'), DashboardController.createClient);
 router.get('/dashboard/clients/:id/edit', requireAccess, DashboardController.showEditClient);
-router.put('/dashboard/clients/:id', requireAccess, DashboardController.updateClient);
+router.put('/dashboard/clients/:id', requireAccess, upload.single('client_logo_file'), DashboardController.updateClient);
 router.delete('/dashboard/clients/:id', requireAccess, DashboardController.deleteClient);
 
 // Invoices

@@ -165,6 +165,7 @@ class AdminController {
         plan: 'active',
         subscription_ends_at: subEnd.toISOString(),
       }).write();
+      FunnelService.sendAdminNotification('purchase', { ...user, plan: 'active' }).catch(() => {});
     } else if (plan === 'suspended') {
       db.get('users').find({ id: user.id }).assign({
         plan: 'suspended',

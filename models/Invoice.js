@@ -92,6 +92,7 @@ class Invoice {
       client_company: client?.company || null,
       client_siret: client?.siret || null,
       client_tva: client?.tva || null,
+      client_logo: client?.logo || null,
     };
   }
 

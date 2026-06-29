@@ -51,7 +51,11 @@ class DashboardController {
     if (!name || name.trim().length < 1) {
       return dash(res, 'dashboard/clients/create', { pageTitle: 'Nouveau client', activePage: 'clients', errors: ['Le nom est requis.'], old: req.body });
     }
-    Client.create({ user_id: req.user.id, ...req.body });
+    let logo = null;
+    if (req.file) {
+      logo = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    }
+    Client.create({ user_id: req.user.id, ...req.body, logo });
     req.flash('success', 'Client créé avec succès.');
     res.redirect('/dashboard/clients');
   }
@@ -65,7 +69,13 @@ class DashboardController {
   static updateClient(req, res) {
     const client = Client.findById(req.params.id);
     if (!client || client.user_id !== req.user.id) return res.redirect('/dashboard/clients');
-    Client.update(req.params.id, req.body);
+    const data = { ...req.body };
+    if (req.file) {
+      data.logo = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+    } else if (req.body.remove_logo === '1') {
+      data.logo = null;
+    }
+    Client.update(req.params.id, data);
     req.flash('success', 'Client mis à jour.');
     res.redirect('/dashboard/clients');
   }

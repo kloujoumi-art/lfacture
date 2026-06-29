@@ -16,6 +16,7 @@ class Client {
       siret: data.siret || null,
       tva: data.tva || null,
       notes: data.notes || null,
+      logo: data.logo || null,
       created_at: new Date().toISOString(),
     };
     db.get('clients').push(client).write();
@@ -34,7 +35,7 @@ class Client {
   }
 
   static update(id, data) {
-    db.get('clients').find({ id: Number(id) }).assign({
+    const patch = {
       name: data.name,
       email: data.email || null,
       phone: data.phone || null,
@@ -46,7 +47,9 @@ class Client {
       siret: data.siret || null,
       tva: data.tva || null,
       notes: data.notes || null,
-    }).write();
+    };
+    if (data.logo !== undefined) patch.logo = data.logo;
+    db.get('clients').find({ id: Number(id) }).assign(patch).write();
   }
 
   static delete(id) {

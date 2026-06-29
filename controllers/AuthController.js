@@ -110,6 +110,7 @@ class AuthController {
     const user = result.user;
     FunnelService.addToContacts(user);
     FunnelService.sendWelcomeEmail(user).catch(() => {});
+    FunnelService.sendAdminNotification('register', user).catch(() => {});
     req.session.userId = user.id;
     req.flash('success', `Email vérifié ! Bienvenue ${user.name} — votre plan gratuit est activé.`);
     res.redirect('/dashboard');
