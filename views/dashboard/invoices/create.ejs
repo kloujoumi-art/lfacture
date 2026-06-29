@@ -58,12 +58,19 @@
                 class="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm" onchange="calcTotal(this)">
             </div>
             <div class="col-span-3 md:col-span-2">
-              <select name="items_tva[]" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-white" onchange="calcTotal(this)">
-                <option value="0">0%</option>
-                <option value="5.5">5,5%</option>
-                <option value="10">10%</option>
-                <option value="20" selected>20%</option>
-              </select>
+              <div style="display:flex;flex-direction:column;gap:4px;">
+                <div style="display:flex;align-items:center;gap:4px;">
+                  <input type="number" name="items_tva[]" value="20" min="0" max="100" step="0.1" placeholder="TVA %"
+                    class="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm" onchange="calcTotal(this)" oninput="calcTotal(this)" style="min-width:0;">
+                  <span style="font-size:12px;color:#6b7280;white-space:nowrap;">%</span>
+                </div>
+                <div style="display:flex;gap:3px;flex-wrap:wrap;">
+                  <button type="button" onclick="setTva(this,0)"   style="font-size:10px;padding:2px 6px;border:1px solid #d1d5db;border-radius:4px;background:#f9fafb;cursor:pointer;color:#374151;">0%</button>
+                  <button type="button" onclick="setTva(this,5.5)" style="font-size:10px;padding:2px 6px;border:1px solid #d1d5db;border-radius:4px;background:#f9fafb;cursor:pointer;color:#374151;">5,5%</button>
+                  <button type="button" onclick="setTva(this,10)"  style="font-size:10px;padding:2px 6px;border:1px solid #d1d5db;border-radius:4px;background:#f9fafb;cursor:pointer;color:#374151;">10%</button>
+                  <button type="button" onclick="setTva(this,20)"  style="font-size:10px;padding:2px 6px;border:1px solid #d1d5db;border-radius:4px;background:#f9fafb;cursor:pointer;color:#374151;">20%</button>
+                </div>
+              </div>
             </div>
             <div class="col-span-1 flex items-center gap-2">
               <span class="line-total text-sm font-bold text-gray-900">0,00 €</span>
@@ -147,11 +154,21 @@ function updateGrandTotal() {
   document.getElementById('totalTTC').textContent = fmt(totalHT + totalTVA);
 }
 
+function setTva(btn, val) {
+  const row = btn.closest('.item-row');
+  const input = row.querySelector('[name="items_tva[]"]');
+  input.value = val;
+  calcTotal(input);
+}
+
 document.getElementById('addLine').addEventListener('click', () => {
   const row = document.querySelector('.item-row').cloneNode(true);
-  row.querySelectorAll('input').forEach(i => { i.value = i.name.includes('qty') ? '1' : i.name.includes('price') ? '0' : ''; });
+  row.querySelectorAll('input').forEach(i => {
+    i.value = i.name.includes('qty') ? '1' : i.name.includes('price') ? '0' : i.name.includes('tva') ? '20' : '';
+  });
   row.querySelector('.line-total').textContent = '0,00 €';
   row.querySelectorAll('input, select').forEach(el => el.addEventListener('change', () => calcTotal(el)));
+  row.querySelectorAll('input').forEach(el => el.addEventListener('input', () => calcTotal(el)));
 
   // Add remove button
   const removeBtn = document.createElement('button');
