@@ -147,53 +147,149 @@
 
   <!-- Footer -->
   <footer class="bg-gray-900 text-gray-400">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-12 mb-10">
-        <div class="col-span-2 sm:col-span-2">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
+
+      <!-- Colonnes principales -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 sm:gap-10 mb-12">
+
+        <!-- Logo + desc -->
+        <div class="col-span-2 sm:col-span-1">
           <a href="/" class="flex items-center gap-2 mb-4">
-            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center flex-shrink-0">
               <span class="text-white font-black text-sm">L</span>
             </div>
             <span class="text-xl font-black text-white">LFacture</span>
           </a>
-          <p class="text-sm leading-relaxed max-w-xs">
-            Logiciel de facturation gratuit en ligne pour les indépendants et PME françaises. Factures et devis professionnels en 2 minutes.
-          </p>
-          <div class="mt-5 flex gap-3">
-            <a href="/register" class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition">
-              Commencer gratuitement →
-            </a>
+          <!-- Drapeau France + Made in France -->
+          <div class="flex items-center gap-2 mb-3">
+            <svg width="20" height="14" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;">
+              <rect width="20" height="14" fill="#ED2939"/>
+              <rect width="13.3" height="14" fill="#fff"/>
+              <rect width="6.67" height="14" fill="#002395"/>
+            </svg>
+            <span class="text-xs font-semibold text-gray-500">Logiciel 100% français</span>
           </div>
+          <p class="text-sm leading-relaxed text-gray-500 mb-4">
+            Logiciel de facturation en ligne pour les indépendants et PME françaises. Factures PDF professionnelles en 2 minutes.
+          </p>
+          <a href="/register" class="inline-block bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-lg transition">
+            Commencer gratuitement →
+          </a>
         </div>
+
+        <!-- Produit -->
         <div>
-          <h3 class="text-white font-semibold text-sm mb-4">Produit</h3>
+          <h3 class="text-white font-bold text-sm mb-4">Produit</h3>
           <ul class="space-y-2.5 text-sm">
             <li><a href="/features" class="hover:text-white transition">Fonctionnalités</a></li>
             <li><a href="/pricing" class="hover:text-white transition">Tarifs</a></li>
-            <li><a href="/blog" class="hover:text-white transition">Blog</a></li>
+            <li><a href="/blog" class="hover:text-white transition">Blog facturation</a></li>
             <li><a href="/register" class="hover:text-white transition">Plan gratuit</a></li>
+            <li><a href="/about" class="hover:text-white transition">À propos</a></li>
           </ul>
         </div>
+
+        <!-- Légal -->
         <div>
-          <h3 class="text-white font-semibold text-sm mb-4">Compte</h3>
+          <h3 class="text-white font-bold text-sm mb-4">Légal</h3>
+          <ul class="space-y-2.5 text-sm">
+            <li><a href="/mentions-legales" class="hover:text-white transition">Mentions légales</a></li>
+            <li><a href="/politique-confidentialite" class="hover:text-white transition">Confidentialité</a></li>
+            <li><a href="/cgu" class="hover:text-white transition">CGU</a></li>
+            <li><a href="/sitemap.xml" class="hover:text-white transition">Sitemap</a></li>
+          </ul>
+        </div>
+
+        <!-- Compte -->
+        <div>
+          <h3 class="text-white font-bold text-sm mb-4">Compte</h3>
           <ul class="space-y-2.5 text-sm">
             <li><a href="/login" class="hover:text-white transition">Connexion</a></li>
             <li><a href="/register" class="hover:text-white transition">Inscription</a></li>
-            <li><a href="/dashboard" class="hover:text-white transition">Dashboard</a></li>
+            <li><a href="/dashboard" class="hover:text-white transition">Mon espace</a></li>
           </ul>
         </div>
       </div>
-      <div class="border-t border-gray-800 pt-8">
-        <div class="flex flex-wrap gap-x-5 gap-y-2 justify-center sm:justify-start text-xs text-gray-600 mb-4">
-          <a href="/mentions-legales" class="hover:text-gray-400 transition">Mentions légales</a>
-          <a href="/politique-confidentialite" class="hover:text-gray-400 transition">Confidentialité</a>
-          <a href="/cgu" class="hover:text-gray-400 transition">CGU</a>
-          <a href="/sitemap.xml" class="hover:text-gray-400 transition">Sitemap</a>
+
+      <!-- Moyens de paiement + crédibilité -->
+      <div class="border-t border-gray-800 pt-8 mb-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+
+          <!-- Paiement sécurisé -->
+          <div>
+            <p class="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wider">Paiement sécurisé</p>
+            <div class="flex flex-wrap items-center gap-2">
+              <!-- Visa -->
+              <div style="background:#fff;border-radius:5px;padding:4px 8px;display:flex;align-items:center;">
+                <svg width="38" height="12" viewBox="0 0 38 12" xmlns="http://www.w3.org/2000/svg">
+                  <text x="0" y="10" font-family="Arial Black,Arial" font-size="11" font-weight="900" fill="#1A1F71">VISA</text>
+                </svg>
+              </div>
+              <!-- Mastercard -->
+              <div style="background:#fff;border-radius:5px;padding:4px 6px;display:flex;align-items:center;gap:2px;">
+                <div style="width:16px;height:16px;border-radius:50%;background:#EB001B;opacity:.9;"></div>
+                <div style="width:16px;height:16px;border-radius:50%;background:#F79E1B;margin-left:-6px;opacity:.9;"></div>
+              </div>
+              <!-- CB -->
+              <div style="background:#fff;border-radius:5px;padding:4px 8px;">
+                <span style="font-size:10px;font-weight:900;color:#004B9D;letter-spacing:-.5px;">CB</span>
+              </div>
+              <!-- Cadenas HTTPS -->
+              <div style="background:#1e293b;border:1px solid #334155;border-radius:5px;padding:4px 8px;display:flex;align-items:center;gap:5px;">
+                <svg width="10" height="12" viewBox="0 0 10 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="1" y="5" width="8" height="7" rx="1.5" fill="#10b981"/>
+                  <path d="M2.5 5V3.5C2.5 2.12 3.62 1 5 1C6.38 1 7.5 2.12 7.5 3.5V5" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <span style="font-size:10px;font-weight:700;color:#10b981;">HTTPS</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Badges crédibilité -->
+          <div>
+            <p class="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wider">Confiance &amp; sécurité</p>
+            <div class="flex flex-wrap items-center gap-2">
+              <!-- RGPD -->
+              <div style="background:#1e293b;border:1px solid #334155;border-radius:6px;padding:5px 10px;display:flex;align-items:center;gap:5px;">
+                <span style="font-size:14px;">🔐</span>
+                <span style="font-size:11px;font-weight:700;color:#94a3b8;">RGPD</span>
+              </div>
+              <!-- Données en France -->
+              <div style="background:#1e293b;border:1px solid #334155;border-radius:6px;padding:5px 10px;display:flex;align-items:center;gap:5px;">
+                <svg width="14" height="10" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;">
+                  <rect width="20" height="14" fill="#ED2939"/>
+                  <rect width="13.3" height="14" fill="#fff"/>
+                  <rect width="6.67" height="14" fill="#002395"/>
+                </svg>
+                <span style="font-size:11px;font-weight:700;color:#94a3b8;">Données en France</span>
+              </div>
+              <!-- 4.9 étoiles -->
+              <div style="background:#1e293b;border:1px solid #334155;border-radius:6px;padding:5px 10px;display:flex;align-items:center;gap:5px;">
+                <span style="color:#F59E0B;font-size:12px;">★★★★★</span>
+                <span style="font-size:11px;font-weight:700;color:#94a3b8;">4,9/5</span>
+              </div>
+              <!-- Sans engagement -->
+              <div style="background:#1e293b;border:1px solid #334155;border-radius:6px;padding:5px 10px;display:flex;align-items:center;gap:5px;">
+                <span style="font-size:13px;">✓</span>
+                <span style="font-size:11px;font-weight:700;color:#94a3b8;">Sans engagement</span>
+              </div>
+            </div>
+          </div>
+
         </div>
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-          <p class="text-xs text-gray-600">© <%= new Date().getFullYear() %> LFacture — Tous droits réservés</p>
-          <p class="text-xs text-gray-600">Fait avec ❤️ pour les entrepreneurs français</p>
-        </div>
+      </div>
+
+      <!-- Copyright -->
+      <div class="border-t border-gray-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+        <p class="text-xs text-gray-600">© <%= new Date().getFullYear() %> LFacture — Tous droits réservés</p>
+        <p class="text-xs text-gray-600 flex items-center gap-1.5">
+          <svg width="14" height="10" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;flex-shrink:0;">
+            <rect width="20" height="14" fill="#ED2939"/>
+            <rect width="13.3" height="14" fill="#fff"/>
+            <rect width="6.67" height="14" fill="#002395"/>
+          </svg>
+          Fait avec ❤️ en France pour les entrepreneurs
+        </p>
       </div>
     </div>
   </footer>

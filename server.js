@@ -55,6 +55,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// Analytics middleware (tracking visiteurs)
+const analyticsMiddleware = require('./middleware/analytics');
+app.use(analyticsMiddleware);
+
 // Routes
 const webRoutes = require('./routes/web');
 app.use('/', webRoutes);

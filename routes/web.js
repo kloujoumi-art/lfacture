@@ -4,6 +4,7 @@ const AuthController = require('../controllers/AuthController');
 const DashboardController = require('../controllers/DashboardController');
 const AdminController = require('../controllers/AdminController');
 const BlogAdminController = require('../controllers/BlogAdminController');
+const AdminAnalyticsController = require('../controllers/AdminAnalyticsController');
 const BlogController = require('../controllers/BlogController');
 const { requireAuth, requireAccess, requireInvoiceQuota, requireQuoteQuota, guestOnly } = require('../middleware/auth');
 const { requireAdmin } = require('../middleware/admin');
@@ -110,6 +111,9 @@ router.post('/admin/users/:id/delete', requireAdmin, AdminController.deleteUser)
 router.get('/admin/invoices', requireAdmin, AdminController.listInvoices);
 router.get('/admin/trial', requireAdmin, AdminController.listTrialUsers);
 router.get('/admin/mailing', requireAdmin, AdminController.listMailing);
+
+// ---- Admin analytics ----
+router.get('/admin/analytics', requireAdmin, AdminAnalyticsController.index);
 
 // ---- Admin blog ----
 router.get('/admin/blog', requireAdmin, BlogAdminController.index);
