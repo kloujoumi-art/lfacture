@@ -5,8 +5,9 @@ class BlogController {
   static index(req, res) {
     const posts = Post.published();
     res.renderLayout('blog/index', {
-      title: 'Blog — LFacture — Conseils Facturation & Gestion',
-      metaDesc: 'Découvrez nos articles sur la facturation, la gestion de devis, et les conseils pour les auto-entrepreneurs et PME.',
+      title: 'Blog logiciel de facturation — Conseils & Guides — LFacture',
+      metaDesc: 'Guides et conseils sur le logiciel de facturation, la facture en ligne gratuite, les devis professionnels et la gestion pour indépendants et PME françaises.',
+      canonicalPath: '/blog',
       posts,
     });
   }
@@ -24,6 +25,7 @@ class BlogController {
       title: `${post.title} — Blog LFacture`,
       metaDesc: post.meta_desc || post.excerpt || '',
       ogImage: post.cover_image || '',
+      canonicalPath: `/blog/${post.slug}`,
       post,
       related,
     });

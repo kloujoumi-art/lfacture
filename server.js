@@ -75,6 +75,11 @@ app.listen(PORT, () => {
   // Démarre le scheduler funnel (emails automatiques)
   const { startFunnelScheduler } = require('./services/FunnelService');
   startFunnelScheduler();
+  // Auto-seed blog articles SEO si la collection est vide
+  const Post = require('./models/Post');
+  if (Post.all().length === 0) {
+    try { require('./scripts/seed-blog'); } catch(e) { console.error('Blog seed error:', e.message); }
+  }
 });
 
 module.exports = app;

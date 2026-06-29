@@ -1,6 +1,30 @@
 <div class="max-w-3xl">
   <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-    <form action="/dashboard/settings" method="POST" class="space-y-8">
+    <form action="/dashboard/settings" method="POST" enctype="multipart/form-data" class="space-y-8">
+
+      <!-- Logo -->
+      <div>
+        <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Logo de l'entreprise</h3>
+        <div class="flex items-start gap-6">
+          <% if (settings && settings.company_logo) { %>
+          <div class="flex-shrink-0">
+            <img src="<%= settings.company_logo %>" alt="Logo" class="h-20 w-auto rounded-lg border border-gray-200 p-2 bg-white object-contain" style="max-width:160px;" />
+            <label class="flex items-center gap-2 mt-2 cursor-pointer">
+              <input type="checkbox" name="remove_logo" value="1" class="rounded">
+              <span class="text-xs text-red-500 font-medium">Supprimer le logo</span>
+            </label>
+          </div>
+          <% } %>
+          <div class="flex-1">
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+              <%= (settings && settings.company_logo) ? 'Changer le logo' : 'Ajouter un logo' %>
+            </label>
+            <input type="file" name="company_logo_file" accept="image/*"
+              class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100 cursor-pointer">
+            <p class="text-xs text-gray-400 mt-1.5">Format : JPG, PNG, SVG, WebP — Max 2 Mo. Le logo apparaît sur vos factures et devis.</p>
+          </div>
+        </div>
+      </div>
 
       <!-- Company info -->
       <div>

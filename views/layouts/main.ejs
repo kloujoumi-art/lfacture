@@ -3,8 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="LFacture — Créez vos factures et devis professionnels en quelques secondes." />
-  <title><%= typeof title !== 'undefined' ? title : 'LFacture' %></title>
+  <meta name="description" content="<%= typeof metaDesc !== 'undefined' && metaDesc ? metaDesc : 'LFacture — Logiciel de facturation gratuit en ligne. Créez vos factures et devis professionnels en quelques secondes. Simple, rapide, sans installation.' %>" />
+  <meta name="keywords" content="logiciel de facturation, logiciel facturation gratuit, facture en ligne gratuit, devis et facture, logiciel facture, facture logiciel, logicielle facturation" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="<%= typeof appUrl !== 'undefined' ? appUrl : 'https://lfacture.com' %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>" />
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'LFacture — Logiciel de facturation gratuit' %>" />
+  <meta property="og:description" content="<%= typeof metaDesc !== 'undefined' && metaDesc ? metaDesc : 'Logiciel de facturation gratuit en ligne. Factures et devis professionnels en quelques secondes.' %>" />
+  <meta property="og:url" content="<%= typeof appUrl !== 'undefined' ? appUrl : 'https://lfacture.com' %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>" />
+  <% if (typeof ogImage !== 'undefined' && ogImage) { %><meta property="og:image" content="<%= ogImage %>" /><% } %>
+  <title><%= typeof title !== 'undefined' ? title : 'LFacture — Logiciel de facturation gratuit en ligne' %></title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>

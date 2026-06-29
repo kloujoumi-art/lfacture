@@ -180,26 +180,40 @@ class DashboardController {
   static updateSettings(req, res) {
     const s = req.body;
     const existing = getSettings(req.user.id);
+
+    // Logo upload: convert to base64 if a file was uploaded
+    let logoData = undefined;
+    if (req.file) {
+      const mime = req.file.mimetype;
+      const b64 = req.file.buffer.toString('base64');
+      logoData = `data:${mime};base64,${b64}`;
+    } else if (s.remove_logo === '1') {
+      logoData = null;
+    }
+
+    const patch = {
+      company_name: s.company_name || null,
+      company_address: s.company_address || null,
+      company_city: s.company_city || null,
+      company_postal: s.company_postal || null,
+      company_country: s.company_country || 'France',
+      company_phone: s.company_phone || null,
+      company_email: s.company_email || null,
+      company_siret: s.company_siret || null,
+      company_tva: s.company_tva || null,
+      invoice_prefix: s.invoice_prefix || 'FAC',
+      quote_prefix: s.quote_prefix || 'DEV',
+      default_tva: parseFloat(s.default_tva) || 20,
+      payment_terms: s.payment_terms || null,
+      invoice_template: s.invoice_template || 'classic',
+      bank_name: s.bank_name || null,
+      bank_iban: s.bank_iban || null,
+      bank_bic: s.bank_bic || null,
+    };
+    if (logoData !== undefined) patch.company_logo = logoData;
+
     if (existing) {
-      db.get('settings').find({ user_id: req.user.id }).assign({
-        company_name: s.company_name || null,
-        company_address: s.company_address || null,
-        company_city: s.company_city || null,
-        company_postal: s.company_postal || null,
-        company_country: s.company_country || 'France',
-        company_phone: s.company_phone || null,
-        company_email: s.company_email || null,
-        company_siret: s.company_siret || null,
-        company_tva: s.company_tva || null,
-        invoice_prefix: s.invoice_prefix || 'FAC',
-        quote_prefix: s.quote_prefix || 'DEV',
-        default_tva: parseFloat(s.default_tva) || 20,
-        payment_terms: s.payment_terms || null,
-        invoice_template: s.invoice_template || 'classic',
-        bank_name: s.bank_name || null,
-        bank_iban: s.bank_iban || null,
-        bank_bic: s.bank_bic || null,
-      }).write();
+      db.get('settings').find({ user_id: req.user.id }).assign(patch).write();
     } else {
       ensureSettings(req.user.id);
     }

@@ -7,12 +7,38 @@ const BlogAdminController = require('../controllers/BlogAdminController');
 const BlogController = require('../controllers/BlogController');
 const { requireAuth, requireAccess, requireInvoiceQuota, requireQuoteQuota, guestOnly } = require('../middleware/auth');
 const { requireAdmin } = require('../middleware/admin');
+const upload = require('../middleware/upload');
 
 // ---- Public routes ----
-router.get('/', (req, res) => res.renderLayout('index', { title: 'LFacture — Créez vos factures et devis en quelques secondes' }));
-router.get('/pricing', (req, res) => res.renderLayout('pricing', { title: 'Tarifs — LFacture' }));
-router.get('/features', (req, res) => res.renderLayout('features', { title: 'Fonctionnalités — LFacture' }));
-router.get('/about', (req, res) => res.renderLayout('about', { title: 'À propos — LFacture' }));
+router.get('/', (req, res) => res.renderLayout('index', {
+  title: 'Logiciel de facturation gratuit en ligne — LFacture',
+  metaDesc: 'LFacture : logiciel de facturation gratuit en ligne pour créer vos factures et devis professionnels en quelques secondes. 8 factures + 8 devis offerts sans carte bancaire.',
+  canonicalPath: '/',
+}));
+router.get('/pricing', (req, res) => res.renderLayout('pricing', {
+  title: 'Tarifs logiciel de facturation — LFacture',
+  metaDesc: 'Découvrez les tarifs de LFacture, logiciel de facturation en ligne. Plan gratuit avec 8 factures + 8 devis, puis à partir de 5€/mois pour une facturation illimitée.',
+  canonicalPath: '/pricing',
+}));
+router.get('/features', (req, res) => res.renderLayout('features', {
+  title: 'Fonctionnalités logiciel facture — LFacture',
+  metaDesc: 'LFacture : toutes les fonctionnalités pour votre logiciel de facturation. Factures PDF, devis, clients, tableaux de bord, modèles personnalisables.',
+  canonicalPath: '/features',
+}));
+router.get('/about', (req, res) => res.renderLayout('about', {
+  title: 'À propos — LFacture logiciel facturation',
+  metaDesc: 'LFacture, le logiciel de facturation français pensé pour les indépendants et PME. Simple, rapide, sans installation.',
+  canonicalPath: '/about',
+}));
+
+// ---- Sitemap ----
+router.get('/sitemap.xml', require('../controllers/SitemapController'));
+
+// ---- Robots.txt ----
+router.get('/robots.txt', (req, res) => {
+  res.type('text/plain');
+  res.send('User-agent: *\nAllow: /\nDisallow: /dashboard\nDisallow: /admin\nSitemap: https://lfacture.com/sitemap.xml');
+});
 
 // ---- Blog public ----
 router.get('/blog', BlogController.index);
@@ -51,7 +77,7 @@ router.delete('/dashboard/invoices/:id', requireAccess, DashboardController.dele
 
 // Settings
 router.get('/dashboard/settings', requireAuth, DashboardController.showSettings);
-router.post('/dashboard/settings', requireAuth, DashboardController.updateSettings);
+router.post('/dashboard/settings', requireAuth, upload.single('company_logo_file'), DashboardController.updateSettings);
 
 // ---- Admin setup (sans auth — seulement si 0 admin existe) ----
 router.get('/admin/setup', AdminController.showSetup);
