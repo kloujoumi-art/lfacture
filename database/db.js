@@ -14,7 +14,8 @@ const DEFAULTS = {
   settings: [],
   contacts: [],        // liste mailing
   funnel_logs: [],     // historique emails funnel
-  _counters: { user: 1, client: 1, invoice: 1, settings: 1, contact: 1, funnel_log: 1 },
+  posts: [],           // articles du blog
+  _counters: { user: 1, client: 1, invoice: 1, settings: 1, contact: 1, funnel_log: 1, post: 1 },
 };
 
 // Load or initialize

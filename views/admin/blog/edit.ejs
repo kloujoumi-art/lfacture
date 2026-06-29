@@ -1,0 +1,195 @@
+<div style="margin-bottom:20px;">
+  <a href="/admin/blog" style="color:#64748b;font-size:13px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+    <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+    Retour aux articles
+  </a>
+</div>
+
+<% if (errors && errors.length > 0) { %>
+<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:14px 16px;margin-bottom:20px;">
+  <% errors.forEach(err => { %><p style="color:#fca5a5;font-size:13px;margin:2px 0;">⚠️ <%= err %></p><% }); %>
+</div>
+<% } %>
+
+<form method="POST" action="<%= post ? '/admin/blog/' + post.id : '/admin/blog' %>" style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start;">
+
+  <!-- Colonne principale -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <!-- Titre -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <label style="display:block;color:#94a3b8;font-size:12px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Titre *</label>
+      <input name="title" value="<%= post?.title || '' %>" required
+        placeholder="Titre de l'article..."
+        style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:12px 14px;border-radius:8px;font-size:16px;font-weight:600;outline:none;box-sizing:border-box;"
+        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#334155'"/>
+      <p style="color:#475569;font-size:11px;margin:6px 0 0;">Le slug URL sera généré automatiquement depuis le titre.</p>
+    </div>
+
+    <!-- Résumé -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <label style="display:block;color:#94a3b8;font-size:12px;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;">Extrait / Résumé</label>
+      <textarea name="excerpt" rows="3" placeholder="Court résumé affiché dans la liste du blog..."
+        style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:12px 14px;border-radius:8px;font-size:13px;resize:vertical;outline:none;box-sizing:border-box;"
+        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#334155'"><%= post?.excerpt || '' %></textarea>
+    </div>
+
+    <!-- Contenu -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+        <label style="color:#94a3b8;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;">Contenu *</label>
+        <div style="display:flex;gap:6px;">
+          <button type="button" onclick="setMode('html')" id="btn-html"
+            style="padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#6366f1;color:#fff;border:none;">HTML</button>
+          <button type="button" onclick="setMode('preview')" id="btn-preview"
+            style="padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;background:#334155;color:#94a3b8;border:none;">Aperçu</button>
+        </div>
+      </div>
+      <!-- Barre d'outils rapide -->
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">
+        <% [
+          ['<strong>Gras</strong>', '<strong>texte</strong>'],
+          ['<em>Italique</em>', '<em>texte</em>'],
+          ['H2', '<h2>Titre 2</h2>'],
+          ['H3', '<h3>Titre 3</h3>'],
+          ['Lien', '<a href="URL">texte</a>'],
+          ['Liste', '<ul>\n  <li>élément 1</li>\n  <li>élément 2</li>\n</ul>'],
+          ['<p>', '<p>Paragraphe</p>'],
+        ].forEach(([label, snippet]) => { %>
+        <button type="button" onclick="insertSnippet(`<%- snippet %>`)"
+          style="padding:3px 8px;background:#0f172a;border:1px solid #334155;color:#94a3b8;border-radius:5px;font-size:11px;cursor:pointer;font-family:monospace;"><%- label %></button>
+        <% }); %>
+      </div>
+      <textarea name="content" id="contentEditor" rows="20"
+        placeholder="<h2>Introduction</h2>&#10;<p>Votre contenu HTML ici...</p>"
+        style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:12px 14px;border-radius:8px;font-size:13px;font-family:monospace;resize:vertical;outline:none;box-sizing:border-box;line-height:1.6;"
+        onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#334155'"><%= post?.content || '' %></textarea>
+      <div id="contentPreview" style="display:none;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:20px;min-height:200px;color:#e2e8f0;line-height:1.8;font-size:15px;"></div>
+    </div>
+  </div>
+
+  <!-- Colonne latérale -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <!-- Publication -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <h3 style="color:#e2e8f0;font-size:13px;font-weight:700;margin:0 0 14px;">Publication</h3>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:16px;">
+        <div style="position:relative;width:40px;height:22px;flex-shrink:0;">
+          <input type="checkbox" name="published" value="1" id="publishToggle" <%- post?.published ? 'checked' : '' %>
+            style="opacity:0;position:absolute;" onchange="updatePublishBtn()">
+          <div id="toggleBg" style="position:absolute;inset:0;border-radius:11px;background:<%- post?.published ? '#4F46E5' : '#334155' %>;transition:background .2s;"></div>
+          <div id="toggleDot" style="position:absolute;top:3px;left:<%- post?.published ? '21px' : '3px' %>;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;"></div>
+        </div>
+        <div>
+          <p id="publishLabel" style="margin:0;color:#e2e8f0;font-size:13px;font-weight:600;"><%= post?.published ? 'Publié' : 'Brouillon' %></p>
+          <p style="margin:2px 0 0;color:#64748b;font-size:11px;"><%- post?.published ? 'Visible sur le blog' : 'Non visible au public' %></p>
+        </div>
+      </label>
+      <button type="submit"
+        style="width:100%;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border:none;padding:12px;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .2s;"
+        onmouseover="this.style.opacity='.9'" onmouseout="this.style.opacity='1'">
+        <%= post ? '💾 Sauvegarder' : '✅ Créer l\'article' %>
+      </button>
+      <% if (post) { %>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid #334155;display:flex;gap:8px;">
+        <a href="/blog/<%= post.slug %>" target="_blank"
+          style="flex:1;text-align:center;padding:8px;background:#0f172a;color:#64748b;border:1px solid #334155;border-radius:6px;text-decoration:none;font-size:12px;font-weight:600;">
+          ↗ Voir
+        </a>
+        <form method="POST" action="/admin/blog/<%= post.id %>/delete" style="flex:1;" onsubmit="return confirm('Supprimer cet article définitivement ?')">
+          <button type="submit" style="width:100%;padding:8px;background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2);border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;">
+            🗑️ Supprimer
+          </button>
+        </form>
+      </div>
+      <% } %>
+    </div>
+
+    <!-- SEO -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <h3 style="color:#e2e8f0;font-size:13px;font-weight:700;margin:0 0 14px;">🔍 SEO</h3>
+
+      <div style="margin-bottom:12px;">
+        <label style="display:block;color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:6px;">Meta description</label>
+        <textarea name="meta_desc" rows="3" placeholder="Description Google (max 160 caractères)..."
+          style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:10px 12px;border-radius:8px;font-size:12px;resize:vertical;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#334155'"><%= post?.meta_desc || '' %></textarea>
+      </div>
+
+      <div style="margin-bottom:12px;">
+        <label style="display:block;color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:6px;">Tags (séparés par virgule)</label>
+        <input name="tags" value="<%= post?.tags || '' %>" placeholder="facturation, devis, auto-entrepreneur"
+          style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:10px 12px;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#334155'"/>
+      </div>
+
+      <div>
+        <label style="display:block;color:#94a3b8;font-size:11px;font-weight:600;margin-bottom:6px;">Image de couverture (URL)</label>
+        <input name="cover_image" id="coverInput" value="<%= post?.cover_image || '' %>"
+          placeholder="https://images.unsplash.com/..."
+          style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;padding:10px 12px;border-radius:8px;font-size:12px;outline:none;box-sizing:border-box;"
+          onfocus="this.style.borderColor='#6366f1'" onblur="this.style.borderColor='#334155'"
+          oninput="updateCoverPreview(this.value)"/>
+        <div id="coverPreview" style="margin-top:8px;border-radius:8px;overflow:hidden;<%- post?.cover_image ? '' : 'display:none' %>">
+          <img id="coverImg" src="<%= post?.cover_image || '' %>" alt="Aperçu" style="width:100%;height:100px;object-fit:cover;border-radius:8px;"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infos -->
+    <% if (post) { %>
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:16px;font-size:12px;color:#64748b;">
+      <p style="margin:0 0 4px;"><strong style="color:#94a3b8;">Créé :</strong> <%= new Date(post.created_at).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'}) %></p>
+      <p style="margin:0 0 4px;"><strong style="color:#94a3b8;">Modifié :</strong> <%= new Date(post.updated_at).toLocaleDateString('fr-FR', {day:'numeric', month:'long', year:'numeric'}) %></p>
+      <p style="margin:0;"><strong style="color:#94a3b8;">Slug :</strong> <code style="background:#0f172a;padding:2px 6px;border-radius:4px;font-size:11px;">/blog/<%= post.slug %></code></p>
+    </div>
+    <% } %>
+  </div>
+</form>
+
+<script>
+function setMode(mode) {
+  const editor = document.getElementById('contentEditor');
+  const preview = document.getElementById('contentPreview');
+  const btnHtml = document.getElementById('btn-html');
+  const btnPrev = document.getElementById('btn-preview');
+  if (mode === 'html') {
+    editor.style.display = ''; preview.style.display = 'none';
+    btnHtml.style.background = '#6366f1'; btnHtml.style.color = '#fff';
+    btnPrev.style.background = '#334155'; btnPrev.style.color = '#94a3b8';
+  } else {
+    preview.innerHTML = editor.value || '<p style="color:#475569;font-style:italic;">Contenu vide</p>';
+    editor.style.display = 'none'; preview.style.display = '';
+    btnPrev.style.background = '#6366f1'; btnPrev.style.color = '#fff';
+    btnHtml.style.background = '#334155'; btnHtml.style.color = '#94a3b8';
+  }
+}
+
+function insertSnippet(snippet) {
+  const ta = document.getElementById('contentEditor');
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const selected = ta.value.substring(start, end);
+  const replaced = snippet.includes('texte') ? snippet.replace('texte', selected || 'texte') : snippet;
+  ta.value = ta.value.substring(0, start) + replaced + ta.value.substring(end);
+  ta.focus();
+  ta.selectionStart = ta.selectionEnd = start + replaced.length;
+}
+
+function updateCoverPreview(url) {
+  const preview = document.getElementById('coverPreview');
+  const img = document.getElementById('coverImg');
+  if (url) { img.src = url; preview.style.display = ''; }
+  else { preview.style.display = 'none'; }
+}
+
+function updatePublishBtn() {
+  const cb = document.getElementById('publishToggle');
+  const bg = document.getElementById('toggleBg');
+  const dot = document.getElementById('toggleDot');
+  const label = document.getElementById('publishLabel');
+  bg.style.background = cb.checked ? '#4F46E5' : '#334155';
+  dot.style.left = cb.checked ? '21px' : '3px';
+  label.textContent = cb.checked ? 'Publié' : 'Brouillon';
+}
+</script>

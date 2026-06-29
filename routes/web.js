@@ -3,6 +3,8 @@ const router = express.Router();
 const AuthController = require('../controllers/AuthController');
 const DashboardController = require('../controllers/DashboardController');
 const AdminController = require('../controllers/AdminController');
+const BlogAdminController = require('../controllers/BlogAdminController');
+const BlogController = require('../controllers/BlogController');
 const { requireAuth, requireAccess, guestOnly } = require('../middleware/auth');
 const { requireAdmin } = require('../middleware/admin');
 
@@ -11,6 +13,10 @@ router.get('/', (req, res) => res.renderLayout('index', { title: 'LFacture — C
 router.get('/pricing', (req, res) => res.renderLayout('pricing', { title: 'Tarifs — LFacture' }));
 router.get('/features', (req, res) => res.renderLayout('features', { title: 'Fonctionnalités — LFacture' }));
 router.get('/about', (req, res) => res.renderLayout('about', { title: 'À propos — LFacture' }));
+
+// ---- Blog public ----
+router.get('/blog', BlogController.index);
+router.get('/blog/:slug', BlogController.show);
 
 // ---- Auth routes ----
 router.get('/register', guestOnly, AuthController.showRegister);
@@ -61,5 +67,14 @@ router.post('/admin/users/:id/delete', requireAdmin, AdminController.deleteUser)
 router.get('/admin/invoices', requireAdmin, AdminController.listInvoices);
 router.get('/admin/trial', requireAdmin, AdminController.listTrialUsers);
 router.get('/admin/mailing', requireAdmin, AdminController.listMailing);
+
+// ---- Admin blog ----
+router.get('/admin/blog', requireAdmin, BlogAdminController.index);
+router.get('/admin/blog/create', requireAdmin, BlogAdminController.showCreate);
+router.post('/admin/blog', requireAdmin, BlogAdminController.create);
+router.get('/admin/blog/:id/edit', requireAdmin, BlogAdminController.showEdit);
+router.post('/admin/blog/:id', requireAdmin, BlogAdminController.update);
+router.post('/admin/blog/:id/toggle', requireAdmin, BlogAdminController.togglePublish);
+router.post('/admin/blog/:id/delete', requireAdmin, BlogAdminController.delete);
 
 module.exports = router;

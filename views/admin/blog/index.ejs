@@ -1,0 +1,98 @@
+<!-- Stats -->
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;">
+  <div class="stat-card">
+    <p style="color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:0 0 6px;">Total articles</p>
+    <p style="font-size:28px;font-weight:900;color:#6366f1;margin:0;"><%= stats.total %></p>
+  </div>
+  <div class="stat-card">
+    <p style="color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:0 0 6px;">Publiés</p>
+    <p style="font-size:28px;font-weight:900;color:#10b981;margin:0;"><%= stats.published %></p>
+  </div>
+  <div class="stat-card">
+    <p style="color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:0 0 6px;">Brouillons</p>
+    <p style="font-size:28px;font-weight:900;color:#f59e0b;margin:0;"><%= stats.drafts %></p>
+  </div>
+</div>
+
+<!-- Header actions -->
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+  <h2 style="color:#e2e8f0;font-size:16px;font-weight:700;margin:0;">Articles du blog</h2>
+  <div style="display:flex;gap:10px;">
+    <a href="/blog" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#334155;color:#94a3b8;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;border:1px solid #475569;">
+      <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+      Voir le blog
+    </a>
+    <a href="/admin/blog/create" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#4F46E5;color:#fff;border-radius:8px;text-decoration:none;font-size:13px;font-weight:700;">
+      + Nouvel article
+    </a>
+  </div>
+</div>
+
+<!-- Table -->
+<div style="background:#1e293b;border:1px solid #334155;border-radius:12px;overflow:hidden;">
+  <% if (posts.length === 0) { %>
+  <div style="text-align:center;padding:60px 20px;color:#64748b;">
+    <div style="font-size:48px;margin-bottom:12px;">✍️</div>
+    <p style="font-size:15px;margin:0 0 8px;">Aucun article pour le moment</p>
+    <p style="font-size:13px;margin:0 0 20px;">Créez votre premier article de blog pour améliorer votre référencement.</p>
+    <a href="/admin/blog/create" style="display:inline-block;background:#4F46E5;color:#fff;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">
+      + Créer un article
+    </a>
+  </div>
+  <% } else { %>
+  <table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead>
+      <tr style="background:#0f172a;border-bottom:1px solid #334155;">
+        <th style="text-align:left;padding:12px 16px;color:#64748b;font-weight:600;font-size:12px;">Titre</th>
+        <th style="text-align:center;padding:12px;color:#64748b;font-weight:600;font-size:12px;">Statut</th>
+        <th style="text-align:left;padding:12px;color:#64748b;font-weight:600;font-size:12px;">Tags</th>
+        <th style="text-align:left;padding:12px;color:#64748b;font-weight:600;font-size:12px;">Date</th>
+        <th style="text-align:center;padding:12px;color:#64748b;font-weight:600;font-size:12px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% posts.forEach(post => { %>
+      <tr style="border-bottom:1px solid #1e293b;transition:background .15s;" onmouseover="this.style.background='rgba(255,255,255,.02)'" onmouseout="this.style.background=''">
+        <td style="padding:14px 16px;max-width:300px;">
+          <p style="margin:0 0 2px;color:#e2e8f0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><%= post.title %></p>
+          <p style="margin:0;color:#475569;font-size:11px;font-family:monospace;">/blog/<%= post.slug %></p>
+          <% if (post.excerpt) { %>
+          <p style="margin:4px 0 0;color:#64748b;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px;"><%= post.excerpt %></p>
+          <% } %>
+        </td>
+        <td style="padding:14px;text-align:center;">
+          <form method="POST" action="/admin/blog/<%= post.id %>/toggle" style="display:inline;">
+            <button type="submit" style="border:none;background:none;cursor:pointer;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;<%- post.published ? 'background:rgba(16,185,129,.15);color:#6ee7b7;' : 'background:rgba(245,158,11,.1);color:#fbbf24;' %>">
+              <%= post.published ? '✅ Publié' : '📝 Brouillon' %>
+            </button>
+          </form>
+        </td>
+        <td style="padding:14px;">
+          <% if (post.tags) { post.tags.split(',').slice(0,3).forEach(tag => { %>
+          <span style="display:inline-block;background:#0f172a;color:#94a3b8;font-size:11px;padding:2px 8px;border-radius:4px;margin:2px;border:1px solid #334155;"><%= tag.trim() %></span>
+          <% }); } else { %>
+          <span style="color:#475569;font-size:12px;">—</span>
+          <% } %>
+        </td>
+        <td style="padding:14px;color:#64748b;font-size:12px;white-space:nowrap;">
+          <%= new Date(post.created_at).toLocaleDateString('fr-FR', {day:'numeric', month:'short', year:'numeric'}) %>
+        </td>
+        <td style="padding:14px;text-align:center;">
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+            <a href="/admin/blog/<%= post.id %>/edit" style="display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2);border-radius:6px;text-decoration:none;font-size:11px;font-weight:600;">
+              ✏️ Éditer
+            </a>
+            <% if (post.published) { %>
+            <a href="/blog/<%= post.slug %>" target="_blank" style="display:inline-flex;align-items:center;padding:5px 8px;background:#1e293b;color:#64748b;border:1px solid #334155;border-radius:6px;text-decoration:none;font-size:11px;">↗</a>
+            <% } %>
+            <form method="POST" action="/admin/blog/<%= post.id %>/delete" style="display:inline;" onsubmit="return confirm('Supprimer cet article ?')">
+              <button type="submit" style="padding:5px 8px;background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2);border-radius:6px;font-size:11px;cursor:pointer;">🗑️</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <% } %>
+</div>

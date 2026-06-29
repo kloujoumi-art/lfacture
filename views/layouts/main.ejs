@@ -51,6 +51,7 @@
         <div class="hidden md:flex items-center gap-6">
           <a href="/features" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Fonctionnalités</a>
           <a href="/pricing" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Tarifs</a>
+          <a href="/blog" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Blog</a>
           <% if (user) { %>
             <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Dashboard</a>
             <form action="/logout" method="POST" class="inline">
@@ -73,6 +74,7 @@
     <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-3">
       <a href="/features" class="block text-sm font-medium text-gray-700">Fonctionnalités</a>
       <a href="/pricing" class="block text-sm font-medium text-gray-700">Tarifs</a>
+      <a href="/blog" class="block text-sm font-medium text-gray-700">Blog</a>
       <% if (user) { %>
         <a href="/dashboard" class="block text-sm font-medium text-gray-700">Dashboard</a>
       <% } else { %>
@@ -121,6 +123,7 @@
           <ul class="space-y-2 text-sm">
             <li><a href="/features" class="hover:text-white transition">Fonctionnalités</a></li>
             <li><a href="/pricing" class="hover:text-white transition">Tarifs</a></li>
+            <li><a href="/blog" class="hover:text-white transition">Blog</a></li>
             <li><a href="/register" class="hover:text-white transition">Essai gratuit</a></li>
           </ul>
         </div>
