@@ -60,6 +60,14 @@ router.get('/en/features', (req, res) => res.renderLayout('en/features', {
   canonicalPath: '/en/features',
   lang: 'en',
 }));
+router.get('/en/contact', (req, res) => res.renderLayout('en/contact', {
+  title: 'Contact Us — LFacture Free Invoice Generator',
+  metaDesc: 'Contact the LFacture team for any question, bug report or suggestion. We reply within 24 hours.',
+  canonicalPath: '/en/contact',
+  lang: 'en',
+  query: req.query,
+}));
+router.post('/en/contact', AdminController.submitContact);
 
 // ---- Pages légales ----
 router.get('/mentions-legales', (req, res) => res.renderLayout('legal/mentions-legales', {
