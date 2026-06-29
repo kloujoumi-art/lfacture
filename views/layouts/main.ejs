@@ -14,6 +14,7 @@
   <meta property="og:url" content="<%= typeof appUrl !== 'undefined' ? appUrl : 'https://lfacture.com' %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>" />
   <% if (typeof ogImage !== 'undefined' && ogImage) { %><meta property="og:image" content="<%= ogImage %>" /><% } %>
   <title><%= typeof title !== 'undefined' ? title : 'LFacture — Logiciel de facturation gratuit en ligne' %></title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
@@ -182,9 +183,17 @@
           </ul>
         </div>
       </div>
-      <div class="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-        <p class="text-xs sm:text-sm">© <%= new Date().getFullYear() %> LFacture — Tous droits réservés</p>
-        <p class="text-xs sm:text-sm">Fait avec ❤️ pour les entrepreneurs français</p>
+      <div class="border-t border-gray-800 pt-8">
+        <div class="flex flex-wrap gap-x-5 gap-y-2 justify-center sm:justify-start text-xs text-gray-600 mb-4">
+          <a href="/mentions-legales" class="hover:text-gray-400 transition">Mentions légales</a>
+          <a href="/politique-confidentialite" class="hover:text-gray-400 transition">Confidentialité</a>
+          <a href="/cgu" class="hover:text-gray-400 transition">CGU</a>
+          <a href="/sitemap.xml" class="hover:text-gray-400 transition">Sitemap</a>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <p class="text-xs text-gray-600">© <%= new Date().getFullYear() %> LFacture — Tous droits réservés</p>
+          <p class="text-xs text-gray-600">Fait avec ❤️ pour les entrepreneurs français</p>
+        </div>
       </div>
     </div>
   </footer>

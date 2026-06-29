@@ -31,6 +31,20 @@ router.get('/about', (req, res) => res.renderLayout('about', {
   canonicalPath: '/about',
 }));
 
+// ---- Pages légales ----
+router.get('/mentions-legales', (req, res) => res.renderLayout('legal/mentions-legales', {
+  title: 'Mentions légales — LFacture',
+  metaDesc: 'Mentions légales du logiciel de facturation LFacture.',
+}));
+router.get('/politique-confidentialite', (req, res) => res.renderLayout('legal/confidentialite', {
+  title: 'Politique de confidentialité — LFacture',
+  metaDesc: 'Politique de confidentialité et RGPD de LFacture, logiciel de facturation gratuit.',
+}));
+router.get('/cgu', (req, res) => res.renderLayout('legal/cgu', {
+  title: 'Conditions Générales d\'Utilisation — LFacture',
+  metaDesc: 'CGU de LFacture — Conditions Générales d\'Utilisation du logiciel de facturation en ligne.',
+}));
+
 // ---- Sitemap ----
 router.get('/sitemap.xml', require('../controllers/SitemapController'));
 
