@@ -1,0 +1,543 @@
+<!-- JSON-LD English -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "LFacture — Free Invoice Generator",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "offers": [
+    { "@type": "Offer", "price": "0", "priceCurrency": "USD", "name": "Free Plan" },
+    { "@type": "Offer", "price": "5", "priceCurrency": "USD", "name": "Monthly Plan" },
+    { "@type": "Offer", "price": "50", "priceCurrency": "USD", "name": "Annual Plan" }
+  ],
+  "description": "Free online invoice generator. Create professional invoices and quotes in seconds. Download PDF instantly. No credit card required.",
+  "url": "https://lfacture.com/en",
+  "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "ratingCount": "214" },
+  "featureList": ["Free invoice generator", "PDF download", "Professional templates", "Client management", "Quote creator"]
+}
+</script>
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Is LFacture really a free invoice generator?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. LFacture is a 100% free invoice generator. You get 8 free invoices + 8 free quotes with no credit card required. Upgrade anytime for unlimited invoices." } },
+    { "@type": "Question", "name": "How do I create an invoice online for free?", "acceptedAnswer": { "@type": "Answer", "text": "Sign up for free, add your client details, fill in your services and amounts, and download your professional PDF invoice in seconds. No software installation needed." } },
+    { "@type": "Question", "name": "Can I download my invoice as a PDF?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, every invoice you create can be downloaded as a professional A4 PDF instantly. You can also export to Word (.docx) format." } },
+    { "@type": "Question", "name": "Is this invoice creator free online?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. LFacture is a free online invoice creator. Create, customize, and download invoices without any monthly fees on the free plan." } }
+  ]
+}
+</script>
+
+<style>
+@keyframes floatY  { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-8px)} }
+@keyframes floatY2 { 0%,100%{transform:translateY(-4px)} 50%{transform:translateY(4px)} }
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+.float1 { animation: floatY  4s ease-in-out infinite; }
+.float2 { animation: floatY2 5s ease-in-out infinite; }
+.mock-window { background:#fff; border-radius:14px; box-shadow:0 30px 80px rgba(0,0,0,.18),0 8px 24px rgba(79,70,229,.12); overflow:hidden; }
+.mock-topbar { background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 14px; display:flex; align-items:center; gap:6px; }
+.mock-dot { width:10px; height:10px; border-radius:50%; }
+.badge-float { background:#fff; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12); padding:10px 14px; display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:12px; font-weight:700; }
+.feat-card { background:#fff; border:1px solid #e8edf3; border-radius:18px; overflow:hidden; transition:transform .2s,box-shadow .2s; }
+.feat-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.1); }
+.testi-card { background:#fff; border:1px solid #e8edf3; border-radius:16px; padding:24px; }
+.faq-item summary { cursor:pointer; list-style:none; }
+.faq-item summary::-webkit-details-marker { display:none; }
+.faq-item[open] .faq-icon { transform:rotate(45deg); }
+.faq-icon { transition:transform .2s; flex-shrink:0; }
+@media(max-width:768px){ .hide-mobile{display:none!important;} }
+</style>
+
+<!-- ═══ 1. HERO ═══ -->
+<section class="hero-section pt-8 pb-16 sm:pt-16 sm:pb-24 overflow-hidden" style="background:linear-gradient(160deg,#fafbff 0%,#f0f4ff 50%,#fdf4ff 100%);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      <!-- Left -->
+      <div style="animation:fadeSlideUp .7s ease both;">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-6">
+          <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+          <span class="text-xs font-bold text-indigo-600 uppercase tracking-wide">Free Invoice Generator — No Credit Card</span>
+        </div>
+
+        <!-- H1 — target keyword dense -->
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-tight mb-6">
+          Free Invoice<br/>
+          <span class="gradient-text">Generator</span><br/>
+          <span style="font-size:.75em;font-weight:800;color:#475569;">Create Professional Invoices Online</span>
+        </h1>
+
+        <p class="text-lg text-gray-500 mb-8 leading-relaxed" style="max-width:480px;">
+          The best <strong>free online invoice generator</strong> for freelancers and small businesses.
+          Create, customize, and download professional PDF invoices in seconds — completely free.
+        </p>
+
+        <!-- Stats row -->
+        <div class="flex flex-wrap gap-6 mb-8">
+          <div><p class="text-3xl font-black text-gray-900">8</p><p class="text-sm text-gray-500 font-medium">Free invoices</p></div>
+          <div class="w-px bg-gray-200"></div>
+          <div><p class="text-3xl font-black text-gray-900">8</p><p class="text-sm text-gray-500 font-medium">Free quotes</p></div>
+          <div class="w-px bg-gray-200"></div>
+          <div><p class="text-3xl font-black text-gray-900">9</p><p class="text-sm text-gray-500 font-medium">Templates</p></div>
+          <div class="w-px bg-gray-200"></div>
+          <div><p class="text-3xl font-black text-gray-900">30s</p><p class="text-sm text-gray-500 font-medium">To create</p></div>
+        </div>
+
+        <!-- CTA buttons -->
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+          <a href="/register" class="btn-primary text-white font-bold text-base px-8 py-4 rounded-xl inline-block text-center">
+            Create Free Invoice Now →
+          </a>
+          <a href="/en/features" class="bg-white border border-gray-200 text-gray-700 font-semibold text-base px-8 py-4 rounded-xl text-center hover:border-indigo-300 transition">
+            See all features
+          </a>
+        </div>
+        <p class="text-xs text-gray-400">✓ No credit card required &nbsp;·&nbsp; ✓ Free forever plan &nbsp;·&nbsp; ✓ Instant PDF download</p>
+      </div>
+
+      <!-- Right — Invoice mockup -->
+      <div class="relative hide-mobile" style="animation:fadeSlideUp .9s ease .2s both;">
+        <div class="mock-window float1" style="max-width:520px;margin:0 auto;">
+          <div class="mock-topbar">
+            <div class="mock-dot" style="background:#ff5f57;"></div>
+            <div class="mock-dot" style="background:#ffbd2e;"></div>
+            <div class="mock-dot" style="background:#28c840;"></div>
+            <div style="flex:1;background:#fff;border:1px solid #e2e8f0;border-radius:6px;height:22px;margin:0 10px;display:flex;align-items:center;padding:0 8px;">
+              <span style="font-size:10px;color:#94a3b8;">🔒 lfacture.com/dashboard/invoices</span>
+            </div>
+          </div>
+          <div style="padding:20px;">
+            <!-- Invoice preview -->
+            <div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:10px;padding:20px;margin-bottom:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div style="background:rgba(255,255,255,.2);border-radius:6px;width:80px;height:28px;margin-bottom:6px;"></div>
+                  <div style="color:rgba(255,255,255,.7);font-size:10px;">Acme Digital Agency</div>
+                  <div style="color:rgba(255,255,255,.5);font-size:9px;">New York, USA</div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="color:#fff;font-size:22px;font-weight:900;">INVOICE</div>
+                  <div style="color:rgba(255,255,255,.8);font-size:12px;font-weight:700;">#INV-2024-042</div>
+                  <div style="color:rgba(255,255,255,.6);font-size:10px;margin-top:4px;">Due: Jan 31, 2025</div>
+                </div>
+              </div>
+            </div>
+            <!-- Items -->
+            <div style="background:#f8fafc;border-radius:8px;overflow:hidden;margin-bottom:12px;">
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px 12px;background:#4F46E5;">
+                <span style="color:#fff;font-size:10px;font-weight:700;">Description</span>
+                <span style="color:#fff;font-size:10px;font-weight:700;">Qty</span>
+                <span style="color:#fff;font-size:10px;font-weight:700;text-align:right;">Total</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px 12px;border-bottom:1px solid #f1f5f9;">
+                <span style="font-size:11px;color:#374151;">Web Design — Homepage</span>
+                <span style="font-size:11px;color:#64748b;text-align:center;">1</span>
+                <span style="font-size:11px;color:#374151;font-weight:700;text-align:right;">$1,200.00</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px 12px;background:#f9fafb;border-bottom:1px solid #f1f5f9;">
+                <span style="font-size:11px;color:#374151;">SEO Optimization</span>
+                <span style="font-size:11px;color:#64748b;text-align:center;">3</span>
+                <span style="font-size:11px;color:#374151;font-weight:700;text-align:right;">$450.00</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:8px 12px;">
+                <span style="font-size:11px;color:#374151;">Monthly Maintenance</span>
+                <span style="font-size:11px;color:#64748b;text-align:center;">2</span>
+                <span style="font-size:11px;color:#374151;font-weight:700;text-align:right;">$300.00</span>
+              </div>
+            </div>
+            <!-- Total -->
+            <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+              <div style="width:200px;">
+                <div style="display:flex;justify-content:space-between;padding:5px 10px;font-size:11px;color:#64748b;">
+                  <span>Subtotal</span><span>$1,950.00</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:5px 10px;font-size:11px;color:#64748b;">
+                  <span>Tax (10%)</span><span>$195.00</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;padding:10px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:8px;">
+                  <span style="color:#fff;font-weight:800;font-size:12px;">TOTAL</span>
+                  <span style="color:#fff;font-weight:900;font-size:14px;">$2,145.00</span>
+                </div>
+              </div>
+            </div>
+            <!-- Action buttons -->
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border-radius:8px;padding:9px;text-align:center;font-size:11px;font-weight:700;">⬇ Download PDF</div>
+              <div style="flex:1;background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff;border-radius:8px;padding:9px;text-align:center;font-size:11px;font-weight:700;">📄 Download Word</div>
+            </div>
+          </div>
+        </div>
+        <!-- Floating badges -->
+        <div class="badge-float float2" style="position:absolute;top:-16px;right:-10px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+          Invoice sent!
+        </div>
+        <div class="badge-float" style="position:absolute;bottom:10px;left:-20px;animation:floatY2 4s ease-in-out infinite;">
+          <span style="font-size:16px;">⭐</span>
+          <div><div style="font-size:11px;font-weight:700;color:#1e293b;">4.9/5 rating</div><div style="font-size:10px;color:#64748b;">214+ reviews</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. SOCIAL PROOF ═══ -->
+<section class="py-8 bg-white border-y border-gray-100">
+  <div class="max-w-6xl mx-auto px-4">
+    <p class="text-center text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6">Trusted by freelancers & businesses worldwide</p>
+    <div class="flex flex-wrap justify-center items-center gap-8 opacity-50 grayscale">
+      <div style="font-size:18px;font-weight:900;color:#64748b;letter-spacing:-1px;">Freelancer</div>
+      <div style="font-size:18px;font-weight:900;color:#64748b;letter-spacing:-1px;">Consultant</div>
+      <div style="font-size:18px;font-weight:900;color:#64748b;letter-spacing:-1px;">Agency</div>
+      <div style="font-size:18px;font-weight:900;color:#64748b;letter-spacing:-1px;">Startup</div>
+      <div style="font-size:18px;font-weight:900;color:#64748b;letter-spacing:-1px;">SMB</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. HOW IT WORKS ═══ -->
+<section class="py-20 bg-white">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-indigo-50 text-indigo-600 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider mb-4">How it works</span>
+      <h2 class="text-4xl font-black text-gray-900 mb-4">Create an invoice online in 3 steps</h2>
+      <p class="text-gray-500 text-lg">Our free invoice generator makes invoicing effortless</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="text-center p-8 rounded-2xl bg-gradient-to-b from-indigo-50 to-white border border-indigo-100">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+          <span style="color:#fff;font-size:28px;font-weight:900;">1</span>
+        </div>
+        <h3 class="text-xl font-black text-gray-900 mb-3">Create a free account</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Sign up in 30 seconds — no credit card, no commitment. Get 8 free invoices + 8 free quotes instantly.</p>
+      </div>
+      <div class="text-center p-8 rounded-2xl bg-gradient-to-b from-indigo-50 to-white border border-indigo-100">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+          <span style="color:#fff;font-size:28px;font-weight:900;">2</span>
+        </div>
+        <h3 class="text-xl font-black text-gray-900 mb-3">Fill in your invoice details</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Add your company info, client details, line items, taxes, and choose from 9 professional invoice templates.</p>
+      </div>
+      <div class="text-center p-8 rounded-2xl bg-gradient-to-b from-indigo-50 to-white border border-indigo-100">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+          <span style="color:#fff;font-size:28px;font-weight:900;">3</span>
+        </div>
+        <h3 class="text-xl font-black text-gray-900 mb-3">Download your PDF invoice</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Download your professional A4 invoice as PDF or Word (.docx) instantly. Send it to your client in seconds.</p>
+      </div>
+    </div>
+    <div class="text-center mt-10">
+      <a href="/register" class="btn-primary text-white font-bold text-base px-8 py-4 rounded-xl inline-block">
+        Start generating invoices for free →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4. FEATURES ═══ -->
+<section class="py-20" style="background:linear-gradient(160deg,#f8faff,#fdf4ff);">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-14">
+      <span class="inline-block bg-indigo-50 text-indigo-600 text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider mb-4">Features</span>
+      <h2 class="text-4xl font-black text-gray-900 mb-4">Everything in your free invoice creator</h2>
+      <p class="text-gray-500 text-lg">Professional invoicing tools — available free online</p>
+    </div>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="feat-card p-6">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="22" height="22" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">PDF Invoice Generator</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Download professional A4 PDF invoices instantly. Perfect formatting every time — no design skills needed.</p>
+      </div>
+
+      <div class="feat-card p-6">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="22" height="22" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Word (.docx) Export</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Export any invoice to Microsoft Word format. Edit and customize before sending to clients.</p>
+      </div>
+
+      <div class="feat-card p-6">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#059669,#047857);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="22" height="22" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">9 Professional Templates</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Choose from 9 invoice templates: Classic, Minimal, Blue, Green, Orange, Red, Navy, Slate, Creative.</p>
+      </div>
+
+      <div class="feat-card p-6">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="22" height="22" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Client Management</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Save your clients once, reuse their details on every invoice. Build a complete client database.</p>
+      </div>
+
+      <div class="feat-card p-6">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#7c3aed,#6d28d9);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="22" height="22" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Free Quote Generator</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Create professional quotes (estimates) and convert them to invoices with one click.</p>
+      </div>
+
+      <div class="feat-card p-6">
+        <div style="width:44px;height:44px;background:linear-gradient(135deg,#dc2626,#b91c1c);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;">
+          <svg width="22" height="22" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-2">Custom Tax Rates</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">Set any VAT or tax rate per line item. Supports 0%, 5%, 10%, 20%, or any custom percentage.</p>
+      </div>
+
+    </div>
+    <div class="text-center mt-10">
+      <a href="/en/features" class="text-indigo-600 font-bold hover:underline">View all features →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. INVOICE TEMPLATES ═══ -->
+<section class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">9 Free Invoice Templates</h2>
+      <p class="text-gray-500 text-lg">Choose your style — every template is free to use</p>
+    </div>
+    <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3 mb-8">
+      <% [
+        {name:'Classic',color:'#4F46E5'},{name:'Minimal',color:'#111827'},{name:'Blue',color:'#1d4ed8'},
+        {name:'Green',color:'#059669'},{name:'Orange',color:'#f97316'},{name:'Red',color:'#dc2626'},
+        {name:'Navy',color:'#0f172a'},{name:'Slate',color:'#334155'},{name:'Creative',color:'#9333ea'},
+      ].forEach(t=>{ %>
+      <div style="cursor:pointer;">
+        <div style="aspect-ratio:3/4;background:linear-gradient(160deg,<%=t.color%>22,<%=t.color%>11);border:2px solid <%=t.color%>33;border-radius:10px;overflow:hidden;margin-bottom:6px;position:relative;">
+          <div style="position:absolute;top:0;left:0;right:0;height:28%;background:<%=t.color%>;"></div>
+          <div style="position:absolute;top:30%;left:8px;right:8px;">
+            <div style="height:4px;background:<%=t.color%>44;border-radius:2px;margin-bottom:4px;width:70%;"></div>
+            <div style="height:3px;background:<%=t.color%>33;border-radius:2px;margin-bottom:3px;"></div>
+            <div style="height:3px;background:<%=t.color%>33;border-radius:2px;margin-bottom:3px;width:80%;"></div>
+            <div style="height:3px;background:<%=t.color%>33;border-radius:2px;margin-bottom:8px;width:60%;"></div>
+            <div style="height:16px;background:<%=t.color%>;border-radius:3px;margin-bottom:3px;"></div>
+            <div style="height:10px;background:<%=t.color%>22;border-radius:2px;margin-bottom:2px;"></div>
+            <div style="height:10px;background:<%=t.color%>22;border-radius:2px;margin-bottom:2px;"></div>
+          </div>
+        </div>
+        <p style="font-size:10px;font-weight:700;color:#64748b;text-align:center;"><%=t.name%></p>
+      </div>
+      <% }) %>
+    </div>
+    <p class="text-center text-sm text-gray-500">All templates included free — switch template at any time</p>
+  </div>
+</section>
+
+<!-- ═══ 6. PRICING ═══ -->
+<section class="py-20" style="background:linear-gradient(160deg,#f8faff,#fdf4ff);" id="pricing">
+  <div class="max-w-5xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">Simple, Transparent Pricing</h2>
+      <p class="text-gray-500 text-lg">Start free — upgrade when you need unlimited invoices</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+
+      <!-- Free -->
+      <div class="bg-white rounded-2xl border-2 border-gray-200 p-6 flex flex-col">
+        <h3 class="text-base font-bold text-gray-900 mb-1">Free</h3>
+        <p class="text-xs text-gray-500 mb-4">Start invoicing today</p>
+        <div class="mb-4"><span class="text-4xl font-black text-gray-900">$0</span><span class="text-gray-500 text-sm">/forever</span></div>
+        <ul class="space-y-2 mb-6 flex-1 text-sm text-gray-600">
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> 8 invoices</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> 8 quotes</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> PDF + Word export</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> 9 templates</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Client management</li>
+        </ul>
+        <a href="/register" class="block text-center py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition text-sm">Start free →</a>
+      </div>
+
+      <!-- Monthly -->
+      <div class="bg-white rounded-2xl border-2 border-gray-200 p-6 flex flex-col">
+        <h3 class="text-base font-bold text-gray-900 mb-1">Monthly</h3>
+        <p class="text-xs text-gray-500 mb-4">For active freelancers</p>
+        <div class="mb-4"><span class="text-4xl font-black text-gray-900">$5</span><span class="text-gray-500 text-sm">/month</span></div>
+        <ul class="space-y-2 mb-6 flex-1 text-sm text-gray-600">
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Unlimited invoices</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Unlimited quotes</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> All free features</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Priority support</li>
+        </ul>
+        <a href="https://skacollection.com/pay-lfacture?plan=monthly" class="block text-center py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition text-sm">Choose Monthly →</a>
+      </div>
+
+      <!-- Semi-annual -->
+      <div class="bg-white rounded-2xl border-2 border-purple-200 p-6 flex flex-col">
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="text-base font-bold text-gray-900">Semi-Annual</h3>
+          <span class="text-xs font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">Save 17%</span>
+        </div>
+        <p class="text-xs text-gray-500 mb-4">Best for growing businesses</p>
+        <div class="mb-1"><span class="text-4xl font-black text-gray-900">$30</span><span class="text-gray-500 text-sm">/6 months</span></div>
+        <p class="text-xs text-purple-600 font-bold mb-4">= $5/month</p>
+        <ul class="space-y-2 mb-6 flex-1 text-sm text-gray-600">
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Unlimited invoices</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Unlimited quotes</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> All features</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Priority support</li>
+        </ul>
+        <a href="https://skacollection.com/pay-lfacture?plan=semi" style="display:block;text-align:center;padding:12px 16px;background:linear-gradient(135deg,#7C3AED,#6d28d9);color:#fff;font-weight:700;border-radius:12px;font-size:14px;text-decoration:none;">Choose Semi-Annual →</a>
+      </div>
+
+      <!-- Annual — highlighted -->
+      <div class="rounded-2xl border-2 border-indigo-500 p-6 flex flex-col relative" style="background:linear-gradient(160deg,#eef2ff,#f5f3ff);">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">⭐ BEST VALUE</div>
+        <div class="flex items-center justify-between mb-1">
+          <h3 class="text-base font-bold text-gray-900">Annual</h3>
+          <span class="text-xs font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Save 35%</span>
+        </div>
+        <p class="text-xs text-gray-500 mb-4">Most popular plan</p>
+        <div class="mb-1"><span class="text-4xl font-black text-indigo-700">$50</span><span class="text-gray-500 text-sm">/year</span></div>
+        <p class="text-xs text-green-600 font-bold mb-4">= $4.17/month — Save $10/year</p>
+        <ul class="space-y-2 mb-6 flex-1 text-sm text-gray-600">
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Unlimited invoices</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Unlimited quotes</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> All features</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Priority support</li>
+          <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> 1 year access</li>
+        </ul>
+        <a href="https://skacollection.com/pay-lfacture?plan=annual" class="block text-center py-3 px-4 btn-primary text-white font-bold rounded-xl text-sm">Choose Annual → Best Deal</a>
+      </div>
+
+    </div>
+    <p class="text-center text-sm text-gray-400 mt-6">✓ Secure payment via Paddle &nbsp;·&nbsp; ✓ Cancel anytime &nbsp;·&nbsp; ✓ Instant activation</p>
+  </div>
+</section>
+
+<!-- ═══ 7. COMPARISON TABLE ═══ -->
+<section class="py-20 bg-white">
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-black text-gray-900 mb-4">LFacture vs Other Invoice Generators</h2>
+      <p class="text-gray-500">Why LFacture is the best free invoice generator</p>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:14px;">
+      <thead>
+        <tr style="background:#f8fafc;border-bottom:2px solid #e2e8f0;">
+          <th style="text-align:left;padding:12px 16px;color:#374151;font-weight:700;">Feature</th>
+          <th style="text-align:center;padding:12px 16px;color:#4F46E5;font-weight:800;">LFacture</th>
+          <th style="text-align:center;padding:12px 16px;color:#64748b;font-weight:700;">Others</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% [
+          ['Free invoice generator (no credit card)','✓','Rarely'],
+          ['PDF download — A4 professional format','✓','✓'],
+          ['Word (.docx) export','✓','✗'],
+          ['9 invoice templates','✓','2-3'],
+          ['Custom tax rates per line','✓','Fixed only'],
+          ['Free quote generator','✓','Paid'],
+          ['Company logo upload','✓','Paid'],
+          ['Payment terms + bank details','✓','Paid'],
+          ['Unlimited clients (free plan)','✓','Limited'],
+        ].forEach(([f,l,o])=>{ %>
+        <tr style="border-bottom:1px solid #f1f5f9;">
+          <td style="padding:11px 16px;color:#374151;font-weight:500;"><%= f %></td>
+          <td style="padding:11px 16px;text-align:center;"><span style="color:#10b981;font-weight:800;font-size:16px;"><%= l %></span></td>
+          <td style="padding:11px 16px;text-align:center;color:<%= o==='✗'?'#ef4444':'#64748b' %>;font-weight:600;"><%= o %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 8. TESTIMONIALS ═══ -->
+<section class="py-20" style="background:linear-gradient(160deg,#f8faff,#fdf4ff);">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">What users say about our invoice generator</h2>
+      <div class="flex justify-center items-center gap-2 mb-2">
+        <span style="color:#F59E0B;font-size:20px;">★★★★★</span>
+        <span class="text-lg font-black text-gray-900">4.9/5</span>
+        <span class="text-gray-500 text-sm">— 214 reviews</span>
+      </div>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <% [
+        { name:'Sarah M.', role:'Freelance Graphic Designer', text:'Best free invoice generator I\'ve found. Clean PDF, super easy to use. I was sending my first invoice in under 3 minutes.', stars:5 },
+        { name:'James K.', role:'Web Developer', text:'Finally a free invoice creator that actually looks professional. The Word export is a game-changer — I can edit before sending.', stars:5 },
+        { name:'Emma L.', role:'Marketing Consultant', text:'I switched from a $30/month tool to LFacture. Same quality, fraction of the price. The annual plan at $50 is incredible value.', stars:5 },
+      ].forEach(t=>{ %>
+      <div class="testi-card">
+        <div class="flex gap-0.5 mb-3">
+          <% for(let i=0;i<t.stars;i++){ %><span style="color:#F59E0B;">★</span><% } %>
+        </div>
+        <p class="text-gray-700 text-sm leading-relaxed mb-4 italic">"<%= t.text %>"</p>
+        <div>
+          <p class="font-bold text-gray-900 text-sm"><%= t.name %></p>
+          <p class="text-xs text-gray-500"><%= t.role %></p>
+        </div>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 9. FAQ ═══ -->
+<section class="py-20 bg-white">
+  <div class="max-w-3xl mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-black text-gray-900 mb-4">Free Invoice Generator — FAQ</h2>
+      <p class="text-gray-500">Frequently asked questions about our online invoice tool</p>
+    </div>
+    <div class="space-y-4">
+      <% [
+        { q:'Is LFacture really a free invoice generator?', a:'Yes, LFacture is a completely free invoice generator. No credit card is needed. You get 8 free invoices and 8 free quotes from day one. Upgrade to unlimited for $5/month or $50/year.' },
+        { q:'How do I create a free invoice online?', a:'Sign up for free at LFacture, click "New Invoice", fill in your company details and client info, add your line items and prices, then click Download PDF. The whole process takes under 2 minutes.' },
+        { q:'Can I download my invoice as a PDF for free?', a:'Yes. Every invoice you create can be downloaded as a professional A4 PDF for free. You can also export to Microsoft Word (.docx) format.' },
+        { q:'What invoice templates are included in the free plan?', a:'All 9 invoice templates are available on the free plan — Classic, Minimal, Blue Pro, Green, Orange, Red, Navy, Slate, and Creative. No template is locked behind a paywall.' },
+        { q:'Is this invoice creator free online without registration?', a:'A free account is required to save your invoices and client data. Registration takes 30 seconds with just your name and email — no credit card ever required.' },
+        { q:'Can I create invoices in dollars (USD)?', a:'Yes. LFacture supports any currency. Simply type your prices in USD or any other currency. The invoice will display the amounts exactly as you enter them.' },
+        { q:'Does LFacture work as a quote (estimate) generator too?', a:'Yes! LFacture includes a free quote generator. Create professional quotes, send them to clients, and convert approved quotes to invoices with one click.' },
+        { q:'How is LFacture different from other invoice generators?', a:'LFacture offers 9 free templates, Word export, custom tax rates per line, client management, and bank details in footer — all for free. Most competitors charge for these features.' },
+      ].forEach(item=>{ %>
+      <details class="faq-item border border-gray-200 rounded-2xl">
+        <summary class="flex items-center justify-between p-5 font-bold text-gray-900">
+          <%= item.q %>
+          <span class="faq-icon ml-4 text-indigo-500 text-xl flex-shrink-0">+</span>
+        </summary>
+        <div class="px-5 pb-5 text-gray-600 text-sm leading-relaxed"><%= item.a %></div>
+      </details>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 10. FINAL CTA ═══ -->
+<section class="py-20" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);">
+  <div class="max-w-3xl mx-auto px-4 text-center">
+    <h2 class="text-4xl sm:text-5xl font-black text-white mb-4">
+      Start generating free<br/>invoices right now
+    </h2>
+    <p class="text-indigo-200 text-lg mb-8">Join thousands of freelancers using the best free online invoice generator</p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4 mb-6">
+      <a href="/register" style="display:inline-block;background:#fff;color:#4F46E5;font-weight:900;font-size:16px;padding:16px 36px;border-radius:14px;text-decoration:none;box-shadow:0 8px 30px rgba(0,0,0,.2);">
+        Create Free Account →
+      </a>
+      <a href="/en/pricing" style="display:inline-block;background:rgba(255,255,255,.15);color:#fff;font-weight:700;font-size:16px;padding:16px 36px;border-radius:14px;text-decoration:none;border:2px solid rgba(255,255,255,.3);">
+        View Pricing
+      </a>
+    </div>
+    <p class="text-indigo-300 text-sm">✓ No credit card &nbsp;·&nbsp; ✓ 8 free invoices &nbsp;·&nbsp; ✓ Instant PDF download</p>
+  </div>
+</section>
+
+<%- include('./_footer') %>

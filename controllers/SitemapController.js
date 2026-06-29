@@ -9,6 +9,10 @@ module.exports = function sitemap(req, res) {
     { loc: '/blog', priority: '0.8', changefreq: 'weekly' },
     { loc: '/register', priority: '0.7', changefreq: 'monthly' },
     { loc: '/login', priority: '0.5', changefreq: 'monthly' },
+    // English pages
+    { loc: '/en', priority: '1.0', changefreq: 'weekly' },
+    { loc: '/en/pricing', priority: '0.9', changefreq: 'monthly' },
+    { loc: '/en/features', priority: '0.8', changefreq: 'monthly' },
   ];
 
   const posts = Post.published();

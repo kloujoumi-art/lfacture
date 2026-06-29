@@ -41,6 +41,26 @@ router.get('/contact', (req, res) => res.renderLayout('contact', {
 }));
 router.post('/contact', AdminController.submitContact);
 
+// ---- English version (/en) ----
+router.get('/en', (req, res) => res.renderLayout('en/index', {
+  title: 'Free Invoice Generator Tool | Create Invoices Online Free — LFacture',
+  metaDesc: 'LFacture: the best free invoice generator online. Create professional PDF invoices and quotes in seconds. 8 free invoices — no credit card required.',
+  canonicalPath: '/en',
+  lang: 'en',
+}));
+router.get('/en/pricing', (req, res) => res.renderLayout('en/pricing', {
+  title: 'Invoice Generator Pricing — Free, $5/mo, $50/year | LFacture',
+  metaDesc: 'LFacture pricing: free invoice generator plan with 8 invoices, or upgrade to unlimited for $5/month or $50/year. No credit card on free plan.',
+  canonicalPath: '/en/pricing',
+  lang: 'en',
+}));
+router.get('/en/features', (req, res) => res.renderLayout('en/features', {
+  title: 'Free Invoice Generator Features — PDF, Word, Templates | LFacture',
+  metaDesc: 'LFacture features: PDF invoice generator, Word export, 9 templates, client management, free quote creator. Everything you need to invoice clients online.',
+  canonicalPath: '/en/features',
+  lang: 'en',
+}));
+
 // ---- Pages légales ----
 router.get('/mentions-legales', (req, res) => res.renderLayout('legal/mentions-legales', {
   title: 'Mentions légales — LFacture',

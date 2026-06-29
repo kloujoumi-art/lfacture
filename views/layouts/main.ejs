@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr" class="scroll-smooth">
+<html lang="<%= (typeof lang !== 'undefined' && lang === 'en') ? 'en' : 'fr' %>" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="<%= typeof metaDesc !== 'undefined' && metaDesc ? metaDesc : 'LFacture — Logiciel de facturation gratuit en ligne. Créez vos factures et devis professionnels en quelques secondes. Simple, rapide, sans installation.' %>" />
+  <% if (typeof lang !== 'undefined' && lang === 'en') { %>
+  <meta name="keywords" content="invoice generator, free invoice generator, online invoice generator, invoice creator free online, free invoice creator, invoice generator tool, invoice maker" />
+  <% } else { %>
   <meta name="keywords" content="logiciel de facturation, logiciel facturation gratuit, facture en ligne gratuit, devis et facture, logiciel facture, facture logiciel, logicielle facturation" />
+  <% } %>
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="<%= typeof appUrl !== 'undefined' ? appUrl : 'https://lfacture.com' %><%= typeof canonicalPath !== 'undefined' ? canonicalPath : '' %>" />
+  <link rel="alternate" hreflang="fr" href="https://lfacture.com<%= typeof canonicalPath !== 'undefined' ? canonicalPath.replace(/^\/en/,'') || '/' : '/' %>" />
+  <link rel="alternate" hreflang="en" href="https://lfacture.com/en<%= typeof canonicalPath !== 'undefined' ? (canonicalPath.startsWith('/en') ? canonicalPath.slice(3) : canonicalPath) : '' %>" />
+  <link rel="alternate" hreflang="x-default" href="https://lfacture.com/" />
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="<%= typeof title !== 'undefined' ? title : 'LFacture — Logiciel de facturation gratuit' %>" />
@@ -82,19 +89,30 @@
         </a>
 
         <!-- Nav links -->
+        <% const isEn = (typeof lang !== 'undefined' && lang === 'en'); %>
         <div class="hidden md:flex items-center gap-6">
-          <a href="/features" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Fonctionnalités</a>
-          <a href="/pricing" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Tarifs</a>
+          <a href="<%= isEn ? '/en/features' : '/features' %>" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"><%= isEn ? 'Features' : 'Fonctionnalités' %></a>
+          <a href="<%= isEn ? '/en/pricing' : '/pricing' %>" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"><%= isEn ? 'Pricing' : 'Tarifs' %></a>
           <a href="/blog" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Blog</a>
           <a href="/contact" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Contact</a>
           <% if (user) { %>
             <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Dashboard</a>
             <form action="/logout" method="POST" class="inline">
-              <button type="submit" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Déconnexion</button>
+              <button type="submit" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"><%= isEn ? 'Logout' : 'Déconnexion' %></button>
             </form>
           <% } else { %>
-            <a href="/login" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Connexion</a>
-            <a href="/register" class="btn-primary text-white text-sm font-semibold px-4 py-2 rounded-lg">Essai gratuit</a>
+            <a href="/login" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"><%= isEn ? 'Log in' : 'Connexion' %></a>
+            <a href="/register" class="btn-primary text-white text-sm font-semibold px-4 py-2 rounded-lg"><%= isEn ? 'Start free' : 'Essai gratuit' %></a>
+          <% } %>
+          <!-- Lang switcher -->
+          <% if (isEn) { %>
+            <a href="/" title="Version française" style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#64748b;text-decoration:none;border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;">
+              🇫🇷 FR
+            </a>
+          <% } else { %>
+            <a href="/en" title="English version" style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:#64748b;text-decoration:none;border:1px solid #e2e8f0;border-radius:6px;padding:4px 8px;">
+              🇬🇧 EN
+            </a>
           <% } %>
         </div>
 
@@ -164,6 +182,7 @@
   </main>
 
   <!-- Footer -->
+  <% if (typeof lang === 'undefined' || lang !== 'en') { %>
   <footer class="bg-gray-900 text-gray-400">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-8">
 
@@ -312,6 +331,7 @@
       </div>
     </div>
   </footer>
+  <% } %>
 
   <script>
     // Mobile menu toggle with animation
