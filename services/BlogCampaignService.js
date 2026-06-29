@@ -10,8 +10,8 @@ const FREQ_MS = {
 };
 
 async function generateArticle({ keyword, language = 'fr' }) {
-  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
-  if (!ANTHROPIC_KEY) throw new Error('ANTHROPIC_API_KEY manquant dans les variables d\'environnement');
+  const OPENAI_KEY = process.env.OPENAI_API_KEY;
+  if (!OPENAI_KEY) throw new Error('OPENAI_API_KEY manquant dans les variables d\'environnement');
 
   const langMap = { fr: 'français', en: 'anglais', ar: 'arabe' };
   const lang = langMap[language] || 'français';
@@ -30,28 +30,30 @@ Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de balises \
   "content": "<article HTML avec h2, h3, p, ul, li — minimum 600 mots, style professionnel>"
 }`;
 
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_KEY,
-      'anthropic-version': '2023-06-01',
+      'Authorization': `Bearer ${OPENAI_KEY}`,
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model: 'gpt-4o-mini',
       max_tokens: 4096,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userPrompt }],
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt },
+      ],
     }),
   });
 
   if (!resp.ok) {
     const errText = await resp.text().catch(() => '');
-    throw new Error(`Claude API ${resp.status}: ${errText.slice(0, 200)}`);
+    throw new Error(`OpenAI API ${resp.status}: ${errText.slice(0, 200)}`);
   }
 
   const data = await resp.json();
-  const text = (data.content?.[0]?.text || '').trim();
+  const text = (data.choices?.[0]?.message?.content || '').trim();
 
   let article;
   try {
