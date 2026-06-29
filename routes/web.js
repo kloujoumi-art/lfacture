@@ -3,6 +3,7 @@ const router = express.Router();
 const AuthController = require('../controllers/AuthController');
 const DashboardController = require('../controllers/DashboardController');
 const AdminController = require('../controllers/AdminController');
+const PaddleController = require('../controllers/PaddleController');
 const BlogAdminController = require('../controllers/BlogAdminController');
 const AdminAnalyticsController = require('../controllers/AdminAnalyticsController');
 const BlogController = require('../controllers/BlogController');
@@ -45,6 +46,9 @@ router.get('/cgu', (req, res) => res.renderLayout('legal/cgu', {
   title: 'Conditions Générales d\'Utilisation — LFacture',
   metaDesc: 'CGU de LFacture — Conditions Générales d\'Utilisation du logiciel de facturation en ligne.',
 }));
+
+// ---- Paddle webhook (appelé par skacollection.com) ----
+router.post('/api/paddle/confirm', express.json(), PaddleController.confirm);
 
 // ---- Sitemap ----
 router.get('/sitemap.xml', require('../controllers/SitemapController'));
@@ -131,6 +135,7 @@ router.post('/admin/users/:id/magic-link', requireAdmin, AdminController.sendMag
 router.get('/admin/invoices', requireAdmin, AdminController.listInvoices);
 router.get('/admin/trial', requireAdmin, AdminController.listTrialUsers);
 router.get('/admin/mailing', requireAdmin, AdminController.listMailing);
+router.get('/admin/payments', requireAdmin, AdminController.listPayments);
 
 // ---- Admin analytics ----
 router.get('/admin/analytics', requireAdmin, AdminAnalyticsController.index);

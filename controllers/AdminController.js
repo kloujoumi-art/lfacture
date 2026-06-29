@@ -290,6 +290,20 @@ class AdminController {
     });
   }
 
+  // ---- Payments (Paddle) ----
+  static listPayments(req, res) {
+    const payments = (db.get('payments').value() || [])
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const total = payments.reduce((sum, p) => sum + (p.amount || 0), 0);
+    adm(res, 'admin/payments', {
+      title: 'Paiements — Admin',
+      pageTitle: 'Paiements Paddle',
+      activePage: 'payments',
+      payments,
+      total,
+    });
+  }
+
   // ---- Invoices overview ----
   static listInvoices(req, res) {
     const all = db.get('invoices').value();

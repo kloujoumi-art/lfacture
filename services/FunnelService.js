@@ -431,6 +431,59 @@ function startFunnelScheduler() {
   setInterval(() => runCheck().catch(console.error), 30 * 60 * 1000);
 }
 
+// ── Email abonnement activé (Paddle) ───────────────────────────────────────
+async function sendSubscriptionActivated(user, isNew, magicLink, plainPassword = null) {
+  const APP_URL_VAL = APP_URL();
+  const subject = isNew
+    ? `🎉 Votre compte LFacture est prêt — Accès immédiat`
+    : `✅ Votre abonnement LFacture est activé !`;
+
+  const credentialsBlock = isNew && plainPassword
+    ? `<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:16px 20px;margin:20px 0;">
+        <p style="font-size:13px;font-weight:700;color:#166534;margin:0 0 8px;">Vos identifiants de connexion :</p>
+        <p style="margin:4px 0;font-size:13px;color:#1e293b;">📧 Email : <strong>${user.email}</strong></p>
+        <p style="margin:4px 0;font-size:13px;color:#1e293b;">🔒 Mot de passe : <strong style="font-family:monospace;background:#e2e8f0;padding:2px 6px;border-radius:4px;">${plainPassword}</strong></p>
+        <p style="font-size:11px;color:#64748b;margin:8px 0 0;">Vous pouvez changer ce mot de passe depuis vos paramètres.</p>
+      </div>`
+    : '';
+
+  const html = `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"/></head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+<div style="max-width:560px;margin:40px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.06);">
+  <div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:32px 40px;text-align:center;">
+    <p style="color:rgba(255,255,255,.7);font-size:12px;letter-spacing:2px;text-transform:uppercase;margin:0 0 6px;">LFacture</p>
+    <h1 style="color:#fff;font-size:26px;font-weight:900;margin:0;">${isNew ? '🎉 Bienvenue !' : '✅ Abonnement activé !'}</h1>
+  </div>
+  <div style="padding:32px 40px;">
+    <p style="font-size:15px;color:#374151;">Bonjour <strong>${user.name}</strong>,</p>
+    <p style="font-size:14px;color:#64748b;line-height:1.6;">
+      ${isNew
+        ? 'Votre compte LFacture vient d\'être créé suite à votre paiement. Vous avez maintenant un accès complet à toutes les fonctionnalités.'
+        : 'Merci pour votre paiement ! Votre abonnement LFacture est maintenant actif. Toutes les fonctionnalités sont déverrouillées.'}
+    </p>
+    ${credentialsBlock}
+    <div style="text-align:center;margin:28px 0;">
+      <a href="${magicLink}" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-weight:800;font-size:15px;padding:14px 32px;border-radius:12px;text-decoration:none;box-shadow:0 4px 14px rgba(79,70,229,.35);">
+        Accéder à mon espace →
+      </a>
+    </div>
+    <p style="font-size:12px;color:#94a3b8;text-align:center;">Ce lien d'accès expire dans 24h. Si vous avez besoin d'aide : <a href="https://wa.me/212750282154" style="color:#4F46E5;">WhatsApp</a></p>
+  </div>
+  <div style="padding:16px 40px;background:#f8fafc;text-align:center;">
+    <p style="font-size:11px;color:#94a3b8;margin:0;">LFacture · <a href="${APP_URL_VAL}" style="color:#94a3b8;">${APP_URL_VAL}</a></p>
+  </div>
+</div>
+</body></html>`;
+
+  await transporter().sendMail({
+    from: FROM(),
+    to: user.email,
+    subject,
+    html,
+  });
+}
+
 // ── Notification admin : nouveau client inscrit / achat ───────────────────
 const ADMIN_NOTIFY_EMAIL = 'khalidlouj520@gmail.com';
 
@@ -479,4 +532,5 @@ module.exports = {
   addToContacts,
   startFunnelScheduler,
   sendAdminNotification,
+  sendSubscriptionActivated,
 };
