@@ -308,6 +308,60 @@
 </div>
 
 <!-- ══════════════════════════════════════════════════════════
+     3b. PACK ILLUSTRATION
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 bg-white overflow-hidden">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+
+      <!-- Texte gauche -->
+      <div class="flex-1 text-center lg:text-left">
+        <span style="background:#eef2ff;color:#4F46E5;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:12px;border:1px solid #c7d2fe;">Solution complète</span>
+        <h2 class="text-2xl sm:text-4xl font-black text-gray-900 leading-tight mb-4">
+          Tout ce qu'il vous faut<br/>
+          <span class="gradient-heading">dans un seul outil</span>
+        </h2>
+        <p class="text-gray-500 text-base sm:text-lg leading-relaxed mb-6 max-w-lg mx-auto lg:mx-0">
+          Factures, devis, clients, tableau de bord, modèles PDF, logo d'entreprise — LFacture centralise tout votre processus de facturation en un endroit simple et accessible partout.
+        </p>
+        <ul class="space-y-3 mb-7 text-left max-w-sm mx-auto lg:mx-0">
+          <% [
+            'Créez vos factures en 2 minutes',
+            '3 modèles PDF professionnels inclus',
+            'Logo + mentions légales automatiques',
+            'Accessible sur mobile et ordinateur',
+            'Données sécurisées et conformes RGPD',
+          ].forEach(item => { %>
+          <li class="flex items-center gap-3 text-sm text-gray-700">
+            <span style="width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="10" height="10" fill="none" stroke="white" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+            </span>
+            <%= item %>
+          </li>
+          <% }); %>
+        </ul>
+        <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-7 py-3.5 rounded-xl" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 20px rgba(79,70,229,.3);">
+          Essayer gratuitement →
+        </a>
+      </div>
+
+      <!-- Image pack droite -->
+      <div class="flex-shrink-0 flex justify-center relative" style="min-width:260px;">
+        <!-- Halo lumineux -->
+        <div style="position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 50% 50%,rgba(79,70,229,.13) 0%,transparent 70%);border-radius:50%;animation:pulse-glow 3s ease-in-out infinite;"></div>
+        <img
+          src="/images/pack-illustration.png"
+          alt="LFacture logiciel de facturation complet"
+          style="width:clamp(220px,38vw,460px);filter:drop-shadow(0 24px 48px rgba(79,70,229,.22)) drop-shadow(0 8px 20px rgba(0,0,0,.1));animation:floatY 4s ease-in-out infinite;position:relative;z-index:1;"
+          loading="lazy"
+        />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
      4. AVANT / APRÈS
 ══════════════════════════════════════════════════════════ -->
 <section class="py-12 sm:py-16 bg-white">
