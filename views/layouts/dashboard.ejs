@@ -20,67 +20,161 @@
     }
   </script>
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .sidebar-link { display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;font-size:14px;font-weight:500;color:#6b7280;transition:all 0.15s; }
-    .sidebar-link:hover { background:#f1f5f9;color:#1e293b; }
-    .sidebar-link.active { background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,0.3); }
-    .btn-primary { background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:600;border:none;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 12px rgba(79,70,229,0.25); }
-    .btn-primary:hover { transform:translateY(-1px);box-shadow:0 8px 20px rgba(79,70,229,0.35); }
-    .btn-secondary { background:#f1f5f9;color:#374151;border-radius:8px;padding:8px 16px;font-size:14px;font-weight:600;border:1px solid #e2e8f0;cursor:pointer;transition:all 0.15s; }
+    * { box-sizing:border-box; }
+    body { font-family:'Inter',sans-serif; margin:0; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width:240px; background:#fff; border-right:1px solid #f1f5f9;
+      display:flex; flex-direction:column; flex-shrink:0; overflow-y:auto;
+      transition: transform .25s cubic-bezier(.4,0,.2,1);
+      z-index:50;
+    }
+    .sidebar-link {
+      display:flex; align-items:center; gap:12px;
+      padding:10px 14px; border-radius:10px;
+      font-size:14px; font-weight:500; color:#6b7280; text-decoration:none;
+      transition:all .15s;
+    }
+    .sidebar-link:hover { background:#f1f5f9; color:#1e293b; }
+    .sidebar-link.active { background:linear-gradient(135deg,#4F46E5,#7C3AED); color:#fff; box-shadow:0 4px 12px rgba(79,70,229,.28); }
+
+    /* ── Buttons ── */
+    .btn-primary { background:linear-gradient(135deg,#4F46E5,#7C3AED); color:#fff; border-radius:10px; padding:9px 18px; font-size:14px; font-weight:600; border:none; cursor:pointer; transition:all .2s; box-shadow:0 4px 12px rgba(79,70,229,.25); text-decoration:none; display:inline-flex; align-items:center; }
+    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 8px 20px rgba(79,70,229,.35); }
+    .btn-secondary { background:#f1f5f9; color:#374151; border-radius:10px; padding:9px 18px; font-size:14px; font-weight:600; border:1px solid #e2e8f0; cursor:pointer; transition:all .15s; }
     .btn-secondary:hover { background:#e2e8f0; }
-    .flash-success { background:#ecfdf5;border:1px solid #6ee7b7;color:#065f46; }
-    .flash-error { background:#fef2f2;border:1px solid #fca5a5;color:#991b1b; }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
-    .animate-fade-in { animation:fadeIn 0.3s ease forwards; }
-    .stat-card { background:#fff;border-radius:16px;padding:24px;box-shadow:0 1px 3px rgba(0,0,0,0.05),0 4px 20px rgba(0,0,0,0.05);border:1px solid #f1f5f9; }
+
+    /* ── Flash ── */
+    .flash-success { background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46; }
+    .flash-error   { background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+    .animate-fade-in { animation:fadeIn .3s ease forwards; }
+
+    /* ── Cards ── */
+    .stat-card { background:#fff; border-radius:16px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,.05),0 4px 20px rgba(0,0,0,.05); border:1px solid #f1f5f9; }
     .table-row:hover { background:#f8fafc; }
+
+    /* ── Overlay backdrop (mobile) ── */
+    #sidebarOverlay {
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.4);
+      z-index:40; opacity:0; transition:opacity .25s;
+    }
+    #sidebarOverlay.visible { display:block; opacity:1; }
+
+    /* ── Mobile: sidebar becomes a full-height drawer ── */
+    @media (max-width:1023px) {
+      .sidebar {
+        position:fixed; top:0; left:0; bottom:0;
+        transform:translateX(-100%);
+        box-shadow:4px 0 24px rgba(0,0,0,.12);
+      }
+      .sidebar.open { transform:translateX(0); }
+      .dashboard-wrapper { padding-bottom:72px; }
+    }
+
+    /* ── Bottom nav (mobile only) ── */
+    .bottom-nav {
+      display:none;
+      position:fixed; bottom:0; left:0; right:0;
+      background:#fff; border-top:1px solid #f1f5f9;
+      z-index:30; padding:6px 0 env(safe-area-inset-bottom,6px);
+      box-shadow:0 -4px 20px rgba(0,0,0,.06);
+    }
+    @media (max-width:1023px) { .bottom-nav { display:flex; } }
+    .bottom-nav a, .bottom-nav button {
+      flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:3px; padding:6px 4px; font-size:10px; font-weight:600;
+      color:#9ca3af; background:none; border:none; cursor:pointer; text-decoration:none;
+      transition:color .15s;
+    }
+    .bottom-nav a.active, .bottom-nav a:hover, .bottom-nav button:hover { color:#4F46E5; }
+    .bottom-nav svg { width:20px; height:20px; flex-shrink:0; }
+
+    /* ── Content padding responsive ── */
+    .content-area { padding:20px 16px; }
+    @media (min-width:640px) { .content-area { padding:24px; } }
+    @media (min-width:1024px) { .content-area { padding:28px 32px; } }
+
+    /* ── Top bar responsive ── */
+    .topbar { padding:12px 16px; }
+    @media (min-width:1024px) { .topbar { padding:14px 28px; } }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 antialiased" style="font-family:'Inter',sans-serif">
+<body class="bg-gray-50 text-gray-900 antialiased">
 
-<!-- Trial Banner -->
-<% if (isOnTrial && trialDaysLeft <= 3) { %>
-<div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center">
-  <p class="text-sm text-amber-800 font-medium">
-    ⏰ Votre essai se termine dans <strong><%= trialDaysLeft %> jour<%= trialDaysLeft > 1 ? 's' : '' %></strong> —
-    <a href="/pricing" class="underline font-semibold hover:text-amber-900">Choisir un abonnement</a>
-  </p>
+<!-- Trial/Quota Banner -->
+<% if (typeof isFree !== 'undefined' && isFree && typeof quota !== 'undefined' && quota) { %>
+<% const invoiceReached = quota.invoices.reached; const quoteReached = quota.quotes.reached; %>
+<% if (invoiceReached || quoteReached) { %>
+<div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-800 font-medium">
+  ⚠️ Limite atteinte sur le plan gratuit —
+  <a href="/pricing" class="underline font-bold hover:text-amber-900">Passer à Premium</a>
 </div>
 <% } %>
+<% } %>
 
-<div class="flex h-screen overflow-hidden" style="height:calc(100vh - <%= (isOnTrial && trialDaysLeft <= 3) ? '40px' : '0px' %>);">
+<!-- Mobile sidebar backdrop -->
+<div id="sidebarOverlay" onclick="closeSidebar()"></div>
 
-  <!-- Sidebar -->
-  <aside class="w-64 bg-white border-r border-gray-100 flex flex-col flex-shrink-0 overflow-y-auto">
-    <!-- Logo -->
-    <div class="px-6 py-5 border-b border-gray-100">
+<div class="flex h-screen overflow-hidden dashboard-wrapper" style="height:100dvh;">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Header sidebar -->
+    <div class="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
+        <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
           <span class="text-white font-black text-sm">L</span>
         </div>
         <span class="text-lg font-black text-gray-900">LFacture</span>
       </a>
+      <!-- Close button (mobile) -->
+      <button onclick="closeSidebar()" class="lg:hidden p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
     </div>
 
-    <!-- User Info -->
-    <div class="px-6 py-4 border-b border-gray-100">
+    <!-- User card -->
+    <div class="px-5 py-4 border-b border-gray-100">
       <div class="flex items-center gap-3">
         <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
           <%= user.name.charAt(0).toUpperCase() %>
         </div>
         <div class="min-w-0">
           <p class="text-sm font-semibold text-gray-900 truncate"><%= user.name %></p>
-          <% if (isOnTrial) { %>
-            <span class="text-xs text-amber-600 font-medium">Essai — <%= trialDaysLeft %>j restant<%= trialDaysLeft > 1 ? 's' : '' %></span>
+          <% if (typeof isFree !== 'undefined' && isFree) { %>
+            <span class="text-xs text-indigo-600 font-medium">Plan gratuit</span>
           <% } else { %>
-            <span class="text-xs text-green-600 font-medium">✓ Abonnement actif</span>
+            <span class="text-xs text-green-600 font-medium">✓ Premium actif</span>
           <% } %>
         </div>
       </div>
+      <% if (typeof isFree !== 'undefined' && isFree && typeof quota !== 'undefined' && quota) { %>
+      <div class="mt-3 space-y-1.5">
+        <div>
+          <div class="flex justify-between text-xs text-gray-400 mb-1">
+            <span>Factures</span><span><%= quota.invoices.used %>/<%= quota.invoices.max %></span>
+          </div>
+          <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all" style="width:<%= Math.min(100,(quota.invoices.used/quota.invoices.max)*100) %>%;background:<%= quota.invoices.reached ? '#ef4444' : quota.invoices.used/quota.invoices.max >= .75 ? '#f59e0b' : '#4F46E5' %>"></div>
+          </div>
+        </div>
+        <div>
+          <div class="flex justify-between text-xs text-gray-400 mb-1">
+            <span>Devis</span><span><%= quota.quotes.used %>/<%= quota.quotes.max %></span>
+          </div>
+          <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full rounded-full transition-all" style="width:<%= Math.min(100,(quota.quotes.used/quota.quotes.max)*100) %>%;background:<%= quota.quotes.reached ? '#ef4444' : quota.quotes.used/quota.quotes.max >= .75 ? '#f59e0b' : '#7C3AED' %>"></div>
+          </div>
+        </div>
+      </div>
+      <% } %>
     </div>
 
     <!-- Navigation -->
-    <nav class="px-4 py-4 flex-1 space-y-1">
+    <nav class="px-3 py-4 flex-1 space-y-0.5">
       <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider px-3 mb-2">Principal</p>
       <a href="/dashboard" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'active' : '' %>">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
@@ -106,8 +200,8 @@
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         Paramètres
       </a>
-      <% if (!hasAccess || isOnTrial) { %>
-      <a href="/pricing" class="sidebar-link text-primary-600 hover:bg-primary-50">
+      <% if (typeof isFree !== 'undefined' && isFree) { %>
+      <a href="/pricing" class="sidebar-link" style="color:#4F46E5;">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
         Passer Premium
       </a>
@@ -115,9 +209,9 @@
     </nav>
 
     <!-- Logout -->
-    <div class="px-4 py-4 border-t border-gray-100">
+    <div class="px-3 py-4 border-t border-gray-100">
       <form action="/logout" method="POST">
-        <button type="submit" class="sidebar-link w-full text-left text-red-500 hover:bg-red-50 hover:text-red-600">
+        <button type="submit" class="sidebar-link w-full text-left text-red-400 hover:bg-red-50 hover:text-red-600">
           <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
           Déconnexion
         </button>
@@ -125,45 +219,99 @@
     </div>
   </aside>
 
-  <!-- Main content -->
+  <!-- ══ MAIN CONTENT ══ -->
   <div class="flex-1 flex flex-col overflow-hidden">
+
     <!-- Top bar -->
-    <header class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between flex-shrink-0">
-      <h1 class="text-xl font-bold text-gray-900"><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %></h1>
+    <header class="bg-white border-b border-gray-100 flex items-center justify-between flex-shrink-0 topbar">
       <div class="flex items-center gap-3">
+        <!-- Hamburger (mobile/tablet) -->
+        <button onclick="openSidebar()" class="lg:hidden p-2 rounded-lg text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+        <h1 class="text-base sm:text-xl font-bold text-gray-900 truncate"><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %></h1>
+      </div>
+      <div class="flex items-center gap-2">
         <% if (typeof ctaLink !== 'undefined' && ctaLink) { %>
-          <a href="<%= ctaLink %>" class="btn-primary text-sm"><%= typeof ctaLabel !== 'undefined' ? ctaLabel : 'Nouveau' %></a>
+          <a href="<%= ctaLink %>" class="btn-primary text-xs sm:text-sm"><%= typeof ctaLabel !== 'undefined' ? ctaLabel : 'Nouveau' %></a>
         <% } %>
+        <!-- Avatar (mobile) -->
+        <div class="lg:hidden w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-xs flex-shrink-0" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
+          <%= user.name.charAt(0).toUpperCase() %>
+        </div>
       </div>
     </header>
 
     <!-- Flash messages -->
-    <div class="px-8 pt-4 space-y-2" id="flashContainer">
+    <div class="px-4 sm:px-6 lg:px-8 pt-3 space-y-2" id="flashContainer">
       <% if (success && success.length > 0) { success.forEach(msg => { %>
-        <div class="flash-success rounded-xl p-4 flex items-center gap-3 animate-fade-in">
+        <div class="flash-success rounded-xl p-3 sm:p-4 flex items-center gap-3 animate-fade-in text-sm">
           <svg class="w-5 h-5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-          <p class="text-sm font-medium"><%= msg %></p>
+          <p class="font-medium"><%= msg %></p>
         </div>
       <% }); } %>
       <% if (error && error.length > 0) { error.forEach(msg => { %>
-        <div class="flash-error rounded-xl p-4 flex items-center gap-3 animate-fade-in">
+        <div class="flash-error rounded-xl p-3 sm:p-4 flex items-center gap-3 animate-fade-in text-sm">
           <svg class="w-5 h-5 flex-shrink-0 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-          <p class="text-sm font-medium"><%= msg %></p>
+          <p class="font-medium"><%= msg %></p>
         </div>
       <% }); } %>
     </div>
 
     <!-- Page content -->
-    <div class="flex-1 overflow-y-auto px-8 py-6">
+    <div class="flex-1 overflow-y-auto content-area">
       <%- body %>
     </div>
   </div>
 </div>
 
+<!-- ══ BOTTOM NAV (mobile) ══ -->
+<nav class="bottom-nav">
+  <a href="/dashboard" class="<%= typeof activePage !== 'undefined' && activePage === 'dashboard' ? 'active' : '' %>">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+    Accueil
+  </a>
+  <a href="/dashboard/invoices" class="<%= typeof activePage !== 'undefined' && activePage === 'invoices' ? 'active' : '' %>">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    Factures
+  </a>
+  <a href="/dashboard/quotes" class="<%= typeof activePage !== 'undefined' && activePage === 'quotes' ? 'active' : '' %>">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    Devis
+  </a>
+  <a href="/dashboard/clients" class="<%= typeof activePage !== 'undefined' && activePage === 'clients' ? 'active' : '' %>">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+    Clients
+  </a>
+  <button onclick="openSidebar()">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    Plus
+  </button>
+</nav>
+
 <script>
+  function openSidebar() {
+    document.getElementById('sidebar').classList.add('open');
+    const ov = document.getElementById('sidebarOverlay');
+    ov.style.display = 'block';
+    requestAnimationFrame(() => ov.classList.add('visible'));
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    const ov = document.getElementById('sidebarOverlay');
+    ov.classList.remove('visible');
+    setTimeout(() => { ov.style.display = 'none'; }, 250);
+    document.body.style.overflow = '';
+  }
+  // Auto-close sidebar on larger screens
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 1024) closeSidebar();
+  });
+  // Auto-dismiss flash
   setTimeout(() => {
     document.querySelectorAll('#flashContainer > div').forEach(el => {
-      el.style.transition = 'opacity 0.5s';
+      el.style.transition = 'opacity .5s';
       el.style.opacity = '0';
       setTimeout(() => el.remove(), 500);
     });
