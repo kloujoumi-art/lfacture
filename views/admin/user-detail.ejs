@@ -25,7 +25,7 @@
         <div>
           <h2 style="font-size:20px;font-weight:800;color:#f1f5f9;"><%= targetUser.name %><% if(targetUser.is_admin){ %> 👑<% } %></h2>
           <p style="font-size:13px;color:#64748b;"><%= targetUser.email %></p>
-          <p style="font-size:11px;color:#475569;margin-top:2px;">ID #<%= targetUser.id %> • Inscrit le <%= new Date(targetUser.created_at).toLocaleDateString('fr-FR') %></p>
+          <p style="font-size:11px;color:#475569;margin-top:2px;">ID #<%= targetUser.id %> • Inscrit le <%= new Date(targetUser.created_at).toLocaleDateString('fr-FR') %><% if(targetUser.country){ %> • 🌍 <%= targetUser.country %><% } %></p>
         </div>
         <div style="margin-left:auto;">
           <span style="font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;<%=

@@ -9,7 +9,7 @@ class AuthController {
   }
 
   static async register(req, res) {
-    const { name, email, password, password_confirm } = req.body;
+    const { name, email, password, password_confirm, country } = req.body;
     const errors = [];
 
     if (!name || name.trim().length < 2) errors.push('Le nom doit contenir au moins 2 caractères.');
@@ -27,7 +27,7 @@ class AuthController {
     }
 
     try {
-      const user = User.create({ name: name.trim(), email: email.toLowerCase().trim(), password });
+      const user = User.create({ name: name.trim(), email: email.toLowerCase().trim(), password, country: country || null });
 
       // Paramètres par défaut
       db.get('settings').push({

@@ -236,6 +236,12 @@ class DashboardController {
     } else {
       ensureSettings(req.user.id);
     }
+
+    // Mise à jour du pays sur le compte utilisateur
+    if (s.user_country !== undefined) {
+      db.get('users').find({ id: req.user.id }).assign({ country: s.user_country || null }).write();
+    }
+
     req.flash('success', 'Paramètres sauvegardés.');
     res.redirect('/dashboard/settings');
   }

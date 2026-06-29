@@ -11,7 +11,7 @@ class User {
     return String(Math.floor(100000 + Math.random() * 900000));
   }
 
-  static create({ name, email, password }) {
+  static create({ name, email, password, country }) {
     const otp = User.generateOTP();
     const expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     const user = {
@@ -23,6 +23,7 @@ class User {
       plan: 'pending',
       is_admin: 0,
       email_verified: 0,
+      country: country || null,
       verification_token: otp,         // code OTP 6 chiffres
       verification_expires_at: expires, // expire dans 24h
       verification_sent_at: new Date().toISOString(),
