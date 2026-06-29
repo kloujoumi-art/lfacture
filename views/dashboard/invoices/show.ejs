@@ -175,7 +175,26 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
         <span style="display:inline-block;margin-top:8px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;<%=statusStyle(invoice.status)%>"><%=statusLabel(invoice.status)%></span>
       </div>
     </div>
-    <%- include('../../partials/invoice-table', {invoice,accentColor:'#1e293b',fmt}) %>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:24px;font-size:13px;">
+      <thead><tr style="border-bottom:2px solid #1e293b;">
+        <th style="text-align:left;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;">Description</th>
+        <th style="text-align:center;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;">Qté</th>
+        <th style="text-align:right;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;">PU HT</th>
+        <th style="text-align:center;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;">TVA</th>
+        <th style="text-align:right;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;">TTC</th>
+      </tr></thead>
+      <tbody>
+        <% if(invoice.items&&invoice.items.length>0){invoice.items.forEach((item,idx)=>{%>
+        <tr style="background:<%=idx%2===0?'#fff':'#f8fafc'%>;">
+          <td style="padding:10px;color:#374151;"><%=item.description%></td>
+          <td style="padding:10px;color:#64748b;text-align:center;"><%=item.quantity%></td>
+          <td style="padding:10px;color:#64748b;text-align:right;"><%=fmt(item.unit_price)%> €</td>
+          <td style="padding:10px;color:#64748b;text-align:center;"><%=item.tva_rate%>%</td>
+          <td style="padding:10px;font-weight:700;color:#1e293b;text-align:right;"><%=fmt(item.total)%> €</td>
+        </tr>
+        <%});}%>
+      </tbody>
+    </table>
     <div style="display:flex;justify-content:flex-end;margin:16px 0;"><div style="width:240px;">
       <div style="display:flex;justify-content:space-between;padding:5px 0;color:#64748b;font-size:13px;border-bottom:1px solid #f1f5f9;"><span>Total HT</span><span><%=fmt(invoice.subtotal)%> €</span></div>
       <div style="display:flex;justify-content:space-between;padding:5px 0;color:#64748b;font-size:13px;border-bottom:1px solid #f1f5f9;"><span>TVA</span><span><%=fmt(invoice.tva_amount)%> €</span></div>
