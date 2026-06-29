@@ -14,85 +14,245 @@
 </script>
 
 <style>
-  .pack-img {
-    width: clamp(180px, 30vw, 380px);
-    filter: drop-shadow(0 20px 40px rgba(79,70,229,.22)) drop-shadow(0 6px 16px rgba(0,0,0,.1));
-    animation: float 4s ease-in-out infinite;
-  }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-  @media(max-width:640px){ .pack-img{width:clamp(160px,65vw,280px);animation:none;} }
+/* ── Animations ── */
+@keyframes floatY   { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-8px)} }
+@keyframes floatY2  { 0%,100%{transform:translateY(-4px)} 50%{transform:translateY(4px)} }
+@keyframes pulse-glow { 0%,100%{box-shadow:0 0 0 0 rgba(99,102,241,.15)} 50%{box-shadow:0 0 0 18px rgba(99,102,241,0)} }
+@keyframes fadeSlideUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes shimmer  { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+@keyframes check-pop{ 0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)} }
 
-  .pack-glow {
-    position:absolute; inset:-30px;
-    background:radial-gradient(ellipse 80% 80% at 50% 50%, rgba(79,70,229,.12) 0%, transparent 70%);
-    border-radius:50%; animation:pulse-g 3s ease-in-out infinite;
-  }
-  @keyframes pulse-g { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.06);opacity:1} }
+.float1 { animation: floatY  4s ease-in-out infinite; }
+.float2 { animation: floatY2 5s ease-in-out infinite; }
+.float3 { animation: floatY  6s ease-in-out infinite .5s; }
 
-  .vs-col { border-radius:16px; padding:24px; }
-  .faq-item summary { cursor:pointer; list-style:none; }
-  .faq-item summary::-webkit-details-marker { display:none; }
-  .faq-item[open] summary .faq-icon { transform:rotate(45deg); }
-  .faq-icon { transition:transform .2s; }
-  .feature-card:hover { transform:translateY(-3px); box-shadow:0 10px 32px rgba(0,0,0,.09); }
-  .feature-card { transition:transform .2s, box-shadow .2s; }
-  section { overflow-x:hidden; }
+/* ── Hero mockup ── */
+.hero-mockup { width:100%; max-width:560px; }
+.mock-window { background:#fff; border-radius:14px; box-shadow:0 30px 80px rgba(0,0,0,.18),0 8px 24px rgba(79,70,229,.12); overflow:hidden; }
+.mock-topbar { background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 14px; display:flex; align-items:center; gap:6px; }
+.mock-dot    { width:10px; height:10px; border-radius:50%; }
+.mock-addr   { flex:1; background:#fff; border:1px solid #e2e8f0; border-radius:6px; height:22px; margin:0 10px; }
+.mock-body   { padding:18px; }
+.mock-invoice{ background:#fff; border:1px solid #e8eaf0; border-radius:10px; padding:16px; }
+.mock-line   { height:8px; border-radius:4px; background:#eef2ff; margin-bottom:7px; }
+.mock-line.dark { background:#c7d2fe; }
+.mock-line.sm   { width:55%; }
+.mock-line.xs   { width:35%; }
+.mock-row    { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #f1f5f9; }
+.mock-total  { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; background:linear-gradient(135deg,#4F46E5,#7C3AED); border-radius:8px; margin-top:10px; }
+
+/* ── Floating badges ── */
+.badge-float { background:#fff; border-radius:12px; box-shadow:0 8px 24px rgba(0,0,0,.12); padding:10px 14px; display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:12px; font-weight:700; }
+
+/* ── Feature cards ── */
+.feat-card { background:#fff; border:1px solid #e8edf3; border-radius:18px; overflow:hidden; transition:transform .2s,box-shadow .2s; }
+.feat-card:hover { transform:translateY(-4px); box-shadow:0 16px 40px rgba(0,0,0,.1); }
+
+/* ── Template cards ── */
+.tpl-card { background:#fff; border-radius:16px; box-shadow:0 8px 32px rgba(0,0,0,.1); overflow:hidden; transition:transform .2s,box-shadow .2s; cursor:pointer; }
+.tpl-card:hover { transform:translateY(-5px) scale(1.01); box-shadow:0 20px 50px rgba(79,70,229,.18); }
+
+/* ── Testimonial ── */
+.testi-card { background:#fff; border:1px solid #e8edf3; border-radius:16px; padding:24px; transition:transform .2s,box-shadow .2s; }
+.testi-card:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,.08); }
+
+/* ── Steps connector ── */
+.step-line { position:absolute; left:27px; top:52px; bottom:-20px; width:2px; background:linear-gradient(180deg,#c7d2fe,transparent); }
+
+/* ── Misc ── */
+.faq-item summary { cursor:pointer; list-style:none; }
+.faq-item summary::-webkit-details-marker { display:none; }
+.faq-item[open] .faq-icon { transform:rotate(45deg); }
+.faq-icon { transition:transform .2s; flex-shrink:0; }
+.gradient-heading { background:linear-gradient(135deg,#4F46E5,#7C3AED); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.check-green { color:#10b981; font-weight:700; }
+.cross-red   { color:#ef4444; font-weight:700; }
+
+@media(max-width:768px){
+  .hero-mockup { max-width:100%; }
+  .step-line { display:none; }
+  .hide-mobile { display:none !important; }
+}
 </style>
 
-<!-- ══════════════════════════════════════════════
-     HERO
-══════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════
+     1. HERO
+══════════════════════════════════════════════════════════ -->
 <section class="relative bg-white overflow-hidden" style="padding-top:64px;">
-  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 60% 70% at 75% 40%,rgba(79,70,229,.09) 0%,transparent 70%),radial-gradient(ellipse 40% 50% at 15% 80%,rgba(124,58,237,.06) 0%,transparent 60%)"></div>
+  <!-- Background gradients -->
+  <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 65% 80% at 80% 30%,rgba(99,102,241,.08) 0%,transparent 65%),radial-gradient(ellipse 45% 55% at 10% 85%,rgba(124,58,237,.06) 0%,transparent 60%)"></div>
+  <!-- Grid subtle -->
+  <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(99,102,241,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.03) 1px,transparent 1px);background-size:40px 40px;"></div>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-28">
-    <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 lg:py-20">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
-      <!-- Texte gauche -->
-      <div class="flex-1 text-center lg:text-left max-w-xl mx-auto lg:mx-0">
-
-        <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-6">
+      <!-- ── Texte gauche ── -->
+      <div class="flex-1 min-w-0 text-center lg:text-left">
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-5">
           <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0"></span>
           <span class="text-sm font-semibold text-indigo-700">Plan gratuit — 8 factures + 8 devis offerts</span>
         </div>
 
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-gray-900 tracking-tight leading-[1.1] mb-5">
-          Fini les factures<br/>sous Excel.<br/>
-          <span style="background:linear-gradient(135deg,#4F46E5,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Passez au pro.</span>
+        <h1 class="text-4xl sm:text-5xl lg:text-[3.4rem] font-black text-gray-900 tracking-tight leading-[1.08] mb-5">
+          Le logiciel de<br/>
+          <span class="gradient-heading">facturation gratuit</span><br/>
+          des pros français
         </h1>
 
-        <p class="text-lg sm:text-xl text-gray-500 leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0">
-          LFacture vous permet de créer des <strong class="text-gray-700">factures</strong> et <strong class="text-gray-700">devis professionnels en PDF</strong> en moins de 2 minutes — sans Excel, sans Word, sans complication.
+        <p class="text-lg text-gray-500 leading-relaxed mb-7 max-w-lg mx-auto lg:mx-0">
+          Créez vos <strong class="text-gray-700">factures et devis PDF professionnels</strong> en 2 minutes. Sans Excel. Sans Word. Sans erreur de TVA. Conforme à la loi française.
         </p>
 
-        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-8">
-          <a href="/register" class="w-full sm:w-auto text-center text-white font-bold text-base sm:text-lg px-8 py-4 rounded-xl" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 8px 24px rgba(79,70,229,.35);">
-            Commencer gratuitement →
+        <!-- CTAs -->
+        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 mb-6">
+          <a href="/register" class="w-full sm:w-auto text-center text-white font-black text-base px-7 py-4 rounded-xl transition" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 8px 28px rgba(79,70,229,.38);">
+            Créer mon compte gratuit →
           </a>
-          <a href="/pricing" class="w-full sm:w-auto text-center bg-white border-2 border-gray-200 text-gray-700 font-semibold text-base sm:text-lg px-8 py-4 rounded-xl hover:border-gray-300 transition">
-            Voir les tarifs
+          <a href="#templates" class="w-full sm:w-auto text-center bg-white border-2 border-gray-200 text-gray-700 font-bold text-base px-7 py-4 rounded-xl hover:border-indigo-200 hover:text-indigo-700 transition">
+            Voir les modèles
           </a>
         </div>
 
-        <!-- Trust micro -->
-        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-x-4 gap-y-2 text-sm text-gray-500">
-          <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Sans carte bancaire</span>
-          <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>8 factures + 8 devis gratuits</span>
-          <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Résiliation libre</span>
+        <!-- Trust items -->
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-x-5 gap-y-2 text-sm text-gray-500 mb-5">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Sans carte bancaire
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Conforme loi française
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            100% en ligne
+          </span>
+          <span class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+            Résiliation libre
+          </span>
         </div>
 
-        <!-- Stars -->
-        <div class="flex items-center gap-2 mt-5 justify-center lg:justify-start">
+        <!-- Stars + avis -->
+        <div class="flex items-center gap-3 justify-center lg:justify-start">
           <div class="flex"><%for(let i=0;i<5;i++){%><span style="color:#F59E0B;font-size:18px;">★</span><%}%></div>
-          <span class="text-sm text-gray-500 font-medium">4,9/5 · <strong class="text-gray-700">127 avis</strong></span>
+          <span class="text-sm font-semibold text-gray-700">4,9/5</span>
+          <span class="text-sm text-gray-400">·</span>
+          <div class="flex -space-x-2">
+            <% ['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981'].forEach((c,i)=>{ %>
+            <div class="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold" style="background:<%= c %>"><%= ['M','T','S','A','L'][i] %></div>
+            <% }); %>
+          </div>
+          <span class="text-sm text-gray-500">127 utilisateurs satisfaits</span>
         </div>
       </div>
 
-      <!-- Illustration droite — taille réduite -->
-      <div class="flex-shrink-0 flex justify-center relative" style="min-width:180px;">
-        <div class="relative">
-          <div class="pack-glow"></div>
-          <img src="/images/pack-illustration.png" alt="LFacture logiciel de facturation" class="pack-img" loading="eager"/>
+      <!-- ── Mockup droite ── -->
+      <div class="flex-shrink-0 w-full lg:w-auto relative" style="max-width:520px;margin:0 auto;">
+        <!-- Badge flottant haut-gauche -->
+        <div class="badge-float float2 absolute -left-4 top-6 z-10 hide-mobile" style="color:#10b981;">
+          <span style="font-size:18px;">✓</span>
+          <span style="color:#1f2937;">PDF généré !</span>
+        </div>
+        <!-- Badge flottant bas-droite -->
+        <div class="badge-float float3 absolute -right-2 bottom-12 z-10 hide-mobile" style="color:#4F46E5;">
+          <span style="font-size:18px;">⚡</span>
+          <span style="color:#1f2937;">2 min chrono</span>
+        </div>
+        <!-- Badge TVA -->
+        <div class="badge-float float1 absolute -right-6 top-20 z-10 hide-mobile" style="color:#f59e0b;">
+          <span style="font-size:16px;">🧮</span>
+          <span style="color:#1f2937;">TVA auto</span>
+        </div>
+
+        <!-- Fenêtre navigateur mockup -->
+        <div class="mock-window float1" style="max-width:460px;margin:0 auto;">
+          <div class="mock-topbar">
+            <div class="mock-dot" style="background:#ff5f57;"></div>
+            <div class="mock-dot" style="background:#febc2e;"></div>
+            <div class="mock-dot" style="background:#28c840;"></div>
+            <div class="mock-addr"></div>
+            <div style="font-size:11px;color:#94a3b8;font-weight:600;">lfacture.com</div>
+          </div>
+          <div class="mock-body">
+            <!-- Header invoice -->
+            <div class="mock-invoice">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;">
+                <div>
+                  <div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:flex;align-items:center;justify-content:center;margin-bottom:8px;">
+                    <span style="color:#fff;font-weight:900;font-size:16px;">L</span>
+                  </div>
+                  <div class="mock-line dark" style="width:90px;margin-bottom:4px;"></div>
+                  <div class="mock-line" style="width:65px;height:6px;"></div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:15px;font-weight:900;color:#1e293b;margin-bottom:4px;">FACTURE</div>
+                  <div style="font-size:11px;color:#4F46E5;font-weight:700;background:#eef2ff;padding:2px 8px;border-radius:6px;">#2024-042</div>
+                  <div style="font-size:10px;color:#94a3b8;margin-top:4px;">28 juin 2025</div>
+                </div>
+              </div>
+
+              <!-- Client info -->
+              <div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:12px;display:flex;justify-content:space-between;">
+                <div>
+                  <div style="font-size:9px;color:#94a3b8;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Facturé à</div>
+                  <div class="mock-line dark sm" style="margin-bottom:3px;height:7px;"></div>
+                  <div class="mock-line xs" style="height:6px;"></div>
+                </div>
+                <div style="text-align:right;">
+                  <div style="font-size:9px;color:#94a3b8;font-weight:700;text-transform:uppercase;margin-bottom:4px;">Échéance</div>
+                  <div style="font-size:11px;font-weight:700;color:#ef4444;">28 juil. 2025</div>
+                </div>
+              </div>
+
+              <!-- Items -->
+              <div style="margin-bottom:10px;">
+                <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #f1f5f9;font-size:9px;font-weight:700;color:#64748b;text-transform:uppercase;">
+                  <span>Description</span><span>Total HT</span>
+                </div>
+                <% [
+                  { label:'Développement web', price:'1 200,00 €', w:'60%' },
+                  { label:'Design UI/UX', price:'800,00 €', w:'45%' },
+                  { label:'Maintenance mensuelle', price:'350,00 €', w:'75%' },
+                ].forEach(item => { %>
+                <div class="mock-row">
+                  <div style="display:flex;align-items:center;gap:8px;">
+                    <div style="width:<%= item.w %>;max-width:130px;" class="mock-line" style="height:7px;margin:0;"></div>
+                  </div>
+                  <span style="font-size:11px;font-weight:700;color:#1e293b;white-space:nowrap;"><%= item.price %></span>
+                </div>
+                <% }); %>
+              </div>
+
+              <!-- TVA + Total -->
+              <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+                <div style="width:200px;">
+                  <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#64748b;">
+                    <span>Total HT</span><span style="font-weight:600;color:#1e293b;">2 350,00 €</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:#64748b;">
+                    <span>TVA 20%</span><span style="font-weight:600;color:#1e293b;">470,00 €</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mock-total">
+                <span style="color:rgba(255,255,255,.8);font-size:12px;font-weight:600;">TOTAL TTC</span>
+                <span style="color:#fff;font-size:16px;font-weight:900;">2 820,00 €</span>
+              </div>
+            </div>
+
+            <!-- Bouton PDF -->
+            <div style="margin-top:12px;display:flex;gap:8px;">
+              <div style="flex:1;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:8px;padding:10px;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;">
+                <span style="color:#fff;font-size:12px;font-weight:700;">⬇ Télécharger PDF</span>
+              </div>
+              <div style="background:#f1f5f9;border-radius:8px;padding:10px 14px;display:flex;align-items:center;cursor:pointer;">
+                <span style="font-size:14px;">🖨</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -100,166 +260,430 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     PROBLÈME vs SOLUTION
-══════════════════════════════════════════════ -->
-<section class="py-14 sm:py-20 bg-gray-50">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <h2 class="text-2xl sm:text-3xl font-black text-gray-900 text-center mb-10">Vous en avez assez de ça ?</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-      <!-- Avant -->
-      <div class="vs-col bg-red-50 border border-red-100">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-xl flex-shrink-0">😤</div>
-          <h3 class="font-black text-red-800 text-lg">Avant LFacture</h3>
-        </div>
-        <ul class="space-y-3">
-          <% [
-            'Factures créées sur Word/Excel, mises en forme à la main',
-            'Numérotation manuelle, oubli des mentions obligatoires',
-            'PDF approximatif, impression bizarre, logo déformé',
-            'Calculs TVA à refaire à chaque fois',
-            'Impossible de retrouver une facture de 6 mois',
-            'Client se plaint : "ta facture ne respecte pas la loi"',
-          ].forEach(t => { %>
-          <li class="flex items-start gap-2.5 text-sm text-red-800">
-            <span class="text-red-400 mt-0.5 flex-shrink-0">✗</span><%= t %>
-          </li>
-          <% }); %>
-        </ul>
-      </div>
-      <!-- Après -->
-      <div class="vs-col bg-green-50 border border-green-100">
-        <div class="flex items-center gap-3 mb-5">
-          <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-xl flex-shrink-0">😌</div>
-          <h3 class="font-black text-green-800 text-lg">Avec LFacture</h3>
-        </div>
-        <ul class="space-y-3">
-          <% [
-            'Facture créée en 2 minutes, prête à envoyer',
-            'Numérotation automatique, toutes les mentions légales incluses',
-            'PDF professionnel avec votre logo, 3 modèles au choix',
-            'TVA calculée automatiquement (0%, 5,5%, 10%, 20%)',
-            'Toutes vos factures rangées et trouvables en 1 clic',
-            'Documents conformes à la législation française',
-          ].forEach(t => { %>
-          <li class="flex items-start gap-2.5 text-sm text-green-800">
-            <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span><%= t %>
-          </li>
-          <% }); %>
-        </ul>
-      </div>
-    </div>
-    <div class="text-center mt-8">
-      <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-xl text-base" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 20px rgba(79,70,229,.28);">
-        Je veux des factures pro gratuitement →
-      </a>
+<!-- ══════════════════════════════════════════════════════════
+     2. PROFILS UTILISATEURS
+══════════════════════════════════════════════════════════ -->
+<div style="background:#f8fafc;border-top:1px solid #e8edf3;border-bottom:1px solid #e8edf3;padding:18px 0;">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-gray-500 font-medium">
+      <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider">Utilisé par</span>
+      <% [
+        { icon:'💼', label:'Auto-entrepreneurs' },
+        { icon:'🎨', label:'Freelances' },
+        { icon:'🏗️', label:'Artisans' },
+        { icon:'💻', label:'Consultants IT' },
+        { icon:'📐', label:'Architectes' },
+        { icon:'🏥', label:'Praticiens libéraux' },
+        { icon:'📸', label:'Photographes' },
+        { icon:'🏢', label:'TPE / PME' },
+      ].forEach(p => { %>
+      <span class="flex items-center gap-1.5 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
+        <span><%= p.icon %></span><%= p.label %>
+      </span>
+      <% }); %>
     </div>
   </div>
-</section>
+</div>
 
-<!-- ══════════════════════════════════════════════
-     STATS
-══════════════════════════════════════════════ -->
-<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);" class="py-10 sm:py-14">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+<!-- ══════════════════════════════════════════════════════════
+     3. STATS
+══════════════════════════════════════════════════════════ -->
+<div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:36px 0;">
+  <div class="max-w-5xl mx-auto px-4">
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center text-white">
       <% [
-        { n:'500+', label:'Entrepreneurs' },
-        { n:'4,9/5', label:'Note moyenne' },
-        { n:'2 min', label:'Pour une facture' },
-        { n:'100%', label:'En ligne, partout' },
+        { n:'500+',  label:'Entrepreneurs actifs', icon:'👥' },
+        { n:'4,9/5', label:'Note des utilisateurs', icon:'⭐' },
+        { n:'2 min', label:'Pour créer une facture', icon:'⚡' },
+        { n:'100%',  label:'Conforme loi française', icon:'🇫🇷' },
       ].forEach(s => { %>
       <div>
+        <div style="font-size:22px;margin-bottom:4px;"><%= s.icon %></div>
         <p class="text-3xl sm:text-4xl font-black mb-1"><%= s.n %></p>
-        <p class="text-sm font-medium opacity-80"><%= s.label %></p>
+        <p class="text-xs sm:text-sm font-medium opacity-75"><%= s.label %></p>
       </div>
       <% }); %>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     FONCTIONNALITÉS
-══════════════════════════════════════════════ -->
-<section class="py-14 sm:py-24 bg-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-12">
-      <h2 class="text-2xl sm:text-4xl font-black text-gray-900 mb-3">Tout ce qu'il vous faut</h2>
-      <p class="text-gray-500 text-base sm:text-lg max-w-lg mx-auto">Simple à prendre en main. Puissant quand vous en avez besoin.</p>
+<!-- ══════════════════════════════════════════════════════════
+     4. AVANT / APRÈS
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 bg-white">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Vous reconnaissez-vous dans ça ?</h2>
+      <p class="text-gray-500 text-sm sm:text-base">La douleur est réelle. La solution aussi.</p>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-7">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Avant -->
+      <div style="background:#fff5f5;border:1.5px solid #fecaca;border-radius:18px;padding:24px;">
+        <div class="flex items-center gap-3 mb-5">
+          <div style="width:42px;height:42px;background:#fee2e2;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">😤</div>
+          <div>
+            <h3 class="font-black text-red-800 text-base">Avant LFacture</h3>
+            <p class="text-xs text-red-400">La galère habituelle…</p>
+          </div>
+        </div>
+        <ul class="space-y-2.5">
+          <% [
+            'Factures sous Word/Excel — mise en forme à la main à chaque fois',
+            'Oubli des mentions obligatoires (SIRET, pénalités, TVA…)',
+            'PDF dégradé à l\'impression, logo pixelisé',
+            'Calcul TVA manuel — risque d\'erreur',
+            'Factures éparpillées dans 12 dossiers différents',
+            'Client qui refuse la facture : "elle n\'est pas conforme"',
+          ].forEach(t => { %>
+          <li class="flex items-start gap-2.5 text-sm text-red-700">
+            <span class="cross-red mt-0.5 flex-shrink-0" style="font-size:16px;">✗</span><%= t %>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+      <!-- Après -->
+      <div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:18px;padding:24px;">
+        <div class="flex items-center gap-3 mb-5">
+          <div style="width:42px;height:42px;background:#dcfce7;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">😌</div>
+          <div>
+            <h3 class="font-black text-green-800 text-base">Avec LFacture</h3>
+            <p class="text-xs text-green-500">La vie devient simple</p>
+          </div>
+        </div>
+        <ul class="space-y-2.5">
+          <% [
+            'Facture créée et téléchargée en 2 minutes top chrono',
+            'Toutes les mentions légales incluses automatiquement',
+            'PDF haute qualité avec votre logo — 3 modèles pros',
+            'TVA calculée instantanément (0%, 5,5%, 10%, 20%)',
+            'Toutes vos factures classées, retrouvables en 1 clic',
+            'Documents conformes 100% à la législation française',
+          ].forEach(t => { %>
+          <li class="flex items-start gap-2.5 text-sm text-green-700">
+            <span class="check-green mt-0.5 flex-shrink-0" style="font-size:16px;">✓</span><%= t %>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+    <div class="text-center mt-7">
+      <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-xl" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 22px rgba(79,70,229,.3);">
+        Je veux des factures pro — c'est gratuit →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     5. FONCTIONNALITÉS — grille riche
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <span style="background:#eef2ff;color:#4F46E5;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:10px;border:1px solid #c7d2fe;">Fonctionnalités</span>
+      <h2 class="text-2xl sm:text-4xl font-black text-gray-900 mb-2">Tout ce qu'il vous faut, rien de plus</h2>
+      <p class="text-gray-500 max-w-lg mx-auto">Simple à prendre en main le premier jour. Puissant pour votre croissance.</p>
+    </div>
+
+    <!-- Grande grille -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
       <% [
-        { icon:'📄', title:'Factures & Devis PDF', desc:'Créez, personnalisez et téléchargez vos documents. Numérotation automatique, calcul TVA instantané.' },
-        { icon:'🎨', title:'3 modèles professionnels', desc:'Classique, Moderne ou Épuré. Ajoutez votre logo et les couleurs de votre marque.' },
-        { icon:'👥', title:'Carnet de clients', desc:'Retrouvez l\'historique de chaque client en 1 clic. Ne ressaisissez plus jamais les mêmes infos.' },
-        { icon:'📊', title:'Tableau de bord', desc:'CA du mois, factures en attente, relances — tout est visible d\'un seul regard.' },
-        { icon:'⚡', title:'PDF en 1 clic', desc:'Téléchargez ou imprimez un PDF haute qualité. Envoyez par email directement depuis le dashboard.' },
-        { icon:'🔒', title:'Données sécurisées', desc:'Accès HTTPS, mots de passe chiffrés. Vos données restent privées et accessibles partout.' },
+        {
+          icon:'📄', color:'#eef2ff', iconColor:'#4F46E5',
+          title:'Factures & Devis PDF',
+          desc:'Créez, personnalisez et téléchargez en quelques clics. Numérotation automatique, calcul TVA instantané. PDF haute définition prêt à envoyer.',
+          tags:['TVA auto','PDF HD','Numérotation']
+        },
+        {
+          icon:'🎨', color:'#fdf4ff', iconColor:'#7C3AED',
+          title:'3 modèles professionnels',
+          desc:'Classique, Moderne ou Épuré. Ajoutez votre logo d\'entreprise depuis les paramètres. Il apparaît automatiquement sur tous vos documents.',
+          tags:['Logo','3 styles','Personnalisable']
+        },
+        {
+          icon:'👥', color:'#f0fdf4', iconColor:'#10b981',
+          title:'Carnet de clients',
+          desc:'Enregistrez vos clients une seule fois. Retrouvez leur historique complet, les factures impayées, le CA généré — tout en un seul endroit.',
+          tags:['Historique','Illimité','Rapide']
+        },
+        {
+          icon:'📊', color:'#fffbeb', iconColor:'#f59e0b',
+          title:'Tableau de bord',
+          desc:'CA du mois, factures payées, en attente, en retard. Vos indicateurs clés d\'un seul regard. Idéal pour piloter votre activité.',
+          tags:['CA mensuel','Suivi','KPIs']
+        },
+        {
+          icon:'⚡', color:'#fef2f2', iconColor:'#ef4444',
+          title:'PDF en 1 clic',
+          desc:'Téléchargez un PDF imprimable ou envoyez la facture par email directement depuis votre dashboard. Vos clients reçoivent un document impeccable.',
+          tags:['Email','Impression','Export']
+        },
+        {
+          icon:'🔒', color:'#f0f9ff', iconColor:'#0ea5e9',
+          title:'Sécurité & Conformité',
+          desc:'Accès HTTPS, mots de passe chiffrés bcrypt, données hébergées en France. Vos factures respectent toutes les mentions légales obligatoires.',
+          tags:['HTTPS','RGPD','Légal']
+        },
       ].forEach(f => { %>
-      <div class="feature-card bg-white rounded-2xl p-6 sm:p-7 border border-gray-100 shadow-sm">
-        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl mb-4" style="background:#eef2ff"><%= f.icon %></div>
-        <h3 class="text-base font-bold text-gray-900 mb-2"><%= f.title %></h3>
-        <p class="text-gray-500 text-sm leading-relaxed"><%= f.desc %></p>
+      <div class="feat-card">
+        <div style="padding:24px;">
+          <div style="width:48px;height:48px;border-radius:14px;background:<%= f.color %>;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;border:1.5px solid rgba(0,0,0,.05);">
+            <%= f.icon %>
+          </div>
+          <h3 class="text-base font-bold text-gray-900 mb-2"><%= f.title %></h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4"><%= f.desc %></p>
+          <div class="flex flex-wrap gap-1.5">
+            <% f.tags.forEach(tag => { %>
+            <span style="font-size:11px;font-weight:600;color:<%= f.iconColor %>;background:<%= f.color %>;padding:3px 8px;border-radius:6px;border:1px solid rgba(0,0,0,.06);"><%= tag %></span>
+            <% }); %>
+          </div>
+        </div>
       </div>
       <% }); %>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     COMMENT ÇA MARCHE
-══════════════════════════════════════════════ -->
-<section class="py-14 sm:py-20 bg-gray-50">
+<!-- ══════════════════════════════════════════════════════════
+     6. TEMPLATES (aperçu CSS)
+══════════════════════════════════════════════════════════ -->
+<section id="templates" class="py-12 sm:py-16 bg-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-10">
+      <span style="background:#eef2ff;color:#4F46E5;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:10px;border:1px solid #c7d2fe;">3 Modèles inclus</span>
+      <h2 class="text-2xl sm:text-4xl font-black text-gray-900 mb-2">Des factures qui font bonne impression</h2>
+      <p class="text-gray-500">Choisissez votre style. Changez en 1 clic.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+
+      <!-- Modèle Classique -->
+      <div class="tpl-card">
+        <div style="padding:18px;background:#f8fafc;min-height:240px;">
+          <div style="background:#fff;border-radius:8px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);">
+            <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+              <div>
+                <div style="width:30px;height:30px;background:#4F46E5;border-radius:6px;margin-bottom:6px;"></div>
+                <div style="height:6px;width:70px;background:#e2e8f0;border-radius:3px;margin-bottom:3px;"></div>
+                <div style="height:5px;width:50px;background:#f1f5f9;border-radius:3px;"></div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:12px;font-weight:900;color:#1e293b;">FACTURE</div>
+                <div style="height:5px;width:60px;background:#e2e8f0;border-radius:3px;margin-top:4px;"></div>
+              </div>
+            </div>
+            <div style="border-top:2px solid #4F46E5;padding-top:10px;">
+              <% for(let i=0;i<3;i++){ %>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+                <div style="height:5px;width:<%= [65,50,75][i] %>%;background:#f1f5f9;border-radius:3px;"></div>
+                <div style="height:5px;width:40px;background:#e2e8f0;border-radius:3px;"></div>
+              </div>
+              <% } %>
+              <div style="margin-top:8px;padding:7px 8px;background:#4F46E5;border-radius:5px;display:flex;justify-content:space-between;">
+                <span style="color:#fff;font-size:9px;font-weight:700;">TOTAL TTC</span>
+                <span style="color:#fff;font-size:9px;font-weight:900;">2 820 €</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:14px 18px;border-top:1px solid #f1f5f9;">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-gray-900 text-sm">Classique</h3>
+              <p class="text-xs text-gray-500">Sobre et professionnel</p>
+            </div>
+            <span style="background:#eef2ff;color:#4F46E5;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">Populaire</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modèle Moderne -->
+      <div class="tpl-card" style="box-shadow:0 12px 40px rgba(79,70,229,.2);">
+        <div style="padding:18px;background:#0f172a;min-height:240px;position:relative;">
+          <div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;">⭐ Favori</div>
+          <div style="display:flex;height:100%;gap:10px;">
+            <div style="width:55px;background:#1e293b;border-radius:8px;padding:10px 6px;flex-shrink:0;">
+              <div style="width:28px;height:28px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:6px;margin:0 auto 8px;"></div>
+              <div style="height:4px;width:100%;background:#334155;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="height:4px;width:80%;background:#334155;border-radius:2px;margin-bottom:4px;"></div>
+              <div style="height:4px;width:60%;background:#334155;border-radius:2px;"></div>
+            </div>
+            <div style="flex:1;">
+              <div style="color:rgba(255,255,255,.4);font-size:8px;font-weight:700;margin-bottom:2px;">FACTURE</div>
+              <div style="color:#fff;font-size:11px;font-weight:900;margin-bottom:8px;">#2024-042</div>
+              <% for(let i=0;i<3;i++){ %>
+              <div style="display:flex;justify-content:space-between;margin-bottom:5px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:4px;">
+                <div style="height:5px;width:<%= [55,40,70][i] %>%;background:#334155;border-radius:2px;"></div>
+                <div style="height:5px;width:35px;background:#475569;border-radius:2px;"></div>
+              </div>
+              <% } %>
+              <div style="margin-top:8px;padding:6px 8px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:5px;display:flex;justify-content:space-between;">
+                <span style="color:rgba(255,255,255,.7);font-size:8px;">TOTAL</span>
+                <span style="color:#fff;font-size:9px;font-weight:900;">2 820 €</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:14px 18px;border-top:1px solid #f1f5f9;">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-gray-900 text-sm">Moderne</h3>
+              <p class="text-xs text-gray-500">Dark & impact visuel fort</p>
+            </div>
+            <span style="background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">Nouveau</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modèle Épuré -->
+      <div class="tpl-card">
+        <div style="padding:18px;background:#fafaf9;min-height:240px;">
+          <div style="background:#fff;border-radius:8px;padding:14px;border:1px solid #e7e5e4;">
+            <div style="text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #e7e5e4;">
+              <div style="width:26px;height:26px;background:#1c1917;border-radius:5px;margin:0 auto 6px;"></div>
+              <div style="height:6px;width:80px;background:#e7e5e4;border-radius:3px;margin:0 auto 3px;"></div>
+              <div style="height:4px;width:55px;background:#f5f5f4;border-radius:3px;margin:0 auto;"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+              <div style="height:5px;width:45%;background:#f5f5f4;border-radius:3px;"></div>
+              <div style="font-size:10px;font-weight:900;color:#1c1917;">FACTURE</div>
+            </div>
+            <% for(let i=0;i<3;i++){ %>
+            <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+              <div style="height:5px;width:<%= [60,45,70][i] %>%;background:#f5f5f4;border-radius:3px;"></div>
+              <div style="height:5px;width:40px;background:#e7e5e4;border-radius:3px;"></div>
+            </div>
+            <% } %>
+            <div style="margin-top:8px;padding:7px 0;border-top:2px solid #1c1917;display:flex;justify-content:space-between;">
+              <span style="font-size:9px;font-weight:700;color:#1c1917;">TOTAL TTC</span>
+              <span style="font-size:9px;font-weight:900;color:#1c1917;">2 820 €</span>
+            </div>
+          </div>
+        </div>
+        <div style="padding:14px 18px;border-top:1px solid #f1f5f9;">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-bold text-gray-900 text-sm">Épuré</h3>
+              <p class="text-xs text-gray-500">Minimaliste & élégant</p>
+            </div>
+            <span style="background:#f5f5f4;color:#44403c;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">Premium</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-xl" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 22px rgba(79,70,229,.3);">
+        Choisir mon modèle gratuitement →
+      </a>
+      <p class="text-xs text-gray-400 mt-2">Changez de modèle à tout moment en 1 clic</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     7. COMMENT ÇA MARCHE
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 bg-gray-50">
   <div class="max-w-4xl mx-auto px-4 sm:px-6">
-    <h2 class="text-2xl sm:text-3xl font-black text-gray-900 text-center mb-10">Votre première facture en 3 étapes</h2>
-    <div class="space-y-5">
+    <div class="text-center mb-10">
+      <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Prêt en 3 étapes</h2>
+      <p class="text-gray-500">De l'inscription à votre première facture PDF : moins de 5 minutes.</p>
+    </div>
+    <div class="space-y-4">
       <% [
-        { n:'1', title:'Créez votre compte gratuit', desc:'Inscription en 30 secondes. Entrez votre email, choisissez un mot de passe — c\'est tout. Aucune carte bancaire.' },
-        { n:'2', title:'Renseignez votre entreprise', desc:'Ajoutez votre nom, SIRET, adresse et logo une seule fois. Ils apparaîtront automatiquement sur tous vos documents.' },
-        { n:'3', title:'Créez et envoyez votre facture', desc:'Sélectionnez votre client, ajoutez vos lignes, téléchargez le PDF. Prêt en moins de 2 minutes.' },
-      ].forEach(step => { %>
-      <div class="flex gap-5 bg-white rounded-2xl p-5 sm:p-7 border border-gray-100 shadow-sm items-start">
-        <div class="w-12 h-12 rounded-full flex items-center justify-center text-white font-black text-lg flex-shrink-0" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)"><%= step.n %></div>
-        <div>
-          <h3 class="font-bold text-gray-900 text-base mb-1"><%= step.title %></h3>
-          <p class="text-gray-500 text-sm leading-relaxed"><%= step.desc %></p>
+        {
+          n:'1', icon:'✉️',
+          title:'Créez votre compte en 30 secondes',
+          desc:'Email + mot de passe, c\'est tout. Confirmez votre adresse avec le code reçu par email. Aucune carte bancaire demandée.',
+          detail:'Inscription gratuite · Code de vérification · Activation immédiate'
+        },
+        {
+          n:'2', icon:'🏢',
+          title:'Renseignez votre entreprise une seule fois',
+          desc:'Nom, SIRET, adresse, logo, conditions de paiement. Ces informations apparaîtront automatiquement sur toutes vos futures factures.',
+          detail:'Logo personnalisé · SIRET · Mentions légales auto'
+        },
+        {
+          n:'3', icon:'📄',
+          title:'Créez votre facture et téléchargez le PDF',
+          desc:'Choisissez votre client, ajoutez les lignes de prestation, le taux de TVA. Votre facture est prête. Téléchargez le PDF ou imprimez-la.',
+          detail:'2 minutes · PDF immédiat · Envoi par email'
+        },
+      ].forEach((step, idx) => { %>
+      <div class="relative flex gap-5 bg-white rounded-2xl p-5 sm:p-7 border border-gray-100 shadow-sm">
+        <% if(idx < 2){ %>
+        <div class="step-line"></div>
+        <% } %>
+        <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 4px 14px rgba(79,70,229,.3);">
+          <%= step.icon %>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span style="background:#eef2ff;color:#4F46E5;font-size:10px;font-weight:800;padding:2px 8px;border-radius:8px;">Étape <%= step.n %></span>
+          </div>
+          <h3 class="font-bold text-gray-900 text-base mb-1.5"><%= step.title %></h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-2"><%= step.desc %></p>
+          <div class="flex flex-wrap gap-2">
+            <% step.detail.split('·').forEach(d => { %>
+            <span class="text-xs text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md font-medium"><%= d.trim() %></span>
+            <% }); %>
+          </div>
         </div>
       </div>
       <% }); %>
     </div>
-    <div class="text-center mt-8">
-      <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-xl text-base" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 20px rgba(79,70,229,.28);">
-        Créer mon compte gratuit
+    <div class="text-center mt-7">
+      <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-xl" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 22px rgba(79,70,229,.3);">
+        Créer mon compte gratuit — c'est parti
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
       </a>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     TÉMOIGNAGES
-══════════════════════════════════════════════ -->
-<section class="py-14 sm:py-24 bg-white">
+<!-- ══════════════════════════════════════════════════════════
+     8. TÉMOIGNAGES (6 cartes)
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 bg-white">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-10">
-      <div class="flex justify-center mb-3"><%for(let i=0;i<5;i++){%><span style="color:#F59E0B;font-size:24px;">★</span><%}%></div>
-      <h2 class="text-2xl sm:text-3xl font-black text-gray-900">Ce que disent nos utilisateurs</h2>
+    <div class="text-center mb-8">
+      <div class="flex justify-center mb-2"><%for(let i=0;i<5;i++){%><span style="color:#F59E0B;font-size:24px;">★</span><%}%></div>
+      <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-1">127 utilisateurs nous font confiance</h2>
+      <p class="text-gray-500 text-sm">Voilà ce qu'ils en disent :</p>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-7">
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
       <% [
-        { name:'Marie L.', role:'Graphiste freelance', quote:'J\'utilisais Word avant. Maintenant mes factures sont prêtes en 90 secondes avec un rendu 10× plus pro. Je ne reviendrais pas en arrière.', stars:5 },
-        { name:'Thomas R.', role:'Consultant IT', quote:'Mes clients reçoivent des factures avec mon logo, mes couleurs, tout en ordre. Ça fait vraiment pro. Et le plan gratuit est suffisant pour démarrer.', stars:5 },
-        { name:'Sophie M.', role:'Coach certifiée', quote:'En tant qu\'auto-entrepreneuse, j\'avais peur de mal faire mes factures. LFacture gère les mentions légales automatiquement. Zéro stress.', stars:5 },
+        { name:'Marie L.',    role:'Graphiste freelance',   avatar:'M', color:'#6366f1',
+          quote:'J\'utilisais Word avant. Mes factures ressemblaient à rien. Maintenant c\'est prêt en 90 secondes et ça fait vraiment pro. Je ne reviendrais pas en arrière.', stars:5 },
+        { name:'Thomas R.',   role:'Consultant IT',          avatar:'T', color:'#8b5cf6',
+          quote:'Mes clients reçoivent des factures avec mon logo, mes couleurs, tout conforme. Le plan gratuit m\'a suffi pour démarrer sans risque.', stars:5 },
+        { name:'Sophie M.',   role:'Coach certifiée',        avatar:'S', color:'#ec4899',
+          quote:'En tant qu\'auto-entrepreneuse, je stressais pour les mentions légales. LFacture gère tout automatiquement. Zéro stress, zéro erreur.', stars:5 },
+        { name:'Antoine B.',  role:'Photographe pro',        avatar:'A', color:'#f59e0b',
+          quote:'Interface ultra-simple. J\'ai créé ma première facture en 3 minutes le jour de l\'inscription. Et le PDF est vraiment beau.', stars:5 },
+        { name:'Laura P.',    role:'Architecte DPLG',        avatar:'L', color:'#10b981',
+          quote:'Je cherchais quelque chose de simple et conforme à la loi. LFacture coche toutes les cases et c\'est gratuit pour commencer. Parfait.', stars:5 },
+        { name:'Karim D.',    role:'Développeur web',        avatar:'K', color:'#0ea5e9',
+          quote:'J\'envoie mes factures directement depuis l\'application. Mes clients paient plus vite car les documents sont clairs et professionnels.', stars:5 },
       ].forEach(t => { %>
-      <div class="feature-card bg-gray-50 rounded-2xl p-6 sm:p-7 border border-gray-100">
-        <div class="flex mb-3"><%for(let i=0;i<t.stars;i++){%><span style="color:#F59E0B;font-size:16px;">★</span><%}%></div>
-        <p class="text-gray-700 text-sm leading-relaxed mb-5 italic">"<%= t.quote %>"</p>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)"><%= t.name.charAt(0) %></div>
+      <div class="testi-card">
+        <div class="flex mb-3"><%for(let i=0;i<t.stars;i++){%><span style="color:#F59E0B;font-size:14px;">★</span><%}%></div>
+        <p class="text-gray-700 text-sm leading-relaxed mb-4">"<%= t.quote %>"</p>
+        <div class="flex items-center gap-3 pt-3 border-t border-gray-50">
+          <div style="width:36px;height:36px;border-radius:50%;background:<%= t.color %>;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0;"><%= t.avatar %></div>
           <div>
             <p class="text-sm font-bold text-gray-900"><%= t.name %></p>
-            <p class="text-xs text-gray-500"><%= t.role %></p>
+            <p class="text-xs text-gray-400"><%= t.role %></p>
+          </div>
+          <div class="ml-auto">
+            <svg width="14" height="14" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;opacity:.5;">
+              <rect width="20" height="14" fill="#ED2939"/>
+              <rect width="13.3" height="14" fill="#fff"/>
+              <rect width="6.67" height="14" fill="#002395"/>
+            </svg>
           </div>
         </div>
       </div>
@@ -268,51 +692,101 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     PRICING TEASER
-══════════════════════════════════════════════ -->
-<section class="py-14 sm:py-20 bg-gray-50">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6">
-    <div class="bg-white rounded-3xl p-7 sm:p-12 border border-gray-100 shadow-sm">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-8">
-        <div>
-          <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Des tarifs clairs, sans surprise</h2>
-          <p class="text-gray-500 text-base mb-4">Commencez gratuitement, passez Premium quand vous êtes prêt.</p>
-          <div class="flex flex-wrap gap-2">
-            <span class="text-xs bg-green-50 text-green-700 font-bold px-3 py-1.5 rounded-full border border-green-100">✓ Plan gratuit — 8 factures offertes</span>
-            <span class="text-xs bg-indigo-50 text-indigo-700 font-bold px-3 py-1.5 rounded-full border border-indigo-100">✓ Premium dès 5€/mois</span>
-            <span class="text-xs bg-purple-50 text-purple-700 font-bold px-3 py-1.5 rounded-full border border-purple-100">✓ Sans engagement</span>
-          </div>
-        </div>
-        <a href="/pricing" class="flex-shrink-0 text-white font-bold text-base px-8 py-4 rounded-xl whitespace-nowrap w-full sm:w-auto text-center" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 20px rgba(79,70,229,.28);">
-          Voir les tarifs →
+<!-- ══════════════════════════════════════════════════════════
+     9. TARIFS (mini table)
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 bg-gray-50">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Des tarifs clairs, sans surprise</h2>
+      <p class="text-gray-500">Commencez gratuitement. Passez Premium quand vous êtes prêt.</p>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <!-- Gratuit -->
+      <div style="background:#fff;border:2px solid #e8edf3;border-radius:20px;padding:24px;">
+        <div style="font-size:13px;font-weight:700;color:#10b981;background:#f0fdf4;border:1px solid #bbf7d0;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">GRATUIT</div>
+        <div style="font-size:36px;font-weight:900;color:#1e293b;line-height:1;margin-bottom:4px;">0 €</div>
+        <div style="font-size:13px;color:#94a3b8;margin-bottom:16px;">pour toujours</div>
+        <ul class="space-y-2 mb-6">
+          <% ['8 factures offertes','8 devis offerts','PDF haute qualité','3 modèles inclus','Logo personnalisé'].forEach(f=>{ %>
+          <li class="flex items-center gap-2 text-sm text-gray-700">
+            <span style="color:#10b981;font-weight:700;">✓</span><%= f %>
+          </li>
+          <% }); %>
+        </ul>
+        <a href="/register" style="display:block;text-align:center;background:#f8fafc;border:1.5px solid #e2e8f0;color:#1e293b;font-weight:700;font-size:14px;padding:11px;border-radius:10px;text-decoration:none;" class="hover:bg-gray-100 transition">
+          Commencer gratuit
+        </a>
+      </div>
+      <!-- Mensuel -->
+      <div style="background:#fff;border:2px solid #e8edf3;border-radius:20px;padding:24px;">
+        <div style="font-size:13px;font-weight:700;color:#4F46E5;background:#eef2ff;border:1px solid #c7d2fe;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">MENSUEL</div>
+        <div style="font-size:36px;font-weight:900;color:#1e293b;line-height:1;margin-bottom:4px;">5 €</div>
+        <div style="font-size:13px;color:#94a3b8;margin-bottom:16px;">par mois</div>
+        <ul class="space-y-2 mb-6">
+          <% ['Factures illimitées','Devis illimités','Clients illimités','Support email','Mises à jour incluses'].forEach(f=>{ %>
+          <li class="flex items-center gap-2 text-sm text-gray-700">
+            <span style="color:#4F46E5;font-weight:700;">✓</span><%= f %>
+          </li>
+          <% }); %>
+        </ul>
+        <a href="/pricing" style="display:block;text-align:center;background:#eef2ff;border:1.5px solid #c7d2fe;color:#4F46E5;font-weight:700;font-size:14px;padding:11px;border-radius:10px;text-decoration:none;" class="hover:bg-indigo-100 transition">
+          Choisir mensuel
+        </a>
+      </div>
+      <!-- Annuel populaire -->
+      <div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border:2px solid transparent;border-radius:20px;padding:24px;position:relative;box-shadow:0 16px 40px rgba(79,70,229,.3);">
+        <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#78350f;font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">⭐ LE PLUS POPULAIRE</div>
+        <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">ANNUEL</div>
+        <div style="font-size:36px;font-weight:900;color:#fff;line-height:1;margin-bottom:2px;">50 €</div>
+        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px;">par an · soit 4,17 €/mois</div>
+        <div style="font-size:11px;font-weight:700;color:#fbbf24;margin-bottom:16px;">Économisez 35% vs mensuel</div>
+        <ul class="space-y-2 mb-6">
+          <% ['Tout du plan mensuel','Support prioritaire','Sauvegardes auto','Nouvelles fonctions en avant-première','Sans engagement annuel'].forEach(f=>{ %>
+          <li class="flex items-center gap-2 text-sm text-white">
+            <span style="color:#a5f3fc;font-weight:700;">✓</span><%= f %>
+          </li>
+          <% }); %>
+        </ul>
+        <a href="/pricing" style="display:block;text-align:center;background:#fff;color:#4F46E5;font-weight:800;font-size:14px;padding:12px;border-radius:10px;text-decoration:none;" class="hover:bg-gray-50 transition">
+          Choisir annuel →
         </a>
       </div>
     </div>
+    <p class="text-center text-xs text-gray-400 mt-5">Tous les plans incluent : PDF, Logo, 3 modèles, TVA automatique, conformité légale.</p>
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     FAQ
-══════════════════════════════════════════════ -->
-<section class="py-14 sm:py-20 bg-white">
+<!-- ══════════════════════════════════════════════════════════
+     10. FAQ
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 bg-white">
   <div class="max-w-3xl mx-auto px-4 sm:px-6">
-    <h2 class="text-2xl sm:text-3xl font-black text-gray-900 text-center mb-10">Questions fréquentes</h2>
-    <div class="space-y-3">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Questions fréquentes</h2>
+      <p class="text-gray-500 text-sm">Tout ce que vous voulez savoir avant de vous lancer.</p>
+    </div>
+    <div class="space-y-2">
       <% [
-        { q:'Le plan gratuit est vraiment gratuit ?', a:'Oui, totalement. Vous créez votre compte sans carte bancaire et vous pouvez créer 8 factures + 8 devis. Aucune limite de temps. Si vous avez besoin de plus, vous passez à Premium.' },
-        { q:'Mes factures sont-elles conformes à la loi française ?', a:'Oui. LFacture intègre automatiquement toutes les mentions obligatoires : numéro de facture, date, coordonnées, SIRET, taux de TVA, conditions de paiement, pénalités de retard.' },
-        { q:'Puis-je ajouter mon logo sur les factures ?', a:'Oui, vous pouvez uploader votre logo depuis les paramètres. Il apparaîtra automatiquement sur toutes vos factures et devis, dans les 3 modèles disponibles.' },
-        { q:'Comment fonctionne l\'abonnement Premium ?', a:'L\'abonnement Premium vous donne accès à des factures et devis illimités. Vous pouvez vous abonner pour 1 mois ou 1 an (avec réduction). Résiliation possible à tout moment.' },
-        { q:'Mes données sont-elles sécurisées ?', a:'Oui. Toutes les connexions sont chiffrées (HTTPS), les mots de passe sont hashés (bcrypt) et vos données vous appartiennent. Vous pouvez les exporter ou les supprimer à tout moment.' },
-        { q:'Puis-je utiliser LFacture depuis mon téléphone ?', a:'Oui, l\'interface est entièrement responsive. Vous pouvez créer et télécharger des factures depuis votre smartphone ou tablette sans aucun problème.' },
-      ].forEach((faq, i) => { %>
+        { q:'Le plan gratuit est vraiment gratuit, sans limite de temps ?',
+          a:'Oui, 100% gratuit. Vous créez votre compte sans carte bancaire et vous pouvez créer 8 factures + 8 devis sans aucune limite de temps. Quand vous atteignez la limite, vous choisissez librement de passer en Premium.' },
+        { q:'Mes factures respectent-elles la loi française ?',
+          a:'Oui. LFacture intègre automatiquement toutes les mentions légales obligatoires : numéro séquentiel, date, coordonnées complètes, SIRET, taux de TVA, conditions de paiement, pénalités de retard et indemnité de recouvrement.' },
+        { q:'Puis-je ajouter mon logo et mes couleurs ?',
+          a:'Oui. Uploadez votre logo depuis les Paramètres (formats PNG, JPG, SVG — max 2 Mo). Il apparaît automatiquement sur tous vos documents, dans les 3 modèles disponibles. La couleur principale s\'adapte à votre charte.' },
+        { q:'Puis-je utiliser LFacture depuis mon téléphone ?',
+          a:'Oui, l\'interface est 100% responsive. Vous créez et téléchargez des factures depuis votre smartphone ou tablette, avec la même fluidité que sur ordinateur.' },
+        { q:'Que se passe-t-il si j\'atteins la limite du plan gratuit ?',
+          a:'Vous êtes notifié quand il vous reste 2 documents. Vous pouvez alors passer en Premium (5€/mois ou 50€/an) pour un accès illimité. Sans engagement — résiliez quand vous voulez.' },
+        { q:'Mes données sont-elles sécurisées et privées ?',
+          a:'Oui. Connexion HTTPS chiffrée, mots de passe hashés (bcrypt), données hébergées en France. Aucune donnée revendue à des tiers. Vous êtes propriétaire de vos documents et pouvez les supprimer à tout moment.' },
+      ].forEach(faq => { %>
       <details class="faq-item bg-gray-50 rounded-xl border border-gray-100 overflow-hidden">
-        <summary class="flex items-center justify-between p-5 font-bold text-gray-900 text-sm sm:text-base">
+        <summary class="flex items-center justify-between p-4 sm:p-5 font-bold text-gray-900 text-sm">
           <%= faq.q %>
-          <svg class="faq-icon w-5 h-5 text-indigo-600 flex-shrink-0 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
+          <svg class="faq-icon w-5 h-5 text-indigo-500 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
         </summary>
-        <div class="px-5 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-4">
+        <div class="px-4 sm:px-5 pb-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100 pt-3">
           <%= faq.a %>
         </div>
       </details>
@@ -321,28 +795,49 @@
   </div>
 </section>
 
-<!-- ══════════════════════════════════════════════
-     CTA FINAL
-══════════════════════════════════════════════ -->
-<section class="py-14 sm:py-20 px-4">
-  <div class="max-w-3xl mx-auto">
-    <div class="rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
-      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,255,255,.1) 0%,transparent 60%)"></div>
-      <div class="relative">
-        <p class="text-indigo-200 font-semibold text-sm mb-3 uppercase tracking-wider">Rejoignez 500+ entrepreneurs</p>
-        <h2 class="text-2xl sm:text-4xl font-black text-white mb-4">Créez votre première facture gratuite maintenant</h2>
-        <p class="text-indigo-200 text-base sm:text-lg mb-8 max-w-lg mx-auto">
-          8 factures + 8 devis professionnels offerts. Sans carte bancaire. Sans engagement.
+<!-- ══════════════════════════════════════════════════════════
+     11. CTA FINAL — urgence douce
+══════════════════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 px-4 bg-gray-50">
+  <div class="max-w-4xl mx-auto">
+    <div class="rounded-3xl overflow-hidden relative" style="background:linear-gradient(135deg,#4F46E5 0%,#6d28d9 60%,#7C3AED 100%);">
+      <!-- Décorations -->
+      <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 70% 60% at 10% 0%,rgba(255,255,255,.1),transparent 50%),radial-gradient(ellipse 50% 80% at 90% 100%,rgba(0,0,0,.15),transparent 50%);"></div>
+      <!-- Grid -->
+      <div class="absolute inset-0 pointer-events-none" style="background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:32px 32px;"></div>
+
+      <div class="relative px-8 sm:px-14 py-12 sm:py-16 text-center">
+        <!-- Avatars -->
+        <div class="flex justify-center -space-x-2 mb-4">
+          <% ['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981'].forEach((c,i)=>{ %>
+          <div class="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-white text-xs font-bold" style="background:<%= c %>"><%= ['M','T','S','A','L'][i] %></div>
+          <% }); %>
+          <div class="w-9 h-9 rounded-full border-2 border-white flex items-center justify-center text-xs font-bold" style="background:rgba(255,255,255,.2);color:#fff;">+</div>
+        </div>
+
+        <p class="text-indigo-200 text-sm font-semibold mb-3">Rejoignez 500+ entrepreneurs français</p>
+        <h2 class="text-2xl sm:text-4xl font-black text-white mb-4 leading-tight">
+          Votre première facture<br/>professionnelle en 2 minutes
+        </h2>
+        <p class="text-indigo-200 text-base sm:text-lg mb-8 max-w-xl mx-auto">
+          8 factures + 8 devis offerts. Sans carte bancaire. Sans engagement. Conforme à la loi française.
         </p>
+
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="/register" class="w-full sm:w-auto text-center bg-white text-indigo-700 font-black text-base sm:text-lg px-8 py-4 rounded-xl hover:bg-gray-50 transition">
-            Commencer gratuitement — c'est gratuit →
+          <a href="/register" style="background:#fff;color:#4F46E5;font-weight:900;font-size:16px;padding:15px 32px;border-radius:14px;text-decoration:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2);" class="hover:bg-gray-50 transition w-full sm:w-auto text-center">
+            Commencer gratuitement →
           </a>
-          <a href="/blog" class="text-white/70 font-semibold text-sm hover:text-white transition">
-            Lire le blog facturation
+          <a href="/pricing" class="text-white/70 font-semibold text-sm hover:text-white transition">
+            Voir les tarifs
           </a>
         </div>
-        <p class="text-indigo-300 text-xs mt-5">Compte créé en 30 secondes · Aucune carte bancaire · Données sécurisées</p>
+
+        <!-- Garanties -->
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 mt-7 text-sm text-indigo-200">
+          <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-green-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Inscription en 30 secondes</span>
+          <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-green-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Aucune carte bancaire</span>
+          <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-green-300" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Données sécurisées en France</span>
+        </div>
       </div>
     </div>
   </div>
