@@ -2,29 +2,24 @@ const { db, nextId } = require('../database/db');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 
+const FREE_INVOICE_LIMIT = 8;
+const FREE_QUOTE_LIMIT = 8;
+
 class User {
   static create({ name, email, password }) {
-    const uuid = uuidv4();
-    const hashedPassword = bcrypt.hashSync(password, 12);
-    const trialDays = parseInt(process.env.TRIAL_DAYS) || 7;
-    const trialEndsAt = new Date();
-    trialEndsAt.setDate(trialEndsAt.getDate() + trialDays);
-
     const user = {
       id: nextId('user'),
-      uuid,
+      uuid: uuidv4(),
       name,
       email: email.toLowerCase().trim(),
-      password: hashedPassword,
+      password: bcrypt.hashSync(password, 12),
       plan: 'pending',           // en attente de vérification email
       is_admin: 0,
       email_verified: 0,
       verification_token: uuidv4(),
       verification_sent_at: new Date().toISOString(),
-      trial_started_at: null,    // démarre après vérification email
-      trial_ends_at: null,       // calculé après vérification
       subscription_ends_at: null,
-      funnel_step: 0,            // étape du funnel (0=vérifié, 1=j5, 2=j7, 3=j9, 4=j12)
+      funnel_step: 0,
       created_at: new Date().toISOString(),
     };
     db.get('users').push(user).write();
@@ -43,49 +38,49 @@ class User {
     return bcrypt.compareSync(plainPassword, hashedPassword);
   }
 
+  // Vérifie l'email → active le plan gratuit (pas de limite de temps)
   static verifyEmail(token) {
     const user = db.get('users').find(u => u.verification_token === token).value();
     if (!user) return null;
-    if (user.email_verified) return user; // déjà vérifié
-
-    const trialDays = parseInt(process.env.TRIAL_DAYS) || 7;
-    const trialEndsAt = new Date();
-    trialEndsAt.setDate(trialEndsAt.getDate() + trialDays);
+    if (user.email_verified) return user;
 
     db.get('users').find({ id: user.id }).assign({
       email_verified: 1,
-      plan: 'trial',
-      trial_started_at: new Date().toISOString(),
-      trial_ends_at: trialEndsAt.toISOString(),
+      plan: 'free',              // plan gratuit, sans limite de temps
       verification_token: null,
     }).write();
 
     return db.get('users').find({ id: user.id }).value();
   }
 
-  static isOnTrial(user) {
-    if (!user || user.plan !== 'trial') return false;
-    if (!user.trial_ends_at) return false;
-    return new Date(user.trial_ends_at) > new Date();
-  }
-
   static isPending(user) {
     return user && user.plan === 'pending' && !user.email_verified;
   }
 
+  static isFree(user) {
+    return user && user.plan === 'free';
+  }
+
+  // Un utilisateur a accès si : plan gratuit OU abonnement actif OU admin
   static hasActiveSubscription(user) {
     if (!user) return false;
-    if (this.isOnTrial(user)) return true;
+    if (user.is_admin) return true;
+    if (user.plan === 'free') return true;  // plan gratuit = accès permanent (limité en volume)
     if (user.plan === 'active' && user.subscription_ends_at) {
       return new Date(user.subscription_ends_at) > new Date();
     }
     return false;
   }
 
-  static trialDaysLeft(user) {
-    if (!user || !user.trial_ends_at) return 0;
-    const diff = new Date(user.trial_ends_at) - new Date();
-    return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  // Quota pour le plan gratuit
+  static getQuota(userId) {
+    const uid = Number(userId);
+    const invoices = db.get('invoices').filter({ user_id: uid, type: 'invoice' }).value().length;
+    const quotes   = db.get('invoices').filter({ user_id: uid, type: 'quote' }).value().length;
+    return {
+      invoices: { used: invoices, max: FREE_INVOICE_LIMIT, remaining: Math.max(0, FREE_INVOICE_LIMIT - invoices), reached: invoices >= FREE_INVOICE_LIMIT },
+      quotes:   { used: quotes,   max: FREE_QUOTE_LIMIT,   remaining: Math.max(0, FREE_QUOTE_LIMIT - quotes),     reached: quotes >= FREE_QUOTE_LIMIT   },
+    };
   }
 
   static makeAdmin(email) {
@@ -107,6 +102,8 @@ class User {
     db.get('clients').remove({ user_id: Number(id) }).write();
     db.get('invoices').remove({ user_id: Number(id) }).write();
     db.get('settings').remove({ user_id: Number(id) }).write();
+    db.get('contacts').remove({ user_id: Number(id) }).write();
+    db.get('funnel_logs').remove({ user_id: Number(id) }).write();
   }
 
   static all() {
@@ -119,43 +116,38 @@ class User {
     const contacts = db.get('contacts').value();
     const now = new Date();
     return {
-      total_users: users.filter(u => !u.is_admin).length,
+      total_users:   users.filter(u => !u.is_admin).length,
       pending_users: users.filter(u => u.plan === 'pending' || !u.email_verified).length,
-      trial_users: users.filter(u => u.plan === 'trial' && u.trial_ends_at && new Date(u.trial_ends_at) > now).length,
-      active_users: users.filter(u => u.plan === 'active' && u.subscription_ends_at && new Date(u.subscription_ends_at) > now).length,
-      expired_users: users.filter(u => {
-        if (u.plan === 'trial') return new Date(u.trial_ends_at) <= now;
-        if (u.plan === 'active') return !u.subscription_ends_at || new Date(u.subscription_ends_at) <= now;
-        return false;
-      }).length,
+      free_users:    users.filter(u => u.plan === 'free').length,
+      active_users:  users.filter(u => u.plan === 'active' && u.subscription_ends_at && new Date(u.subscription_ends_at) > now).length,
+      expired_users: users.filter(u => u.plan === 'active' && (!u.subscription_ends_at || new Date(u.subscription_ends_at) <= now)).length,
       total_invoices: invoices.filter(i => i.type === 'invoice').length,
-      total_quotes: invoices.filter(i => i.type === 'quote').length,
-      new_today: users.filter(u => new Date(u.created_at).toDateString() === now.toDateString()).length,
+      total_quotes:   invoices.filter(i => i.type === 'quote').length,
+      new_today:      users.filter(u => new Date(u.created_at).toDateString() === now.toDateString()).length,
       total_contacts: contacts.length,
     };
   }
 
-  static getTrialUsers() {
-    const now = new Date();
+  static getFreeUsers() {
     return db.get('users')
-      .filter(u => u.plan === 'trial' && u.trial_ends_at && new Date(u.trial_ends_at) > now)
-      .sortBy(u => new Date(u.trial_ends_at).getTime())
-      .value();
+      .filter({ plan: 'free' })
+      .value()
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }
 
   static getStats(userId) {
     const uid = Number(userId);
     const invoices = db.get('invoices').filter({ user_id: uid, type: 'invoice' }).value();
-    const quotes = db.get('invoices').filter({ user_id: uid, type: 'quote' }).value();
-    const clients = db.get('clients').filter({ user_id: uid }).value();
-    const paid = invoices.filter(i => i.status === 'paid');
+    const quotes   = db.get('invoices').filter({ user_id: uid, type: 'quote' }).value();
+    const clients  = db.get('clients').filter({ user_id: uid }).value();
+    const paid    = invoices.filter(i => i.status === 'paid');
     const pending = invoices.filter(i => i.status === 'sent');
     return {
       invoices: invoices.length,
-      quotes: quotes.length,
-      clients: clients.length,
-      revenue: paid.reduce((sum, i) => sum + (i.total || 0), 0),
-      pending: pending.reduce((sum, i) => sum + (i.total || 0), 0),
+      quotes:   quotes.length,
+      clients:  clients.length,
+      revenue:  paid.reduce((sum, i) => sum + (i.total || 0), 0),
+      pending:  pending.reduce((sum, i) => sum + (i.total || 0), 0),
     };
   }
 }

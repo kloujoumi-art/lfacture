@@ -216,32 +216,23 @@ class AdminController {
     res.redirect(`/admin/users/${req.params.id}`);
   }
 
-  // ---- Essai 7j ----
+  // ---- Plan Gratuit (anciennement "Essai 7j") ----
   static listTrialUsers(req, res) {
-    const now = new Date();
-    const allTrialUsers = db.get('users')
-      .filter(u => u.plan === 'trial' && u.trial_ends_at)
-      .value()
-      .map(u => {
-        const trialEnd = new Date(u.trial_ends_at);
-        const trialStart = u.trial_started_at ? new Date(u.trial_started_at) : new Date(u.created_at);
-        const totalDays = 7;
-        const daysElapsed = Math.max(0, (now - trialStart) / 86400000);
-        const daysLeft = Math.max(0, Math.ceil((trialEnd - now) / 86400000));
-        const progress = Math.min(100, Math.round((daysElapsed / totalDays) * 100));
-        const funnelLogs = db.get('funnel_logs').filter({ user_id: u.id }).value();
-        return { ...u, daysLeft, progress, funnelLogs, active: trialEnd > now };
-      })
-      .sort((a, b) => a.daysLeft - b.daysLeft);
+    const freeUsers = User.getFreeUsers().map(u => {
+      const quota = User.getQuota(u.id);
+      const funnelLogs = db.get('funnel_logs').filter({ user_id: u.id }).value();
+      const invProgress = Math.round((quota.invoices.used / quota.invoices.max) * 100);
+      const quotProgress = Math.round((quota.quotes.used / quota.quotes.max) * 100);
+      return { ...u, quota, funnelLogs, invProgress, quotProgress };
+    });
 
     const pendingUsers = db.get('users').filter(u => u.plan === 'pending').value();
 
     adm(res, 'admin/trial-users', {
-      title: 'Essais 7j — Admin',
-      pageTitle: 'Essais 7 jours',
+      title: 'Plan Gratuit — Admin',
+      pageTitle: 'Utilisateurs plan gratuit',
       activePage: 'trial',
-      trialUsers: allTrialUsers.filter(u => u.active),
-      expiredTrials: allTrialUsers.filter(u => !u.active),
+      freeUsers,
       pendingUsers,
       stats: User.globalStats(),
     });

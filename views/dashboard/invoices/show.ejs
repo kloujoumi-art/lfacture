@@ -5,7 +5,21 @@
   </a>
   <div class="flex-1"></div>
 
-  <!-- Status update -->
+  <!-- Template selector -->
+  <div style="display:flex;gap:6px;align-items:center;">
+    <span style="font-size:12px;color:#9ca3af;font-weight:600;">Modèle :</span>
+    <% ['classic','modern','minimal'].forEach(function(tpl) { %>
+    <form method="POST" action="/dashboard/invoices/<%= invoice.id %>/template" style="display:inline;">
+      <input type="hidden" name="template" value="<%= tpl %>">
+      <button type="submit" style="padding:4px 10px;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;<%=
+        (invoice.template || 'classic') === tpl
+          ? 'background:#4F46E5;color:#fff;border-color:#4F46E5;'
+          : 'background:#f9fafb;color:#6b7280;border-color:#e5e7eb;'
+      %>"><%= tpl === 'classic' ? 'Classique' : tpl === 'modern' ? 'Moderne' : 'Épuré' %></button>
+    </form>
+    <% }); %>
+  </div>
+
   <form action="/dashboard/invoices/<%= invoice.id %>/status" method="POST" class="flex items-center gap-2">
     <select name="status" class="px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white">
       <option value="draft" <%= invoice.status === 'draft' ? 'selected' : '' %>>Brouillon</option>
@@ -22,26 +36,26 @@
   </button>
 </div>
 
-<!-- Invoice Document -->
+<% const tpl = invoice.template || 'classic'; %>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     MODÈLE 1 : CLASSIQUE (violet dégradé)
+     ══════════════════════════════════════════════════════════════════ -->
+<% if (tpl === 'classic') { %>
 <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden" id="invoiceDoc">
   <div class="p-10">
-    <!-- Header -->
     <div class="flex items-start justify-between mb-10">
       <div>
         <% if (settings && settings.company_name) { %>
           <h2 class="text-2xl font-black text-gray-900"><%= settings.company_name %></h2>
           <% if (settings.company_address) { %><p class="text-sm text-gray-500 mt-1"><%= settings.company_address %></p><% } %>
           <% if (settings.company_city) { %><p class="text-sm text-gray-500"><%= settings.company_postal || '' %> <%= settings.company_city %></p><% } %>
+          <% if (settings.company_phone) { %><p class="text-sm text-gray-500 mt-1">📞 <%= settings.company_phone %></p><% } %>
+          <% if (settings.company_email) { %><p class="text-sm text-gray-500">✉ <%= settings.company_email %></p><% } %>
           <% if (settings.company_siret) { %><p class="text-xs text-gray-400 mt-1">SIRET : <%= settings.company_siret %></p><% } %>
           <% if (settings.company_tva) { %><p class="text-xs text-gray-400">N° TVA : <%= settings.company_tva %></p><% } %>
         <% } else { %>
-          <div class="flex items-center gap-2">
-            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
-              <span class="text-white font-black text-sm">L</span>
-            </div>
-            <span class="text-xl font-black">LFacture</span>
-          </div>
-          <p class="text-xs text-gray-400 mt-2">Complétez vos paramètres d'entreprise</p>
+          <div class="flex items-center gap-2"><div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)"><span class="text-white font-black text-sm">L</span></div><span class="text-xl font-black">LFacture</span></div>
         <% } %>
       </div>
       <div class="text-right">
@@ -51,22 +65,11 @@
           <p class="text-sm text-gray-500">Date : <strong class="text-gray-700"><%= new Date(invoice.issue_date).toLocaleDateString('fr-FR') %></strong></p>
           <% if (invoice.due_date) { %><p class="text-sm text-gray-500">Échéance : <strong class="text-gray-700"><%= new Date(invoice.due_date).toLocaleDateString('fr-FR') %></strong></p><% } %>
         </div>
-        <span class="inline-block mt-3 text-xs font-bold px-3 py-1 rounded-full <%=
-          invoice.status === 'paid' ? 'bg-green-100 text-green-700' :
-          invoice.status === 'sent' ? 'bg-blue-100 text-blue-700' :
-          invoice.status === 'cancelled' ? 'bg-red-100 text-red-700' :
-          'bg-gray-100 text-gray-600'
-        %>">
-          <%=
-            invoice.status === 'paid' ? '✓ Payée' :
-            invoice.status === 'sent' ? '→ Envoyée' :
-            invoice.status === 'cancelled' ? '✗ Annulée' : '● Brouillon'
-          %>
+        <span class="inline-block mt-3 text-xs font-bold px-3 py-1 rounded-full <%= invoice.status === 'paid' ? 'bg-green-100 text-green-700' : invoice.status === 'sent' ? 'bg-blue-100 text-blue-700' : invoice.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600' %>">
+          <%= invoice.status === 'paid' ? '✓ Payée' : invoice.status === 'sent' ? '→ Envoyée' : invoice.status === 'cancelled' ? '✗ Annulée' : '● Brouillon' %>
         </span>
       </div>
     </div>
-
-    <!-- Client -->
     <% if (invoice.client_name) { %>
     <div class="mb-10 bg-gray-50 rounded-xl p-6 max-w-xs">
       <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Facturé à</p>
@@ -74,54 +77,33 @@
       <% if (invoice.client_company) { %><p class="text-sm text-gray-600"><%= invoice.client_company %></p><% } %>
       <% if (invoice.client_address) { %><p class="text-sm text-gray-500 mt-1"><%= invoice.client_address %></p><% } %>
       <% if (invoice.client_postal || invoice.client_city) { %><p class="text-sm text-gray-500"><%= invoice.client_postal || '' %> <%= invoice.client_city || '' %></p><% } %>
-      <% if (invoice.client_siret) { %><p class="text-xs text-gray-400 mt-1">SIRET : <%= invoice.client_siret %></p><% } %>
     </div>
     <% } %>
-
-    <!-- Items table -->
     <table class="w-full mb-8">
-      <thead>
-        <tr style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
-          <th class="text-left px-4 py-3 text-white text-sm font-semibold rounded-l-xl">Description</th>
-          <th class="text-center px-4 py-3 text-white text-sm font-semibold">Qté</th>
-          <th class="text-right px-4 py-3 text-white text-sm font-semibold">PU HT</th>
-          <th class="text-center px-4 py-3 text-white text-sm font-semibold">TVA</th>
-          <th class="text-right px-4 py-3 text-white text-sm font-semibold rounded-r-xl">Total TTC</th>
-        </tr>
-      </thead>
+      <thead><tr style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
+        <th class="text-left px-4 py-3 text-white text-sm font-semibold rounded-l-xl">Description</th>
+        <th class="text-center px-4 py-3 text-white text-sm font-semibold">Qté</th>
+        <th class="text-right px-4 py-3 text-white text-sm font-semibold">PU HT</th>
+        <th class="text-center px-4 py-3 text-white text-sm font-semibold">TVA</th>
+        <th class="text-right px-4 py-3 text-white text-sm font-semibold rounded-r-xl">Total TTC</th>
+      </tr></thead>
       <tbody class="divide-y divide-gray-100">
         <% if (invoice.items && invoice.items.length > 0) { invoice.items.forEach(item => { %>
-        <tr>
-          <td class="px-4 py-4 text-sm text-gray-800"><%= item.description %></td>
-          <td class="px-4 py-4 text-sm text-gray-600 text-center"><%= item.quantity %></td>
-          <td class="px-4 py-4 text-sm text-gray-600 text-right"><%= item.unit_price.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td>
-          <td class="px-4 py-4 text-sm text-gray-600 text-center"><%= item.tva_rate %>%</td>
-          <td class="px-4 py-4 text-sm font-semibold text-gray-900 text-right"><%= item.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td>
-        </tr>
-        <% }); } else { %>
-        <tr><td colspan="5" class="px-4 py-8 text-center text-gray-400 text-sm">Aucune ligne</td></tr>
-        <% } %>
+        <tr><td class="px-4 py-4 text-sm text-gray-800"><%= item.description %></td><td class="px-4 py-4 text-sm text-gray-600 text-center"><%= item.quantity %></td><td class="px-4 py-4 text-sm text-gray-600 text-right"><%= item.unit_price.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td><td class="px-4 py-4 text-sm text-gray-600 text-center"><%= item.tva_rate %>%</td><td class="px-4 py-4 text-sm font-semibold text-gray-900 text-right"><%= item.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td></tr>
+        <% }); } %>
       </tbody>
     </table>
-
-    <!-- Totals -->
-    <div class="flex justify-end mb-8">
-      <div class="w-64">
-        <div class="flex justify-between py-2 text-sm text-gray-600 border-b border-gray-100"><span>Total HT</span><span><%= invoice.subtotal.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
-        <div class="flex justify-between py-2 text-sm text-gray-600 border-b border-gray-100"><span>TVA</span><span><%= invoice.tva_amount.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
-        <div class="flex justify-between py-3 font-black text-lg text-gray-900"><span>Total TTC</span><span style="color:#4F46E5"><%= invoice.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
-      </div>
-    </div>
-
-    <!-- Notes & Payment terms -->
+    <div class="flex justify-end mb-8"><div class="w-64">
+      <div class="flex justify-between py-2 text-sm text-gray-600 border-b border-gray-100"><span>Total HT</span><span><%= invoice.subtotal.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+      <div class="flex justify-between py-2 text-sm text-gray-600 border-b border-gray-100"><span>TVA</span><span><%= invoice.tva_amount.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+      <div class="flex justify-between py-3 font-black text-lg text-gray-900"><span>Total TTC</span><span style="color:#4F46E5"><%= invoice.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+    </div></div>
     <% if (invoice.notes || invoice.payment_terms) { %>
     <div class="border-t border-gray-100 pt-6 space-y-2">
       <% if (invoice.payment_terms) { %><p class="text-sm text-gray-600"><strong>Conditions :</strong> <%= invoice.payment_terms %></p><% } %>
       <% if (invoice.notes) { %><p class="text-sm text-gray-500"><%= invoice.notes %></p><% } %>
     </div>
     <% } %>
-
-    <!-- Bank details -->
     <% if (settings && settings.bank_iban) { %>
     <div class="mt-6 bg-gray-50 rounded-xl p-4">
       <p class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Coordonnées bancaires</p>
@@ -132,12 +114,196 @@
     <% } %>
   </div>
 </div>
+<% } %>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     MODÈLE 2 : MODERNE (sidebar sombre gauche)
+     ══════════════════════════════════════════════════════════════════ -->
+<% if (tpl === 'modern') { %>
+<div id="invoiceDoc" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08),0 4px 20px rgba(0,0,0,.08);display:flex;min-height:700px;">
+  <!-- Sidebar -->
+  <div style="width:220px;background:#1e293b;flex-shrink:0;padding:36px 24px;display:flex;flex-direction:column;gap:24px;">
+    <div>
+      <% if (settings && settings.company_name) { %>
+      <p style="color:#fff;font-weight:900;font-size:16px;margin:0 0 6px;"><%= settings.company_name %></p>
+      <% if (settings.company_address) { %><p style="color:#94a3b8;font-size:11px;margin:0 0 2px;"><%= settings.company_address %></p><% } %>
+      <% if (settings.company_city) { %><p style="color:#94a3b8;font-size:11px;margin:0;"><%= settings.company_postal || '' %> <%= settings.company_city %></p><% } %>
+      <% } else { %>
+      <p style="color:#fff;font-weight:900;font-size:16px;margin:0;">LFacture</p>
+      <% } %>
+    </div>
+    <div style="border-top:1px solid #334155;padding-top:20px;">
+      <p style="color:#64748b;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin:0 0 8px;">Contact</p>
+      <% if (settings && settings.company_phone) { %><p style="color:#94a3b8;font-size:11px;margin:0 0 4px;">📞 <%= settings.company_phone %></p><% } %>
+      <% if (settings && settings.company_email) { %><p style="color:#94a3b8;font-size:11px;margin:0 0 4px;">✉ <%= settings.company_email %></p><% } %>
+      <% if (settings && settings.company_siret) { %><p style="color:#64748b;font-size:10px;margin:8px 0 0;">SIRET : <%= settings.company_siret %></p><% } %>
+    </div>
+    <% if (invoice.client_name) { %>
+    <div style="border-top:1px solid #334155;padding-top:20px;">
+      <p style="color:#64748b;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin:0 0 8px;">Client</p>
+      <p style="color:#e2e8f0;font-weight:700;font-size:12px;margin:0 0 4px;"><%= invoice.client_name %></p>
+      <% if (invoice.client_company) { %><p style="color:#94a3b8;font-size:11px;margin:0 0 2px;"><%= invoice.client_company %></p><% } %>
+      <% if (invoice.client_address) { %><p style="color:#94a3b8;font-size:11px;margin:0 0 2px;"><%= invoice.client_address %></p><% } %>
+      <% if (invoice.client_city) { %><p style="color:#94a3b8;font-size:11px;margin:0;"><%= invoice.client_postal || '' %> <%= invoice.client_city %></p><% } %>
+    </div>
+    <% } %>
+    <% if (settings && settings.bank_iban) { %>
+    <div style="border-top:1px solid #334155;padding-top:20px;margin-top:auto;">
+      <p style="color:#64748b;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin:0 0 8px;">Banque</p>
+      <% if (settings.bank_name) { %><p style="color:#94a3b8;font-size:11px;margin:0 0 2px;"><%= settings.bank_name %></p><% } %>
+      <p style="color:#94a3b8;font-size:10px;font-family:monospace;margin:0 0 2px;word-break:break-all;"><%= settings.bank_iban %></p>
+      <% if (settings.bank_bic) { %><p style="color:#64748b;font-size:10px;font-family:monospace;margin:0;">BIC : <%= settings.bank_bic %></p><% } %>
+    </div>
+    <% } %>
+  </div>
+  <!-- Content -->
+  <div style="flex:1;padding:36px 36px;">
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;">
+      <div>
+        <p style="font-size:32px;font-weight:900;color:#1e293b;margin:0;line-height:1;"><%= invoice.type === 'invoice' ? 'FACTURE' : 'DEVIS' %></p>
+        <p style="font-size:18px;font-weight:700;color:#64748b;margin:4px 0 0;"><%= invoice.invoice_number %></p>
+      </div>
+      <div style="text-align:right;">
+        <div style="background:#f1f5f9;border-radius:10px;padding:14px 18px;">
+          <p style="margin:0 0 4px;color:#64748b;font-size:11px;">Date</p>
+          <p style="margin:0;color:#1e293b;font-weight:700;font-size:14px;"><%= new Date(invoice.issue_date).toLocaleDateString('fr-FR') %></p>
+          <% if (invoice.due_date) { %>
+          <p style="margin:8px 0 4px;color:#64748b;font-size:11px;">Échéance</p>
+          <p style="margin:0;color:#1e293b;font-weight:700;font-size:14px;"><%= new Date(invoice.due_date).toLocaleDateString('fr-FR') %></p>
+          <% } %>
+        </div>
+        <span style="display:inline-block;margin-top:10px;font-size:11px;font-weight:800;padding:5px 12px;border-radius:20px;<%=
+          invoice.status === 'paid' ? 'background:#d1fae5;color:#065f46;' :
+          invoice.status === 'sent' ? 'background:#dbeafe;color:#1e40af;' :
+          invoice.status === 'cancelled' ? 'background:#fee2e2;color:#991b1b;' : 'background:#f3f4f6;color:#374151;'
+        %>"><%= invoice.status === 'paid' ? '✓ Payée' : invoice.status === 'sent' ? '→ Envoyée' : invoice.status === 'cancelled' ? '✗ Annulée' : '● Brouillon' %></span>
+      </div>
+    </div>
+    <!-- Items -->
+    <table style="width:100%;border-collapse:collapse;margin-bottom:24px;font-size:13px;">
+      <thead><tr style="border-bottom:2px solid #1e293b;">
+        <th style="text-align:left;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;">Description</th>
+        <th style="text-align:center;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;">Qté</th>
+        <th style="text-align:right;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;">PU HT</th>
+        <th style="text-align:center;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;">TVA</th>
+        <th style="text-align:right;padding:8px 10px;color:#1e293b;font-weight:800;font-size:11px;text-transform:uppercase;letter-spacing:.5px;">TTC</th>
+      </tr></thead>
+      <tbody>
+        <% if (invoice.items && invoice.items.length > 0) { invoice.items.forEach((item, idx) => { %>
+        <tr style="background:<%= idx % 2 === 0 ? '#fff' : '#f8fafc' %>;">
+          <td style="padding:10px;color:#374151;"><%= item.description %></td>
+          <td style="padding:10px;color:#64748b;text-align:center;"><%= item.quantity %></td>
+          <td style="padding:10px;color:#64748b;text-align:right;"><%= item.unit_price.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td>
+          <td style="padding:10px;color:#64748b;text-align:center;"><%= item.tva_rate %>%</td>
+          <td style="padding:10px;font-weight:700;color:#1e293b;text-align:right;"><%= item.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td>
+        </tr>
+        <% }); } %>
+      </tbody>
+    </table>
+    <!-- Totals -->
+    <div style="display:flex;justify-content:flex-end;margin-bottom:20px;"><div style="width:240px;">
+      <div style="display:flex;justify-content:space-between;padding:6px 0;color:#64748b;font-size:13px;border-bottom:1px solid #f1f5f9;"><span>Total HT</span><span><%= invoice.subtotal.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+      <div style="display:flex;justify-content:space-between;padding:6px 0;color:#64748b;font-size:13px;border-bottom:1px solid #f1f5f9;"><span>TVA</span><span><%= invoice.tva_amount.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+      <div style="display:flex;justify-content:space-between;padding:10px 12px;background:#1e293b;border-radius:8px;margin-top:8px;"><span style="color:#fff;font-weight:800;font-size:14px;">Total TTC</span><span style="color:#fff;font-weight:900;font-size:16px;"><%= invoice.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+    </div></div>
+    <% if (invoice.notes || invoice.payment_terms) { %>
+    <div style="border-top:1px solid #f1f5f9;padding-top:16px;font-size:12px;color:#6b7280;">
+      <% if (invoice.payment_terms) { %><p style="margin:0 0 4px;"><strong style="color:#374151;">Conditions :</strong> <%= invoice.payment_terms %></p><% } %>
+      <% if (invoice.notes) { %><p style="margin:0;"><%= invoice.notes %></p><% } %>
+    </div>
+    <% } %>
+  </div>
+</div>
+<% } %>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     MODÈLE 3 : ÉPURÉ (minimaliste noir & blanc)
+     ══════════════════════════════════════════════════════════════════ -->
+<% if (tpl === 'minimal') { %>
+<div id="invoiceDoc" style="background:#fff;border-radius:16px;padding:56px;box-shadow:0 1px 3px rgba(0,0,0,.08),0 4px 20px rgba(0,0,0,.08);max-width:760px;">
+  <!-- Header -->
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;padding-bottom:24px;border-bottom:2px solid #000;">
+    <div>
+      <% if (settings && settings.company_name) { %>
+      <p style="font-size:22px;font-weight:900;color:#000;margin:0 0 6px;letter-spacing:-.5px;"><%= settings.company_name %></p>
+      <% if (settings.company_address) { %><p style="color:#6b7280;font-size:12px;margin:0 0 2px;"><%= settings.company_address %></p><% } %>
+      <% if (settings.company_city) { %><p style="color:#6b7280;font-size:12px;margin:0 0 2px;"><%= settings.company_postal || '' %> <%= settings.company_city %></p><% } %>
+      <% if (settings.company_phone) { %><p style="color:#6b7280;font-size:12px;margin:4px 0 0;">T. <%= settings.company_phone %></p><% } %>
+      <% if (settings.company_email) { %><p style="color:#6b7280;font-size:12px;margin:0;"><%= settings.company_email %></p><% } %>
+      <% if (settings.company_siret) { %><p style="color:#9ca3af;font-size:11px;margin:4px 0 0;">SIRET <%= settings.company_siret %></p><% } %>
+      <% } else { %><p style="font-size:22px;font-weight:900;color:#000;margin:0;">LFacture</p><% } %>
+    </div>
+    <div style="text-align:right;">
+      <p style="font-size:14px;font-weight:700;color:#9ca3af;letter-spacing:2px;text-transform:uppercase;margin:0 0 4px;"><%= invoice.type === 'invoice' ? 'FACTURE' : 'DEVIS' %></p>
+      <p style="font-size:28px;font-weight:900;color:#000;margin:0 0 12px;"><%= invoice.invoice_number %></p>
+      <p style="font-size:12px;color:#6b7280;margin:0 0 2px;">Émis le <%= new Date(invoice.issue_date).toLocaleDateString('fr-FR') %></p>
+      <% if (invoice.due_date) { %><p style="font-size:12px;color:#6b7280;margin:0;">Échéance <%= new Date(invoice.due_date).toLocaleDateString('fr-FR') %></p><% } %>
+    </div>
+  </div>
+
+  <!-- Client -->
+  <% if (invoice.client_name) { %>
+  <div style="margin-bottom:40px;">
+    <p style="font-size:10px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1.5px;margin:0 0 8px;">Destinataire</p>
+    <p style="font-size:15px;font-weight:700;color:#000;margin:0 0 4px;"><%= invoice.client_name %></p>
+    <% if (invoice.client_company) { %><p style="font-size:13px;color:#6b7280;margin:0 0 2px;"><%= invoice.client_company %></p><% } %>
+    <% if (invoice.client_address) { %><p style="font-size:13px;color:#6b7280;margin:0 0 2px;"><%= invoice.client_address %></p><% } %>
+    <% if (invoice.client_city) { %><p style="font-size:13px;color:#6b7280;margin:0;"><%= invoice.client_postal || '' %> <%= invoice.client_city %></p><% } %>
+  </div>
+  <% } %>
+
+  <!-- Items -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:32px;font-size:13px;">
+    <thead><tr style="border-bottom:2px solid #000;">
+      <th style="text-align:left;padding:8px 0;color:#000;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.8px;">Description</th>
+      <th style="text-align:center;padding:8px;color:#000;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.8px;">Qté</th>
+      <th style="text-align:right;padding:8px 0;color:#000;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.8px;">PU HT</th>
+      <th style="text-align:center;padding:8px;color:#000;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.8px;">TVA</th>
+      <th style="text-align:right;padding:8px 0;color:#000;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.8px;">TTC</th>
+    </tr></thead>
+    <tbody>
+      <% if (invoice.items && invoice.items.length > 0) { invoice.items.forEach(item => { %>
+      <tr style="border-bottom:1px solid #f3f4f6;">
+        <td style="padding:12px 0;color:#374151;"><%= item.description %></td>
+        <td style="padding:12px;color:#6b7280;text-align:center;"><%= item.quantity %></td>
+        <td style="padding:12px 0;color:#6b7280;text-align:right;"><%= item.unit_price.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td>
+        <td style="padding:12px;color:#6b7280;text-align:center;"><%= item.tva_rate %>%</td>
+        <td style="padding:12px 0;font-weight:700;color:#000;text-align:right;"><%= item.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</td>
+      </tr>
+      <% }); } %>
+    </tbody>
+  </table>
+
+  <!-- Totals -->
+  <div style="display:flex;justify-content:flex-end;margin-bottom:32px;"><div style="width:220px;">
+    <div style="display:flex;justify-content:space-between;padding:5px 0;color:#6b7280;font-size:12px;"><span>Total HT</span><span><%= invoice.subtotal.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+    <div style="display:flex;justify-content:space-between;padding:5px 0;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;"><span>TVA</span><span><%= invoice.tva_amount.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+    <div style="display:flex;justify-content:space-between;padding:10px 0;font-weight:900;font-size:16px;color:#000;border-bottom:2px solid #000;"><span>TOTAL TTC</span><span><%= invoice.total.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</span></div>
+  </div></div>
+
+  <!-- Footer -->
+  <div style="display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;font-size:11px;color:#9ca3af;border-top:1px solid #f3f4f6;padding-top:20px;">
+    <div>
+      <% if (invoice.payment_terms) { %><p style="margin:0 0 2px;"><strong style="color:#6b7280;">Conditions :</strong> <%= invoice.payment_terms %></p><% } %>
+      <% if (invoice.notes) { %><p style="margin:0;"><%= invoice.notes %></p><% } %>
+    </div>
+    <% if (settings && settings.bank_iban) { %>
+    <div style="text-align:right;">
+      <% if (settings.bank_name) { %><p style="margin:0 0 2px;"><strong style="color:#6b7280;"><%= settings.bank_name %></strong></p><% } %>
+      <p style="margin:0 0 2px;font-family:monospace;"><%= settings.bank_iban %></p>
+      <% if (settings.bank_bic) { %><p style="margin:0;font-family:monospace;">BIC : <%= settings.bank_bic %></p><% } %>
+    </div>
+    <% } %>
+  </div>
+</div>
+<% } %>
 
 <style>
-.btn-secondary{background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px}.btn-secondary:hover{background:#e2e8f0}
+.btn-secondary{background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600}.btn-secondary:hover{background:#e2e8f0}
 @media print {
   aside, header, .flex.flex-wrap.items-center.gap-3.mb-6 { display: none !important; }
   body { background: white !important; }
-  #invoiceDoc { box-shadow: none !important; border: none !important; }
+  #invoiceDoc { box-shadow: none !important; border: none !important; border-radius: 0 !important; }
 }
 </style>

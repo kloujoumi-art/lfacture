@@ -99,6 +99,20 @@ class DashboardController {
 
   static createInvoice(req, res) {
     const { client_id, type, issue_date, due_date, notes, payment_terms, template } = req.body;
+
+    // Vérification quota plan gratuit
+    if (User.isFree(req.user)) {
+      const quota = User.getQuota(req.user.id);
+      const docType = type || 'invoice';
+      if (docType === 'invoice' && quota.invoices.reached) {
+        req.flash('error', `Limite atteinte : ${quota.invoices.max} factures maximum sur le plan gratuit. Abonnez-vous pour continuer.`);
+        return res.redirect('/pricing');
+      }
+      if (docType === 'quote' && quota.quotes.reached) {
+        req.flash('error', `Limite atteinte : ${quota.quotes.max} devis maximum sur le plan gratuit. Abonnez-vous pour continuer.`);
+        return res.redirect('/pricing');
+      }
+    }
     let { items_desc, items_qty, items_price, items_tva } = req.body;
 
     const items = [];
@@ -130,6 +144,14 @@ class DashboardController {
     const settings = getSettings(req.user.id);
     const label = invoice.type === 'invoice' ? 'Facture' : 'Devis';
     dash(res, 'dashboard/invoices/show', { pageTitle: `${label} ${invoice.invoice_number}`, activePage: invoice.type === 'invoice' ? 'invoices' : 'quotes', invoice, settings });
+  }
+
+  static updateTemplate(req, res) {
+    const invoice = Invoice.findById(req.params.id);
+    if (!invoice || invoice.user_id !== req.user.id) return res.redirect('/dashboard/invoices');
+    const { db } = require('../database/db');
+    db.get('invoices').find({ id: invoice.id }).assign({ template: req.body.template || 'classic' }).write();
+    res.redirect(`/dashboard/invoices/${invoice.id}`);
   }
 
   static updateInvoiceStatus(req, res) {
@@ -173,6 +195,7 @@ class DashboardController {
         quote_prefix: s.quote_prefix || 'DEV',
         default_tva: parseFloat(s.default_tva) || 20,
         payment_terms: s.payment_terms || null,
+        invoice_template: s.invoice_template || 'classic',
         bank_name: s.bank_name || null,
         bank_iban: s.bank_iban || null,
         bank_bic: s.bank_bic || null,

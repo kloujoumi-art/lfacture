@@ -1,3 +1,36 @@
+<!-- Bandeau quota plan gratuit -->
+<% if (isFree && quota) { %>
+<div style="background:linear-gradient(135deg,#f0f4ff,#e8f0fe);border:1px solid rgba(99,102,241,.25);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+  <div style="flex:1;min-width:200px;">
+    <p style="margin:0 0 4px;color:#4F46E5;font-weight:800;font-size:13px;">Plan Gratuit — Quota d'utilisation</p>
+    <p style="margin:0;color:#6b7280;font-size:12px;">Votre compte inclut <strong>8 factures</strong> et <strong>8 devis</strong> gratuits.</p>
+  </div>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;">
+    <div style="min-width:140px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:11px;color:#6b7280;font-weight:600;">Factures</span>
+        <span style="font-size:11px;color:<%= quota.invoices.reached ? '#ef4444' : '#4F46E5' %>;font-weight:700;"><%= quota.invoices.used %>/<%= quota.invoices.max %></span>
+      </div>
+      <div style="background:#dde5ff;border-radius:6px;height:6px;overflow:hidden;">
+        <div style="background:<%= quota.invoices.reached ? '#ef4444' : '#4F46E5' %>;height:100%;width:<%= Math.round((quota.invoices.used/quota.invoices.max)*100) %>%;border-radius:6px;transition:width .3s;"></div>
+      </div>
+    </div>
+    <div style="min-width:140px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:11px;color:#6b7280;font-weight:600;">Devis</span>
+        <span style="font-size:11px;color:<%= quota.quotes.reached ? '#ef4444' : '#7C3AED' %>;font-weight:700;"><%= quota.quotes.used %>/<%= quota.quotes.max %></span>
+      </div>
+      <div style="background:#ede9fe;border-radius:6px;height:6px;overflow:hidden;">
+        <div style="background:<%= quota.quotes.reached ? '#ef4444' : '#7C3AED' %>;height:100%;width:<%= Math.round((quota.quotes.used/quota.quotes.max)*100) %>%;border-radius:6px;transition:width .3s;"></div>
+      </div>
+    </div>
+  </div>
+  <a href="/pricing" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;padding:8px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:12px;white-space:nowrap;">
+    Passer Premium →
+  </a>
+</div>
+<% } %>
+
 <!-- Stats -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
   <div class="stat-card">

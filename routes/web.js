@@ -5,7 +5,7 @@ const DashboardController = require('../controllers/DashboardController');
 const AdminController = require('../controllers/AdminController');
 const BlogAdminController = require('../controllers/BlogAdminController');
 const BlogController = require('../controllers/BlogController');
-const { requireAuth, requireAccess, guestOnly } = require('../middleware/auth');
+const { requireAuth, requireAccess, requireInvoiceQuota, requireQuoteQuota, guestOnly } = require('../middleware/auth');
 const { requireAdmin } = require('../middleware/admin');
 
 // ---- Public routes ----
@@ -43,9 +43,10 @@ router.delete('/dashboard/clients/:id', requireAccess, DashboardController.delet
 router.get('/dashboard/invoices', requireAccess, DashboardController.listInvoices);
 router.get('/dashboard/quotes', requireAccess, DashboardController.listQuotes);
 router.get('/dashboard/invoices/create', requireAccess, DashboardController.showCreateInvoice);
-router.post('/dashboard/invoices', requireAccess, DashboardController.createInvoice);
+router.post('/dashboard/invoices', requireAccess, DashboardController.createInvoice);  // quota check inside controller
 router.get('/dashboard/invoices/:id', requireAccess, DashboardController.showInvoice);
 router.post('/dashboard/invoices/:id/status', requireAccess, DashboardController.updateInvoiceStatus);
+router.post('/dashboard/invoices/:id/template', requireAccess, DashboardController.updateTemplate);
 router.delete('/dashboard/invoices/:id', requireAccess, DashboardController.deleteInvoice);
 
 // Settings
