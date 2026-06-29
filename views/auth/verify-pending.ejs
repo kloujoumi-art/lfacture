@@ -45,11 +45,25 @@
 
     <h1 style="text-align:center;font-size:22px;font-weight:900;color:#1a1a2e;margin:0 0 8px;">Vérifiez votre email</h1>
 
+    <% const smtpOk = typeof emailSent === 'undefined' || emailSent !== false; %>
+
     <% if (typeof email !== 'undefined' && email) { %>
-    <p style="text-align:center;color:#6b7280;font-size:14px;margin:0 0 24px;line-height:1.5;">
-      Un code à 6 chiffres a été envoyé à<br/>
-      <strong style="color:#4F46E5;"><%= email %></strong>
-    </p>
+      <% if (smtpOk) { %>
+      <p style="text-align:center;color:#6b7280;font-size:14px;margin:0 0 24px;line-height:1.5;">
+        Un code à 6 chiffres a été envoyé à<br/>
+        <strong style="color:#4F46E5;"><%= email %></strong>
+      </p>
+      <% } else { %>
+      <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:16px;margin-bottom:20px;text-align:center;">
+        <p style="margin:0 0 6px;color:#92400e;font-size:14px;font-weight:700;">⚠️ L'email n'a pas pu être envoyé</p>
+        <p style="margin:0 0 10px;color:#78350f;font-size:13px;line-height:1.5;">Contactez-nous via WhatsApp pour recevoir votre code :</p>
+        <a href="https://wa.me/212750282154?text=Bonjour%2C+j'ai+créé+un+compte+LFacture+avec+l'email+<%= encodeURIComponent(email) %>+mais+je+n'ai+pas+reçu+mon+code+de+vérification."
+           target="_blank"
+           style="display:inline-block;background:#25D366;color:#fff;text-decoration:none;padding:10px 22px;border-radius:8px;font-weight:700;font-size:14px;">
+          💬 WhatsApp +212 750 282 154
+        </a>
+      </div>
+      <% } %>
     <% } else { %>
     <p style="text-align:center;color:#6b7280;font-size:14px;margin:0 0 24px;">Saisissez le code reçu par email.</p>
     <% } %>

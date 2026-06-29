@@ -41,16 +41,21 @@ class AuthController {
         payment_terms: 'Paiement à 30 jours',
       }).write();
 
-      // Activation immédiate — pas de blocage par email
-      User.activateFree(user.id);
+      // Envoi du code OTP — si échec SMTP, on stocke l'erreur pour l'afficher
+      let emailSent = false;
+      try {
+        await FunnelService.sendVerificationEmail(user);
+        emailSent = true;
+      } catch (smtpErr) {
+        console.error('[Auth] SMTP error during registration:', smtpErr.message);
+      }
 
-      // Email de bienvenue en arrière-plan (non bloquant)
-      FunnelService.sendWelcomeEmail(user).catch(() => {});
-      FunnelService.addToContacts(user);
-
-      req.session.userId = user.id;
-      req.flash('success', `Bienvenue ${user.name} ! Votre compte gratuit est activé — 8 factures + 8 devis offerts.`);
-      res.redirect('/dashboard');
+      res.renderLayout('auth/verify-pending', {
+        title: 'Vérifiez votre email — LFacture',
+        email: user.email,
+        name: user.name,
+        emailSent,
+      });
     } catch (err) {
       console.error('Registration error:', err);
       return res.renderLayout('auth/register', { title: 'Créer un compte — LFacture', errors: ['Erreur lors de la création du compte. Réessayez.'], old: { name, email } });
