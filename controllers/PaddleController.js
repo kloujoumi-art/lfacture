@@ -92,9 +92,11 @@ class PaddleController {
     }).write();
     const magicLink = `${APP_URL}/auth/magic/${token}`;
 
-    // Envoyer l'email au client
-    FunnelService.sendSubscriptionActivated(user, isNew, magicLink, plainPassword).catch(err =>
-      console.error('[paddle/confirm] email failed:', err.message)
+    // Envoyer l'email au client — retry automatique après 5 min si échec
+    FunnelService.sendWithRetry(
+      () => FunnelService.sendSubscriptionActivated(user, isNew, magicLink, plainPassword),
+      magicLink,
+      (link) => console.error(`[paddle/confirm] Email définitivement échoué pour ${cleanEmail}. Lien manuel : ${link}`)
     );
 
     // Notification admin

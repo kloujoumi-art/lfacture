@@ -521,6 +521,26 @@ async function sendAdminNotification(type, user) {
   }
 }
 
+// ── Retry automatique — si l'email échoue, réessaie après 5 min ───────────
+// Tente fn() immédiatement. Si ça échoue, renouvelle après 5 min (une seule fois).
+// onFail(magicLink) est appelé si les 2 tentatives échouent.
+async function sendWithRetry(fn, magicLink, onFail) {
+  try {
+    await fn();
+  } catch (err) {
+    console.warn(`[FunnelService] Email échoué (1ère tentative) : ${err.message}. Nouvelle tentative dans 5 min…`);
+    setTimeout(async () => {
+      try {
+        await fn();
+        console.log('[FunnelService] Email envoyé avec succès (2ème tentative).');
+      } catch (err2) {
+        console.error(`[FunnelService] Email échoué (2ème tentative) : ${err2.message}`);
+        if (typeof onFail === 'function') onFail(magicLink);
+      }
+    }, 5 * 60 * 1000);
+  }
+}
+
 module.exports = {
   sendVerificationEmail,
   sendWelcomeEmail,
@@ -533,4 +553,5 @@ module.exports = {
   startFunnelScheduler,
   sendAdminNotification,
   sendSubscriptionActivated,
+  sendWithRetry,
 };

@@ -367,18 +367,34 @@ class AdminController {
     const APP_URL = process.env.APP_URL || 'https://lfacture.com';
     const magicLink = `${APP_URL}/auth/magic/${token}`;
 
+    // Envoi email avec retry automatique après 5 min si échec
     let emailOk = false;
     try {
       await FunnelService.sendSubscriptionActivated(user, isNew, magicLink, plainPassword);
       emailOk = true;
     } catch (e) {
-      console.error('[Admin manualPayment] email error:', e.message);
+      console.warn('[Admin manualPayment] 1ère tentative email échouée, retry dans 5 min…');
+      // Retry dans 5 min (non bloquant)
+      setTimeout(async () => {
+        try {
+          // Régénère un token frais pour le retry
+          const retryToken = User.generateMagicToken(user.id);
+          db.get('users').find({ id: user.id }).assign({
+            magic_token_expires_at: new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString(),
+          }).write();
+          const retryLink = `${APP_URL}/auth/magic/${retryToken}`;
+          await FunnelService.sendSubscriptionActivated(user, isNew, retryLink, plainPassword);
+          console.log(`[Admin manualPayment] Email retry OK pour ${cleanEmail}`);
+        } catch (e2) {
+          console.error(`[Admin manualPayment] Email retry échoué pour ${cleanEmail} : ${e2.message}. Lien manuel : ${magicLink}`);
+        }
+      }, 5 * 60 * 1000);
     }
 
     if (emailOk) {
       req.flash('success', `✅ Compte ${cleanEmail} activé (${months} mois). Email envoyé avec lien de connexion.`);
     } else {
-      req.flash('success', `✅ Compte ${cleanEmail} activé (${months} mois). ⚠️ Erreur email — Lien manuel (valide 72h) : ${magicLink}`);
+      req.flash('success', `✅ Compte ${cleanEmail} activé (${months} mois). ⚠️ Erreur email — retry dans 5 min. Lien manuel (72h) : ${magicLink}`);
     }
     res.redirect('/admin/payments');
   }
