@@ -150,6 +150,11 @@ class AuthController {
       return res.redirect('/login');
     }
 
+    // Compte en attente de vérification email → rediriger vers OTP
+    if (!user.email_verified || user.plan === 'pending') {
+      return res.redirect(`/verify-email?email=${encodeURIComponent(user.email)}`);
+    }
+
     req.session.userId = user.id;
     req.flash('success', `Bon retour, ${user.name} !`);
     res.redirect('/dashboard');
