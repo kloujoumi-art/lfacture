@@ -3,43 +3,160 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title><%= title %></title>
+  <title><%= typeof title !== 'undefined' ? title : 'Vérification email — LFacture' %></title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>body{font-family:'Inter',sans-serif;}</style>
+  <style>
+    body { font-family:'Inter',sans-serif; }
+    .otp-input {
+      width:52px; height:64px; text-align:center;
+      font-size:28px; font-weight:900;
+      border:2px solid #e0e7ff; border-radius:14px;
+      background:#f8faff; color:#4F46E5;
+      outline:none; transition:border-color .15s, box-shadow .15s;
+      caret-color: #4F46E5;
+    }
+    .otp-input:focus {
+      border-color:#4F46E5;
+      box-shadow:0 0 0 3px rgba(79,70,229,.15);
+      background:#fff;
+    }
+    .otp-input.filled {
+      border-color:#7C3AED;
+      background:#faf5ff;
+    }
+    @media (max-width:400px) {
+      .otp-input { width:42px; height:54px; font-size:22px; border-radius:10px; }
+    }
+  </style>
 </head>
-<body style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;">
-  <div style="background:#fff;border-radius:20px;padding:48px 40px;max-width:480px;width:100%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,.2);">
+<body style="background:linear-gradient(135deg,#4F46E5 0%,#7C3AED 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;">
+
+  <div style="background:#fff;border-radius:24px;padding:40px 32px;max-width:440px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.25);">
+
     <!-- Icon -->
-    <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;">
-      <svg style="width:40px;height:40px;color:#fff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-      </svg>
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#4F46E5,#7C3AED);display:inline-flex;align-items:center;justify-content:center;">
+        <svg style="width:36px;height:36px;" fill="none" stroke="white" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+        </svg>
+      </div>
     </div>
 
-    <h1 style="font-size:26px;font-weight:900;color:#1a1a2e;margin:0 0 12px;">Vérifiez votre email</h1>
-    <p style="color:#6b7280;font-size:15px;line-height:1.6;margin:0 0 8px;">Un email de vérification a été envoyé à :</p>
-    <p style="color:#4F46E5;font-weight:700;font-size:15px;margin:0 0 28px;word-break:break-all;"><%= email %></p>
+    <h1 style="text-align:center;font-size:22px;font-weight:900;color:#1a1a2e;margin:0 0 8px;">Vérifiez votre email</h1>
 
-    <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:20px;margin-bottom:28px;text-align:left;">
-      <p style="margin:0 0 12px;font-weight:700;color:#0369a1;font-size:14px;">Comment ça marche :</p>
-      <ol style="margin:0;padding-left:20px;color:#374151;font-size:14px;line-height:1.8;">
-        <li>Ouvrez votre boite email</li>
-        <li>Cliquez sur le bouton <strong>"Vérifier mon adresse email"</strong></li>
-        <li>Votre essai gratuit de 7 jours démarre immédiatement</li>
-      </ol>
+    <% if (typeof email !== 'undefined' && email) { %>
+    <p style="text-align:center;color:#6b7280;font-size:14px;margin:0 0 24px;line-height:1.5;">
+      Un code à 6 chiffres a été envoyé à<br/>
+      <strong style="color:#4F46E5;"><%= email %></strong>
+    </p>
+    <% } else { %>
+    <p style="text-align:center;color:#6b7280;font-size:14px;margin:0 0 24px;">Saisissez le code reçu par email.</p>
+    <% } %>
+
+    <!-- Message succès renvoi -->
+    <% if (typeof success !== 'undefined' && success) { %>
+    <div style="background:#ecfdf5;border:1px solid #6ee7b7;border-radius:12px;padding:14px;margin-bottom:20px;text-align:center;">
+      <p style="margin:0;color:#065f46;font-size:14px;font-weight:600;">✅ <%= success %></p>
+    </div>
+    <% } %>
+
+    <!-- Message erreur -->
+    <% if (typeof error !== 'undefined' && error) { %>
+    <div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:12px;padding:14px;margin-bottom:20px;text-align:center;">
+      <p style="margin:0;color:#991b1b;font-size:14px;font-weight:600;">⚠️ <%= error %></p>
+    </div>
+    <% } %>
+
+    <!-- OTP Form -->
+    <form id="otpForm" action="/verify-email" method="POST">
+      <input type="hidden" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>"/>
+
+      <!-- 6 cases OTP -->
+      <div style="display:flex;justify-content:center;gap:8px;margin-bottom:28px;">
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d1" id="d1" autocomplete="one-time-code" placeholder="·"/>
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d2" id="d2" placeholder="·"/>
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d3" id="d3" placeholder="·"/>
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d4" id="d4" placeholder="·"/>
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d5" id="d5" placeholder="·"/>
+        <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d6" id="d6" placeholder="·"/>
+      </div>
+
+      <!-- Bouton submit -->
+      <button type="submit" id="submitBtn"
+        style="width:100%;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 6px 20px rgba(79,70,229,.35);transition:all .2s;">
+        Vérifier mon code →
+      </button>
+    </form>
+
+    <!-- Renvoi code -->
+    <div style="text-align:center;margin-top:20px;">
+      <p style="color:#9ca3af;font-size:13px;margin:0 0 8px;">Vous n'avez pas reçu le code ?</p>
+      <p style="font-size:12px;color:#9ca3af;margin:0 0 10px;">Vérifiez vos <strong>spams</strong> ou</p>
+      <form action="/verify-email/resend" method="POST" style="display:inline;">
+        <input type="hidden" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>"/>
+        <button type="submit"
+          style="background:none;border:1.5px solid #e0e7ff;border-radius:10px;color:#4F46E5;font-size:13px;font-weight:700;padding:8px 20px;cursor:pointer;transition:all .15s;">
+          📧 Renvoyer un nouveau code
+        </button>
+      </form>
     </div>
 
-    <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;margin-bottom:24px;">
-      <p style="margin:0;color:#92400e;font-size:13px;">⏰ Le lien de vérification est valable <strong>24 heures</strong></p>
-    </div>
-
-    <p style="color:#9ca3af;font-size:13px;margin:0 0 6px;">Vous n'avez pas reçu l'email ?</p>
-    <p style="color:#9ca3af;font-size:13px;margin:0;">Vérifiez vos <strong>spams</strong> ou <a href="/register" style="color:#4F46E5;font-weight:600;">créez un nouveau compte</a>.</p>
-
-    <div style="margin-top:28px;padding-top:20px;border-top:1px solid #e5e7eb;">
-      <a href="/login" style="color:#6b7280;font-size:14px;text-decoration:none;">Retour à la connexion</a>
+    <!-- Lien retour -->
+    <div style="text-align:center;margin-top:20px;padding-top:16px;border-top:1px solid #f3f4f6;">
+      <a href="/login" style="color:#9ca3af;font-size:13px;text-decoration:none;">← Retour à la connexion</a>
     </div>
   </div>
+
+  <script>
+    const inputs = [d1,d2,d3,d4,d5,d6];
+
+    // Auto-focus premier champ
+    d1.focus();
+
+    inputs.forEach((el, i) => {
+      el.addEventListener('input', (e) => {
+        const val = e.target.value.replace(/\D/g,'');
+        e.target.value = val.slice(-1);
+
+        if (val) {
+          el.classList.add('filled');
+          if (i < inputs.length - 1) inputs[i+1].focus();
+          // Auto-submit si tous remplis
+          if (inputs.every(inp => inp.value.match(/\d/))) {
+            setTimeout(() => document.getElementById('otpForm').submit(), 150);
+          }
+        } else {
+          el.classList.remove('filled');
+        }
+      });
+
+      // Backspace : retour arrière
+      el.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !el.value && i > 0) {
+          inputs[i-1].focus();
+          inputs[i-1].value = '';
+          inputs[i-1].classList.remove('filled');
+        }
+        // Flèche gauche/droite
+        if (e.key === 'ArrowLeft' && i > 0) inputs[i-1].focus();
+        if (e.key === 'ArrowRight' && i < inputs.length - 1) inputs[i+1].focus();
+      });
+
+      // Coller le code complet depuis le presse-papiers
+      el.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+        if (pasted.length === 6) {
+          pasted.split('').forEach((c, j) => {
+            inputs[j].value = c;
+            inputs[j].classList.add('filled');
+          });
+          inputs[5].focus();
+          setTimeout(() => document.getElementById('otpForm').submit(), 200);
+        }
+      });
+    });
+  </script>
 </body>
 </html>

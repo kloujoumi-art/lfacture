@@ -6,17 +6,24 @@ const FREE_INVOICE_LIMIT = 8;
 const FREE_QUOTE_LIMIT = 8;
 
 class User {
+  static generateOTP() {
+    return String(Math.floor(100000 + Math.random() * 900000));
+  }
+
   static create({ name, email, password }) {
+    const otp = User.generateOTP();
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
     const user = {
       id: nextId('user'),
       uuid: uuidv4(),
       name,
       email: email.toLowerCase().trim(),
       password: bcrypt.hashSync(password, 12),
-      plan: 'pending',           // en attente de vérification email
+      plan: 'pending',
       is_admin: 0,
       email_verified: 0,
-      verification_token: uuidv4(),
+      verification_token: otp,         // code OTP 6 chiffres
+      verification_expires_at: expires, // expire dans 24h
       verification_sent_at: new Date().toISOString(),
       subscription_ends_at: null,
       funnel_step: 0,
@@ -38,18 +45,36 @@ class User {
     return bcrypt.compareSync(plainPassword, hashedPassword);
   }
 
-  // Vérifie l'email → active le plan gratuit (pas de limite de temps)
-  static verifyEmail(token) {
-    const user = db.get('users').find(u => u.verification_token === token).value();
-    if (!user) return null;
-    if (user.email_verified) return user;
+  // Vérifie le code OTP → active le plan gratuit
+  static verifyEmail(code) {
+    const user = db.get('users').find(u => u.verification_token === String(code).trim()).value();
+    if (!user) return { error: 'invalid' };
+    if (user.email_verified) return { user };
+    if (user.verification_expires_at && new Date(user.verification_expires_at) < new Date()) {
+      return { error: 'expired' };
+    }
 
     db.get('users').find({ id: user.id }).assign({
       email_verified: 1,
-      plan: 'free',              // plan gratuit, sans limite de temps
+      plan: 'free',
       verification_token: null,
+      verification_expires_at: null,
     }).write();
 
+    return { user: db.get('users').find({ id: user.id }).value() };
+  }
+
+  // Renvoie un nouveau code OTP (pour le renvoi)
+  static refreshOTP(email) {
+    const user = db.get('users').find(u => u.email === email.toLowerCase()).value();
+    if (!user || user.email_verified) return null;
+    const otp = User.generateOTP();
+    const expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+    db.get('users').find({ id: user.id }).assign({
+      verification_token: otp,
+      verification_expires_at: expires,
+      verification_sent_at: new Date().toISOString(),
+    }).write();
     return db.get('users').find({ id: user.id }).value();
   }
 

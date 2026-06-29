@@ -51,8 +51,10 @@ router.get('/login', guestOnly, AuthController.showLogin);
 router.post('/login', guestOnly, AuthController.login);
 router.post('/logout', requireAuth, AuthController.logout);
 
-// ---- Email verification ----
-router.get('/verify-email', AuthController.verifyEmail);
+// ---- Email verification (code OTP) ----
+router.get('/verify-email', AuthController.showVerifyEmail);
+router.post('/verify-email', AuthController.verifyEmail);
+router.post('/verify-email/resend', AuthController.resendCode);
 
 // ---- Dashboard routes ----
 router.get('/dashboard', requireAuth, (req, res, next) => { res.locals.pageTitle = 'Tableau de bord'; next(); }, DashboardController.index);

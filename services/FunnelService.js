@@ -26,52 +26,66 @@ function alreadySent(userId, type) {
   return !!db.get('funnel_logs').find(l => l.user_id === userId && l.type === type).value();
 }
 
-// ── Email 1 : Vérification d'adresse email ────────────────────────────────
+// ── Email 1 : Vérification d'adresse email — code OTP 6 chiffres ─────────
 async function sendVerificationEmail(user) {
-  const link = `${APP_URL()}/verify-email?token=${user.verification_token}`;
+  const code = user.verification_token; // code OTP 6 chiffres
+  const digits = String(code).split('');
+  const digitBoxes = digits.map(d =>
+    `<span style="display:inline-block;width:52px;height:64px;line-height:64px;border:2px solid #e0e7ff;border-radius:12px;font-size:32px;font-weight:900;color:#4F46E5;text-align:center;background:#f8faff;margin:0 4px;">${d}</span>`
+  ).join('');
+
   const html = `
-<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Vérifiez votre email — LFacture</title></head>
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Votre code de vérification LFacture</title></head>
 <body style="margin:0;padding:0;background:#f4f7f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
 <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7f6;padding:40px 20px;">
   <tr><td align="center">
     <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
-      <tr><td style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:40px;text-align:center;">
+      <tr><td style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:36px 40px;text-align:center;">
         <h1 style="color:#fff;margin:0;font-size:28px;font-weight:900;">LFacture</h1>
-        <p style="color:rgba(255,255,255,.8);margin:8px 0 0;font-size:14px;">Créez vos factures et devis en quelques secondes.</p>
+        <p style="color:rgba(255,255,255,.8);margin:6px 0 0;font-size:14px;">Logiciel de facturation gratuit</p>
       </td></tr>
       <tr><td style="padding:48px 40px;">
-        <h2 style="color:#1a1a2e;margin:0 0 16px;font-size:22px;font-weight:800;">Bonjour ${user.name} 👋</h2>
-        <p style="color:#6b7280;font-size:16px;line-height:1.6;margin:0 0 24px;">Vous venez de créer votre compte LFacture. Il vous reste <strong>une seule étape</strong> : vérifier votre adresse email pour activer votre essai gratuit de 7 jours.</p>
-        <div style="text-align:center;margin:32px 0;">
-          <a href="${link}" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;text-decoration:none;padding:18px 48px;border-radius:10px;font-weight:800;font-size:16px;box-shadow:0 4px 15px rgba(79,70,229,.35);">
-            ✅ Vérifier mon adresse email
+        <h2 style="color:#1a1a2e;margin:0 0 8px;font-size:22px;font-weight:800;">Bonjour ${user.name} 👋</h2>
+        <p style="color:#6b7280;font-size:15px;line-height:1.6;margin:0 0 32px;">Voici votre code de vérification pour activer votre compte LFacture. Saisissez-le sur la page de vérification.</p>
+
+        <!-- Code OTP -->
+        <div style="text-align:center;margin:0 0 32px;">
+          <p style="color:#374151;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin:0 0 16px;">Votre code de vérification</p>
+          <div style="display:inline-block;">${digitBoxes}</div>
+          <p style="color:#9ca3af;font-size:13px;margin:16px 0 0;">Ce code est valable <strong>24 heures</strong></p>
+        </div>
+
+        <!-- Ou copier le code -->
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:18px;text-align:center;margin-bottom:28px;">
+          <p style="margin:0 0 4px;color:#6b7280;font-size:13px;">Code complet :</p>
+          <p style="margin:0;color:#4F46E5;font-size:28px;font-weight:900;letter-spacing:8px;">${code}</p>
+        </div>
+
+        <div style="text-align:center;margin-bottom:24px;">
+          <a href="${APP_URL()}/verify-email" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;text-decoration:none;padding:16px 40px;border-radius:10px;font-weight:800;font-size:15px;box-shadow:0 4px 15px rgba(79,70,229,.3);">
+            Saisir mon code →
           </a>
         </div>
-        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-align:center;margin-bottom:24px;">
-          <p style="margin:0;color:#374151;font-size:14px;font-weight:600;">Ce lien expire dans <strong>24 heures</strong></p>
-        </div>
-        <p style="color:#9ca3af;font-size:13px;">Si vous n'avez pas créé de compte LFacture, ignorez cet email.</p>
-        <p style="color:#9ca3af;font-size:12px;margin-top:8px;">Lien de vérification : <a href="${link}" style="color:#4F46E5;">${link}</a></p>
+
+        <p style="color:#9ca3af;font-size:13px;text-align:center;">Si vous n'avez pas créé de compte LFacture, ignorez cet email.</p>
       </td></tr>
       <tr><td style="background:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
-        <p style="margin:0;color:#9ca3af;font-size:13px;">© ${new Date().getFullYear()} LFacture</p>
+        <p style="margin:0;color:#9ca3af;font-size:13px;">© ${new Date().getFullYear()} LFacture — logiciel de facturation gratuit</p>
       </td></tr>
     </table>
   </td></tr>
 </table>
 </body></html>`;
   try {
-    await transporter().sendMail({ from: FROM(), to: user.email, subject: '✅ Vérifiez votre email pour activer votre essai LFacture', html });
+    await transporter().sendMail({ from: FROM(), to: user.email, subject: `${code} — Votre code de vérification LFacture`, html });
     logEmail(user.id, 'verification');
-    console.log(`[Funnel] Verification email → ${user.email}`);
+    console.log(`[Funnel] Verification OTP → ${user.email} (code: ${code})`);
   } catch (e) { console.error('[Funnel] verification error:', e.message); }
 }
 
 // ── Email 2 : Bienvenue après vérification ────────────────────────────────
 async function sendWelcomeEmail(user) {
   if (alreadySent(user.id, 'welcome')) return;
-  const trialEnd = new Date(user.trial_ends_at);
-  const trialEndFr = trialEnd.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   const html = `
 <!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Bienvenue sur LFacture !</title></head>
 <body style="margin:0;padding:0;background:#f4f7f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
@@ -80,41 +94,47 @@ async function sendWelcomeEmail(user) {
     <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
       <tr><td style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:40px;text-align:center;">
         <h1 style="color:#fff;margin:0;font-size:28px;font-weight:900;">LFacture</h1>
+        <p style="color:rgba(255,255,255,.8);margin:6px 0 0;font-size:14px;">Logiciel de facturation gratuit</p>
       </td></tr>
       <tr><td style="padding:48px 40px;">
-        <h2 style="color:#1a1a2e;margin:0 0 12px;font-size:24px;font-weight:900;">🎉 Email vérifié ! Votre essai commence maintenant</h2>
-        <p style="color:#6b7280;font-size:15px;line-height:1.6;margin:0 0 28px;">Votre adresse email a été vérifiée avec succès. Voici vos informations de connexion :</p>
+        <h2 style="color:#1a1a2e;margin:0 0 12px;font-size:24px;font-weight:900;">🎉 Compte activé — Bienvenue ${user.name} !</h2>
+        <p style="color:#6b7280;font-size:15px;line-height:1.6;margin:0 0 28px;">Votre adresse email a été vérifiée avec succès. Vous pouvez maintenant créer vos premières factures et devis.</p>
+
         <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:28px;">
           <table width="100%" cellpadding="0" cellspacing="0">
-            <tr><td style="padding:8px 0;color:#6b7280;font-size:14px;width:140px;">Adresse email :</td><td style="padding:8px 0;color:#1a1a2e;font-weight:700;font-size:14px;">${user.email}</td></tr>
-            <tr><td style="padding:8px 0;color:#6b7280;font-size:14px;">Fin de l'essai :</td><td style="padding:8px 0;color:#059669;font-weight:700;font-size:14px;">${trialEndFr}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;font-size:14px;width:140px;">Email :</td><td style="padding:8px 0;color:#1a1a2e;font-weight:700;font-size:14px;">${user.email}</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;font-size:14px;">Plan :</td><td style="padding:8px 0;color:#4F46E5;font-weight:700;font-size:14px;">Gratuit — 8 factures + 8 devis</td></tr>
           </table>
         </div>
-        <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border:1px solid #6ee7b7;border-radius:12px;padding:20px;margin-bottom:28px;text-align:center;">
-          <p style="margin:0;color:#065f46;font-weight:800;font-size:16px;">✅ Essai gratuit de 7 jours activé</p>
-          <p style="margin:8px 0 0;color:#047857;font-size:14px;">Accès illimité à toutes les fonctionnalités</p>
+
+        <div style="background:linear-gradient(135deg,#eef2ff,#e0e7ff);border:1px solid #c7d2fe;border-radius:12px;padding:20px;margin-bottom:28px;text-align:center;">
+          <p style="margin:0;color:#4338ca;font-weight:800;font-size:16px;">✅ Plan gratuit activé</p>
+          <p style="margin:8px 0 0;color:#4F46E5;font-size:14px;">8 factures + 8 devis professionnels offerts</p>
         </div>
+
         <div style="text-align:center;margin-bottom:28px;">
-          <a href="${APP_URL()}/dashboard" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;text-decoration:none;padding:16px 40px;border-radius:8px;font-weight:800;font-size:15px;">
-            Accéder à mon tableau de bord →
+          <a href="${APP_URL()}/dashboard" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;text-decoration:none;padding:16px 40px;border-radius:10px;font-weight:800;font-size:15px;box-shadow:0 4px 15px rgba(79,70,229,.3);">
+            Créer ma première facture →
           </a>
         </div>
+
         <table width="100%" cellpadding="0" cellspacing="0">
-          <tr><td style="padding:6px 0;color:#374151;font-size:14px;">📄 Factures et devis illimités</td></tr>
-          <tr><td style="padding:6px 0;color:#374151;font-size:14px;">📥 Téléchargement PDF professionnel</td></tr>
-          <tr><td style="padding:6px 0;color:#374151;font-size:14px;">👥 Gestion des clients et produits</td></tr>
-          <tr><td style="padding:6px 0;color:#374151;font-size:14px;">🎨 Logo personnalisé + plusieurs modèles</td></tr>
+          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📄 8 factures professionnelles offertes</td></tr>
+          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📋 8 devis professionnels offerts</td></tr>
+          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📥 Téléchargement PDF instantané</td></tr>
+          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">👥 Gestion des clients</td></tr>
+          <tr><td style="padding:8px 0;color:#374151;font-size:14px;">🎨 Logo + 3 modèles de factures</td></tr>
         </table>
       </td></tr>
       <tr><td style="background:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
-        <p style="margin:0;color:#9ca3af;font-size:13px;">© ${new Date().getFullYear()} LFacture</p>
+        <p style="margin:0;color:#9ca3af;font-size:13px;">© ${new Date().getFullYear()} LFacture — logiciel de facturation gratuit</p>
       </td></tr>
     </table>
   </td></tr>
 </table>
 </body></html>`;
   try {
-    await transporter().sendMail({ from: FROM(), to: user.email, subject: '🎉 Votre essai LFacture de 7 jours est activé !', html });
+    await transporter().sendMail({ from: FROM(), to: user.email, subject: '🎉 Compte LFacture activé — créez votre première facture !', html });
     logEmail(user.id, 'welcome');
     console.log(`[Funnel] Welcome email → ${user.email}`);
   } catch (e) { console.error('[Funnel] welcome error:', e.message); }

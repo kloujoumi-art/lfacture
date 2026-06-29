@@ -41,7 +41,7 @@ class AuthController {
         payment_terms: 'Paiement à 30 jours',
       }).write();
 
-      // Envoie l'email de vérification (pas encore de session — doit vérifier l'email d'abord)
+      // Envoie l'email avec le code OTP 6 chiffres
       FunnelService.sendVerificationEmail(user).catch(() => {});
 
       res.renderLayout('auth/verify-pending', {
@@ -55,24 +55,73 @@ class AuthController {
     }
   }
 
+  // GET /verify-email — affiche le formulaire de saisie du code
+  static showVerifyEmail(req, res) {
+    const { email } = req.query;
+    res.renderLayout('auth/verify-pending', {
+      title: 'Vérifiez votre email — LFacture',
+      email: email || '',
+      name: '',
+    });
+  }
+
+  // POST /verify-email — vérifie le code OTP saisi
   static async verifyEmail(req, res) {
-    const { token } = req.query;
-    if (!token) {
-      req.flash('error', 'Lien de vérification invalide.');
-      return res.redirect('/login');
+    const digits = ['d1','d2','d3','d4','d5','d6'].map(k => req.body[k] || '').join('');
+    const code = (req.body.code || digits).replace(/\s/g, '');
+    const email = (req.body.email || '').toLowerCase().trim();
+
+    if (!code || code.length !== 6 || !/^\d{6}$/.test(code)) {
+      return res.renderLayout('auth/verify-pending', {
+        title: 'Vérifiez votre email — LFacture',
+        email,
+        name: '',
+        error: 'Veuillez saisir le code complet à 6 chiffres.',
+      });
     }
-    const user = User.verifyEmail(token);
-    if (!user) {
-      return res.renderLayout('auth/verify-error', { title: 'Lien invalide — LFacture' });
+
+    const result = User.verifyEmail(code);
+
+    if (result.error === 'expired') {
+      return res.renderLayout('auth/verify-pending', {
+        title: 'Vérifiez votre email — LFacture',
+        email,
+        name: '',
+        error: 'Ce code a expiré. Cliquez sur "Renvoyer le code" pour en recevoir un nouveau.',
+      });
     }
-    // Ajouter à la liste des contacts mailing
+
+    if (result.error === 'invalid') {
+      return res.renderLayout('auth/verify-pending', {
+        title: 'Vérifiez votre email — LFacture',
+        email,
+        name: '',
+        error: 'Code incorrect. Vérifiez votre email et réessayez.',
+      });
+    }
+
+    const user = result.user;
     FunnelService.addToContacts(user);
-    // Envoyer l'email de bienvenue avec credentials
     FunnelService.sendWelcomeEmail(user).catch(() => {});
-    // Connecter l'utilisateur
     req.session.userId = user.id;
-    req.flash('success', `Email vérifié ! Bienvenue ${user.name}, votre essai de 7 jours commence maintenant.`);
+    req.flash('success', `Email vérifié ! Bienvenue ${user.name} — votre plan gratuit est activé.`);
     res.redirect('/dashboard');
+  }
+
+  // POST /verify-email/resend — renvoie un nouveau code
+  static async resendCode(req, res) {
+    const email = (req.body.email || '').toLowerCase().trim();
+    const user = User.refreshOTP(email);
+    if (user) {
+      FunnelService.sendVerificationEmail(user).catch(() => {});
+    }
+    // Toujours répondre la même chose (sécurité)
+    res.renderLayout('auth/verify-pending', {
+      title: 'Vérifiez votre email — LFacture',
+      email,
+      name: user ? user.name : '',
+      success: 'Un nouveau code a été envoyé à votre adresse email.',
+    });
   }
 
   static showLogin(req, res) {
