@@ -72,6 +72,9 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`\n✅ LFacture est en ligne sur http://localhost:${PORT}\n`);
+  // Démarre le scheduler funnel (emails automatiques)
+  const { startFunnelScheduler } = require('./services/FunnelService');
+  startFunnelScheduler();
 });
 
 module.exports = app;

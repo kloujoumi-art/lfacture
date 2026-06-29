@@ -3,6 +3,7 @@ const Invoice = require('../models/Invoice');
 const { db, nextId } = require('../database/db');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
+const FunnelService = require('../services/FunnelService');
 
 const adm = (res, view, data = {}) => res.renderLayout(view, data, 'admin');
 
@@ -213,6 +214,69 @@ class AdminController {
     }).write();
     req.flash('success', `Essai de ${user.name} prolongé de ${days} jours.`);
     res.redirect(`/admin/users/${req.params.id}`);
+  }
+
+  // ---- Essai 7j ----
+  static listTrialUsers(req, res) {
+    const now = new Date();
+    const allTrialUsers = db.get('users')
+      .filter(u => u.plan === 'trial' && u.trial_ends_at)
+      .value()
+      .map(u => {
+        const trialEnd = new Date(u.trial_ends_at);
+        const trialStart = u.trial_started_at ? new Date(u.trial_started_at) : new Date(u.created_at);
+        const totalDays = 7;
+        const daysElapsed = Math.max(0, (now - trialStart) / 86400000);
+        const daysLeft = Math.max(0, Math.ceil((trialEnd - now) / 86400000));
+        const progress = Math.min(100, Math.round((daysElapsed / totalDays) * 100));
+        const funnelLogs = db.get('funnel_logs').filter({ user_id: u.id }).value();
+        return { ...u, daysLeft, progress, funnelLogs, active: trialEnd > now };
+      })
+      .sort((a, b) => a.daysLeft - b.daysLeft);
+
+    const pendingUsers = db.get('users').filter(u => u.plan === 'pending').value();
+
+    adm(res, 'admin/trial-users', {
+      title: 'Essais 7j — Admin',
+      pageTitle: 'Essais 7 jours',
+      activePage: 'trial',
+      trialUsers: allTrialUsers.filter(u => u.active),
+      expiredTrials: allTrialUsers.filter(u => !u.active),
+      pendingUsers,
+      stats: User.globalStats(),
+    });
+  }
+
+  // ---- Mailing ----
+  static listMailing(req, res) {
+    const contacts = db.get('contacts')
+      .value()
+      .sort((a, b) => new Date(b.subscribed_at) - new Date(a.subscribed_at));
+
+    const funnelLogs = db.get('funnel_logs')
+      .value()
+      .sort((a, b) => new Date(b.sent_at) - new Date(a.sent_at))
+      .slice(0, 100)
+      .map(log => {
+        const user = User.findById(log.user_id);
+        return { ...log, user_name: user?.name || '—', user_email: user?.email || '—' };
+      });
+
+    const emailTypes = ['verification', 'welcome', 'trial_ending', 'trial_expired', 'followup', 'discount'];
+    const emailStats = {};
+    emailTypes.forEach(type => {
+      emailStats[type] = db.get('funnel_logs').filter({ type }).value().length;
+    });
+
+    adm(res, 'admin/mailing', {
+      title: 'Mailing — Admin',
+      pageTitle: 'Mailing & Contacts',
+      activePage: 'mailing',
+      contacts,
+      funnelLogs,
+      emailStats,
+      totalEmails: db.get('funnel_logs').value().length,
+    });
   }
 
   // ---- Invoices overview ----

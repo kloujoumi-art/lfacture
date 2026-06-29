@@ -1,0 +1,182 @@
+<!-- Stats row -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+  <div class="stat-card">
+    <p style="color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:0 0 6px;">En attente vérif.</p>
+    <p style="font-size:28px;font-weight:900;color:#f59e0b;margin:0;"><%= pendingUsers.length %></p>
+    <p style="color:#64748b;font-size:12px;margin:4px 0 0;">Email non vérifié</p>
+  </div>
+  <div class="stat-card">
+    <p style="color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:0 0 6px;">Essais actifs</p>
+    <p style="font-size:28px;font-weight:900;color:#10b981;margin:0;"><%= trialUsers.length %></p>
+    <p style="color:#64748b;font-size:12px;margin:4px 0 0;">Trial en cours</p>
+  </div>
+  <div class="stat-card">
+    <p style="color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:0 0 6px;">Essais expirés</p>
+    <p style="font-size:28px;font-weight:900;color:#ef4444;margin:0;"><%= expiredTrials.length %></p>
+    <p style="color:#64748b;font-size:12px;margin:4px 0 0;">Non convertis</p>
+  </div>
+  <div class="stat-card">
+    <p style="color:#94a3b8;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin:0 0 6px;">Contacts mailing</p>
+    <p style="font-size:28px;font-weight:900;color:#6366f1;margin:0;"><%= stats.total_contacts %></p>
+    <p style="color:#64748b;font-size:12px;margin:4px 0 0;">Inscrits funnel</p>
+  </div>
+</div>
+
+<!-- En attente de vérification -->
+<% if (pendingUsers.length > 0) { %>
+<div style="background:#1e293b;border:1px solid #f59e0b;border-radius:12px;padding:20px;margin-bottom:24px;">
+  <h3 style="color:#fbbf24;font-size:14px;font-weight:700;margin:0 0 16px;display:flex;align-items:center;gap:8px;">
+    <span>⏳</span> En attente de vérification email (<%= pendingUsers.length %>)
+  </h3>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="border-bottom:1px solid #334155;">
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Nom</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Email</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Inscrit le</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pendingUsers.forEach(u => { %>
+        <tr style="border-bottom:1px solid #1e293b;">
+          <td style="padding:10px 12px;color:#e2e8f0;font-weight:600;"><%= u.name %></td>
+          <td style="padding:10px 12px;color:#94a3b8;"><%= u.email %></td>
+          <td style="padding:10px 12px;color:#64748b;font-size:12px;"><%= new Date(u.created_at).toLocaleDateString('fr-FR') %></td>
+          <td style="padding:10px 12px;">
+            <a href="/admin/users/<%= u.id %>" style="color:#3b82f6;font-size:12px;font-weight:600;text-decoration:none;">Voir →</a>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% } %>
+
+<!-- Essais actifs -->
+<div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:24px;">
+  <h3 style="color:#e2e8f0;font-size:14px;font-weight:700;margin:0 0 16px;display:flex;align-items:center;gap:8px;">
+    <span style="background:#10b981;border-radius:50%;width:8px;height:8px;display:inline-block;"></span>
+    Essais en cours (<%= trialUsers.length %>)
+  </h3>
+
+  <% if (trialUsers.length === 0) { %>
+  <p style="color:#64748b;text-align:center;padding:20px 0;font-size:14px;">Aucun essai actif en ce moment.</p>
+  <% } else { %>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="border-bottom:1px solid #334155;">
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Utilisateur</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Progression essai</th>
+          <th style="text-align:center;padding:8px 12px;color:#64748b;font-weight:600;">Jours restants</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Étapes funnel</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Fin essai</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% trialUsers.forEach(u => { %>
+        <%
+          const funnel = {
+            verification: u.funnelLogs.some(l => l.type === 'verification'),
+            welcome: u.funnelLogs.some(l => l.type === 'welcome'),
+            trial_ending: u.funnelLogs.some(l => l.type === 'trial_ending'),
+            trial_expired: u.funnelLogs.some(l => l.type === 'trial_expired'),
+            followup: u.funnelLogs.some(l => l.type === 'followup'),
+            discount: u.funnelLogs.some(l => l.type === 'discount'),
+          };
+          const urgency = u.daysLeft <= 1 ? '#ef4444' : u.daysLeft <= 3 ? '#f59e0b' : '#10b981';
+        %>
+        <tr style="border-bottom:1px solid #0f172a;">
+          <td style="padding:12px;">
+            <p style="margin:0;color:#e2e8f0;font-weight:600;"><%= u.name %></p>
+            <p style="margin:2px 0 0;color:#64748b;font-size:12px;"><%= u.email %></p>
+          </td>
+          <td style="padding:12px;min-width:180px;">
+            <div style="background:#0f172a;border-radius:6px;height:8px;overflow:hidden;margin-bottom:4px;">
+              <div style="background:<%= urgency %>;height:100%;width:<%= u.progress %>%;border-radius:6px;transition:width .3s;"></div>
+            </div>
+            <p style="margin:0;color:#64748b;font-size:11px;"><%= u.progress %>% utilisé</p>
+          </td>
+          <td style="padding:12px;text-align:center;">
+            <span style="background:rgba(239,68,68,.1);color:<%= urgency %>;font-weight:900;font-size:18px;padding:4px 12px;border-radius:8px;">
+              <%= u.daysLeft %>j
+            </span>
+          </td>
+          <td style="padding:12px;">
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <span title="Vérification" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:<%= funnel.verification ? '#065f46' : '#1e293b' %>;border:1px solid <%= funnel.verification ? '#059669' : '#334155' %>;">✉</span>
+              <span title="Bienvenue" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:<%= funnel.welcome ? '#065f46' : '#1e293b' %>;border:1px solid <%= funnel.welcome ? '#059669' : '#334155' %>;">👋</span>
+              <span title="J+5 Rappel" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:<%= funnel.trial_ending ? '#065f46' : '#1e293b' %>;border:1px solid <%= funnel.trial_ending ? '#059669' : '#334155' %>;">⏰</span>
+              <span title="J+7 Expiré" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:<%= funnel.trial_expired ? '#065f46' : '#1e293b' %>;border:1px solid <%= funnel.trial_expired ? '#059669' : '#334155' %>;">😔</span>
+              <span title="J+9 Relance" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:<%= funnel.followup ? '#065f46' : '#1e293b' %>;border:1px solid <%= funnel.followup ? '#059669' : '#334155' %>;">💡</span>
+              <span title="J+12 -15%" style="width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;background:<%= funnel.discount ? '#7f1d1d' : '#1e293b' %>;border:1px solid <%= funnel.discount ? '#dc2626' : '#334155' %>;">🔥</span>
+            </div>
+          </td>
+          <td style="padding:12px;color:#94a3b8;font-size:12px;">
+            <%= new Date(u.trial_ends_at).toLocaleDateString('fr-FR', {day:'numeric',month:'short'}) %>
+          </td>
+          <td style="padding:12px;">
+            <a href="/admin/users/<%= u.id %>" class="btn-gray" style="font-size:11px;padding:5px 10px;">Voir</a>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+  <% } %>
+</div>
+
+<!-- Essais expirés -->
+<% if (expiredTrials.length > 0) { %>
+<div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+  <h3 style="color:#e2e8f0;font-size:14px;font-weight:700;margin:0 0 16px;display:flex;align-items:center;gap:8px;">
+    <span style="background:#ef4444;border-radius:50%;width:8px;height:8px;display:inline-block;"></span>
+    Essais expirés — Funnel post-essai (<%= expiredTrials.length %>)
+  </h3>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="border-bottom:1px solid #334155;">
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Utilisateur</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Fin d'essai</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Emails envoyés</th>
+          <th style="text-align:left;padding:8px 12px;color:#64748b;font-weight:600;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% expiredTrials.forEach(u => { %>
+        <tr style="border-bottom:1px solid #0f172a;">
+          <td style="padding:10px 12px;">
+            <p style="margin:0;color:#e2e8f0;font-weight:600;"><%= u.name %></p>
+            <p style="margin:2px 0 0;color:#64748b;font-size:12px;"><%= u.email %></p>
+          </td>
+          <td style="padding:10px 12px;color:#ef4444;font-size:12px;">
+            <%= new Date(u.trial_ends_at).toLocaleDateString('fr-FR') %>
+          </td>
+          <td style="padding:10px 12px;">
+            <div style="display:flex;gap:4px;">
+              <% ['trial_expired','followup','discount'].forEach(type => { %>
+              <% const sent = u.funnelLogs.some(l => l.type === type); %>
+              <span style="width:8px;height:8px;border-radius:50%;background:<%= sent ? '#10b981' : '#334155' %>;display:inline-block;" title="<%= type %>"></span>
+              <% }); %>
+            </div>
+          </td>
+          <td style="padding:10px 12px;">
+            <a href="/admin/users/<%= u.id %>" style="color:#3b82f6;font-size:12px;font-weight:600;text-decoration:none;">Voir →</a>
+          </td>
+        </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% } %>
+
+<div style="margin-top:16px;padding:12px;background:#1e293b;border-radius:8px;font-size:12px;color:#64748b;">
+  <strong style="color:#94a3b8;">Légende funnel :</strong>
+  ✉ Email vérif → 👋 Bienvenue → ⏰ J+5 Rappel → 😔 J+7 Expiré → 💡 J+9 Relance → 🔥 J+12 −15% annuel
+</div>

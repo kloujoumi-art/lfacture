@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title><%= title %></title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body{font-family:'Inter',sans-serif;}</style>
+</head>
+<body style="background:linear-gradient(135deg,#fef2f2 0%,#fee2e2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:#fff;border-radius:20px;padding:48px 40px;max-width:420px;width:100%;text-align:center;box-shadow:0 25px 60px rgba(0,0,0,.1);">
+    <div style="width:72px;height:72px;border-radius:50%;background:#fee2e2;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <svg style="width:36px;height:36px;color:#dc2626;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+    </div>
+    <h1 style="font-size:22px;font-weight:900;color:#1a1a2e;margin:0 0 12px;">Lien invalide ou expiré</h1>
+    <p style="color:#6b7280;font-size:14px;line-height:1.6;margin:0 0 24px;">Ce lien de vérification est invalide ou a expiré (durée de vie : 24h). Créez un nouveau compte pour recevoir un nouveau lien.</p>
+    <a href="/register" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;text-decoration:none;padding:14px 32px;border-radius:8px;font-weight:700;font-size:14px;">Créer un nouveau compte</a>
+    <div style="margin-top:16px;">
+      <a href="/login" style="color:#9ca3af;font-size:13px;">Retour à la connexion</a>
+    </div>
+  </div>
+</body>
+</html>

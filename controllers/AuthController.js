@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const EmailService = require('../services/EmailService');
+const FunnelService = require('../services/FunnelService');
 const { db, nextId } = require('../database/db');
 
 class AuthController {
@@ -40,16 +41,38 @@ class AuthController {
         payment_terms: 'Paiement à 30 jours',
       }).write();
 
-      req.session.userId = user.id;
+      // Envoie l'email de vérification (pas encore de session — doit vérifier l'email d'abord)
+      FunnelService.sendVerificationEmail(user).catch(() => {});
 
-      EmailService.sendWelcomeEmail(user, password).catch(() => {});
-
-      req.flash('success', `Bienvenue ${user.name} ! Votre essai gratuit de 7 jours est activé.`);
-      res.redirect('/dashboard');
+      res.renderLayout('auth/verify-pending', {
+        title: 'Vérifiez votre email — LFacture',
+        email: user.email,
+        name: user.name,
+      });
     } catch (err) {
       console.error('Registration error:', err);
       return res.renderLayout('auth/register', { title: 'Créer un compte — LFacture', errors: ['Erreur lors de la création du compte. Réessayez.'], old: { name, email } });
     }
+  }
+
+  static async verifyEmail(req, res) {
+    const { token } = req.query;
+    if (!token) {
+      req.flash('error', 'Lien de vérification invalide.');
+      return res.redirect('/login');
+    }
+    const user = User.verifyEmail(token);
+    if (!user) {
+      return res.renderLayout('auth/verify-error', { title: 'Lien invalide — LFacture' });
+    }
+    // Ajouter à la liste des contacts mailing
+    FunnelService.addToContacts(user);
+    // Envoyer l'email de bienvenue avec credentials
+    FunnelService.sendWelcomeEmail(user).catch(() => {});
+    // Connecter l'utilisateur
+    req.session.userId = user.id;
+    req.flash('success', `Email vérifié ! Bienvenue ${user.name}, votre essai de 7 jours commence maintenant.`);
+    res.redirect('/dashboard');
   }
 
   static showLogin(req, res) {
