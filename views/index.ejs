@@ -327,7 +327,7 @@
         <ul class="space-y-3 mb-7 text-left max-w-sm mx-auto lg:mx-0">
           <% [
             'Créez vos factures en 2 minutes',
-            '3 modèles PDF professionnels inclus',
+            '10 modèles PDF professionnels inclus',
             'Logo + mentions légales automatiques',
             'Accessible sur mobile et ordinateur',
             'Données sécurisées et conformes RGPD',
@@ -408,7 +408,7 @@
           <% [
             'Facture créée et téléchargée en 2 minutes top chrono',
             'Toutes les mentions légales incluses automatiquement',
-            'PDF haute qualité avec votre logo — 3 modèles pros',
+            'PDF haute qualité avec votre logo — 10 modèles pros',
             'TVA calculée instantanément (0%, 5,5%, 10%, 20%)',
             'Toutes vos factures classées, retrouvables en 1 clic',
             'Documents conformes 100% à la législation française',
@@ -450,9 +450,9 @@
         },
         {
           icon:'🎨', color:'#fdf4ff', iconColor:'#7C3AED',
-          title:'3 modèles professionnels',
-          desc:'Classique, Moderne ou Épuré. Ajoutez votre logo d\'entreprise depuis les paramètres. Il apparaît automatiquement sur tous vos documents.',
-          tags:['Logo','3 styles','Personnalisable']
+          title:'10 modèles professionnels',
+          desc:'Classique, Moderne, Épuré, Bleu, Vert, Orange, Rouge, Marine, Ardoise, Créatif. Ajoutez votre logo. Il apparaît automatiquement sur tous vos documents.',
+          tags:['Logo','10 styles','Personnalisable']
         },
         {
           icon:'👥', color:'#f0fdf4', iconColor:'#10b981',
@@ -504,126 +504,61 @@
 <section id="templates" class="py-12 sm:py-16 bg-white">
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-10">
-      <span style="background:#eef2ff;color:#4F46E5;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:10px;border:1px solid #c7d2fe;">3 Modèles inclus</span>
+      <span style="background:#eef2ff;color:#4F46E5;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;display:inline-block;margin-bottom:10px;border:1px solid #c7d2fe;">10 Modèles inclus</span>
       <h2 class="text-2xl sm:text-4xl font-black text-gray-900 mb-2">Des factures qui font bonne impression</h2>
-      <p class="text-gray-500">Choisissez votre style. Changez en 1 clic.</p>
+      <p class="text-gray-500">10 modèles professionnels inclus. Changez en 1 clic, sans rien repayer.</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
 
-      <!-- Modèle Classique -->
-      <div class="tpl-card">
-        <div style="padding:18px;background:#f8fafc;min-height:240px;">
-          <div style="background:#fff;border-radius:8px;padding:14px;box-shadow:0 2px 8px rgba(0,0,0,.07);">
-            <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
-              <div>
-                <div style="width:30px;height:30px;background:#4F46E5;border-radius:6px;margin-bottom:6px;"></div>
-                <div style="height:6px;width:70px;background:#e2e8f0;border-radius:3px;margin-bottom:3px;"></div>
-                <div style="height:5px;width:50px;background:#f1f5f9;border-radius:3px;"></div>
-              </div>
-              <div style="text-align:right;">
-                <div style="font-size:12px;font-weight:900;color:#1e293b;">FACTURE</div>
-                <div style="height:5px;width:60px;background:#e2e8f0;border-radius:3px;margin-top:4px;"></div>
-              </div>
-            </div>
-            <div style="border-top:2px solid #4F46E5;padding-top:10px;">
-              <% for(let i=0;i<3;i++){ %>
-              <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-                <div style="height:5px;width:<%= [65,50,75][i] %>%;background:#f1f5f9;border-radius:3px;"></div>
-                <div style="height:5px;width:40px;background:#e2e8f0;border-radius:3px;"></div>
-              </div>
-              <% } %>
-              <div style="margin-top:8px;padding:7px 8px;background:#4F46E5;border-radius:5px;display:flex;justify-content:space-between;">
-                <span style="color:#fff;font-size:9px;font-weight:700;">TOTAL TTC</span>
-                <span style="color:#fff;font-size:9px;font-weight:900;">2 820 €</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="padding:14px 18px;border-top:1px solid #f1f5f9;">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-bold text-gray-900 text-sm">Classique</h3>
-              <p class="text-xs text-gray-500">Sobre et professionnel</p>
-            </div>
-            <span style="background:#eef2ff;color:#4F46E5;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">Populaire</span>
-          </div>
-        </div>
+<%
+const tplPreviews = [
+  { name:'Classique', sub:'Violet professionnel', bg:'#f8faff', accent:'#4F46E5', badge:'Populaire', badgeBg:'#eef2ff', badgeColor:'#4F46E5' },
+  { name:'Moderne',   sub:'Sidebar sombre',       bg:'#0f172a', accent:'#7C3AED', badge:'⭐ Favori',  badgeBg:'#4F46E5', badgeColor:'#fff', dark:true },
+  { name:'Épuré',     sub:'Noir & blanc',          bg:'#fafafa', accent:'#000',    badge:'Élégant',   badgeBg:'#f3f4f6', badgeColor:'#374151' },
+  { name:'Bleu Pro',  sub:'Bleu professionnel',    bg:'#eff6ff', accent:'#2563eb', badge:'Sérieux',   badgeBg:'#dbeafe', badgeColor:'#1e40af' },
+  { name:'Vert',      sub:'Vert élégant',          bg:'#f0fdf4', accent:'#059669', badge:'Nature',    badgeBg:'#dcfce7', badgeColor:'#065f46' },
+  { name:'Orange',    sub:'Orange créatif',        bg:'#fff7ed', accent:'#f97316', badge:'Créatif',   badgeBg:'#ffedd5', badgeColor:'#c2410c' },
+  { name:'Rouge',     sub:'Rouge dynamique',       bg:'#fef2f2', accent:'#dc2626', badge:'Impact',    badgeBg:'#fee2e2', badgeColor:'#991b1b' },
+  { name:'Marine',    sub:'Marine & or',           bg:'#0f172a', accent:'#f59e0b', badge:'Luxe',      badgeBg:'#f59e0b', badgeColor:'#000', dark:true },
+  { name:'Ardoise',   sub:'Gris professionnel',    bg:'#f8fafc', accent:'#475569', badge:'Neutre',    badgeBg:'#e2e8f0', badgeColor:'#334155' },
+  { name:'Créatif',   sub:'Violet-rose dégradé',   bg:'#faf5ff', accent:'#9333ea', badge:'Unique',    badgeBg:'#f3e8ff', badgeColor:'#7e22ce' },
+];
+%>
+<% tplPreviews.forEach(function(t){ %>
+<div class="tpl-card" style="border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);border:1px solid #f1f5f9;transition:transform .2s,box-shadow .2s;cursor:pointer;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 32px rgba(0,0,0,.15)'" onmouseout="this.style.transform='';this.style.boxShadow='0 2px 12px rgba(0,0,0,.08)'">
+  <div style="background:<%=t.bg%>;padding:14px;min-height:160px;display:flex;flex-direction:column;justify-content:space-between;">
+    <div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div style="width:24px;height:24px;background:<%=t.accent%>;border-radius:5px;"></div>
+        <div style="font-size:8px;font-weight:900;color:<%=t.dark?'rgba(255,255,255,.5)':t.accent%>;letter-spacing:1px;">FACTURE</div>
       </div>
-
-      <!-- Modèle Moderne -->
-      <div class="tpl-card" style="box-shadow:0 12px 40px rgba(79,70,229,.2);">
-        <div style="padding:18px;background:#0f172a;min-height:240px;position:relative;">
-          <div style="position:absolute;top:10px;right:10px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;border-radius:10px;">⭐ Favori</div>
-          <div style="display:flex;height:100%;gap:10px;">
-            <div style="width:55px;background:#1e293b;border-radius:8px;padding:10px 6px;flex-shrink:0;">
-              <div style="width:28px;height:28px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:6px;margin:0 auto 8px;"></div>
-              <div style="height:4px;width:100%;background:#334155;border-radius:2px;margin-bottom:4px;"></div>
-              <div style="height:4px;width:80%;background:#334155;border-radius:2px;margin-bottom:4px;"></div>
-              <div style="height:4px;width:60%;background:#334155;border-radius:2px;"></div>
-            </div>
-            <div style="flex:1;">
-              <div style="color:rgba(255,255,255,.4);font-size:8px;font-weight:700;margin-bottom:2px;">FACTURE</div>
-              <div style="color:#fff;font-size:11px;font-weight:900;margin-bottom:8px;">#2024-042</div>
-              <% for(let i=0;i<3;i++){ %>
-              <div style="display:flex;justify-content:space-between;margin-bottom:5px;border-bottom:1px solid rgba(255,255,255,.05);padding-bottom:4px;">
-                <div style="height:5px;width:<%= [55,40,70][i] %>%;background:#334155;border-radius:2px;"></div>
-                <div style="height:5px;width:35px;background:#475569;border-radius:2px;"></div>
-              </div>
-              <% } %>
-              <div style="margin-top:8px;padding:6px 8px;background:linear-gradient(135deg,#4F46E5,#7C3AED);border-radius:5px;display:flex;justify-content:space-between;">
-                <span style="color:rgba(255,255,255,.7);font-size:8px;">TOTAL</span>
-                <span style="color:#fff;font-size:9px;font-weight:900;">2 820 €</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div style="padding:14px 18px;border-top:1px solid #f1f5f9;">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-bold text-gray-900 text-sm">Moderne</h3>
-              <p class="text-xs text-gray-500">Dark & impact visuel fort</p>
-            </div>
-            <span style="background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">Nouveau</span>
-          </div>
-        </div>
+      <div style="height:4px;width:70%;background:<%=t.dark?'rgba(255,255,255,.1)':'rgba(0,0,0,.08)'%>;border-radius:2px;margin-bottom:3px;"></div>
+      <div style="height:3px;width:50%;background:<%=t.dark?'rgba(255,255,255,.06)':'rgba(0,0,0,.05)'%>;border-radius:2px;margin-bottom:10px;"></div>
+      <div style="height:2px;width:100%;background:<%=t.accent%>;border-radius:1px;margin-bottom:8px;opacity:.3;"></div>
+      <% for(let i=0;i<3;i++){%>
+      <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+        <div style="height:4px;width:<%=[60,45,70][i]%>%;background:<%=t.dark?'rgba(255,255,255,.1)':'rgba(0,0,0,.07)'%>;border-radius:2px;"></div>
+        <div style="height:4px;width:30px;background:<%=t.dark?'rgba(255,255,255,.15)':'rgba(0,0,0,.1)'%>;border-radius:2px;"></div>
       </div>
-
-      <!-- Modèle Épuré -->
-      <div class="tpl-card">
-        <div style="padding:18px;background:#fafaf9;min-height:240px;">
-          <div style="background:#fff;border-radius:8px;padding:14px;border:1px solid #e7e5e4;">
-            <div style="text-align:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid #e7e5e4;">
-              <div style="width:26px;height:26px;background:#1c1917;border-radius:5px;margin:0 auto 6px;"></div>
-              <div style="height:6px;width:80px;background:#e7e5e4;border-radius:3px;margin:0 auto 3px;"></div>
-              <div style="height:4px;width:55px;background:#f5f5f4;border-radius:3px;margin:0 auto;"></div>
-            </div>
-            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
-              <div style="height:5px;width:45%;background:#f5f5f4;border-radius:3px;"></div>
-              <div style="font-size:10px;font-weight:900;color:#1c1917;">FACTURE</div>
-            </div>
-            <% for(let i=0;i<3;i++){ %>
-            <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
-              <div style="height:5px;width:<%= [60,45,70][i] %>%;background:#f5f5f4;border-radius:3px;"></div>
-              <div style="height:5px;width:40px;background:#e7e5e4;border-radius:3px;"></div>
-            </div>
-            <% } %>
-            <div style="margin-top:8px;padding:7px 0;border-top:2px solid #1c1917;display:flex;justify-content:space-between;">
-              <span style="font-size:9px;font-weight:700;color:#1c1917;">TOTAL TTC</span>
-              <span style="font-size:9px;font-weight:900;color:#1c1917;">2 820 €</span>
-            </div>
-          </div>
-        </div>
-        <div style="padding:14px 18px;border-top:1px solid #f1f5f9;">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-bold text-gray-900 text-sm">Épuré</h3>
-              <p class="text-xs text-gray-500">Minimaliste & élégant</p>
-            </div>
-            <span style="background:#f5f5f4;color:#44403c;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">Premium</span>
-          </div>
-        </div>
+      <%}%>
+    </div>
+    <div style="padding:6px 8px;background:<%=t.accent%>;border-radius:5px;display:flex;justify-content:space-between;margin-top:8px;">
+      <span style="color:#fff;font-size:8px;font-weight:700;opacity:.8;">TOTAL TTC</span>
+      <span style="color:#fff;font-size:8px;font-weight:900;">2 820 €</span>
+    </div>
+  </div>
+  <div style="padding:10px 12px;background:#fff;border-top:1px solid #f1f5f9;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <p style="font-size:12px;font-weight:800;color:#1e293b;margin:0;"><%=t.name%></p>
+        <p style="font-size:10px;color:#94a3b8;margin:0;"><%=t.sub%></p>
       </div>
+      <span style="font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:<%=t.badgeBg%>;color:<%=t.badgeColor%>;white-space:nowrap;"><%=t.badge%></span>
+    </div>
+  </div>
+</div>
+<% }); %>
 
     </div>
 
@@ -631,7 +566,7 @@
       <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-xl" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);box-shadow:0 6px 22px rgba(79,70,229,.3);">
         Choisir mon modèle gratuitement →
       </a>
-      <p class="text-xs text-gray-400 mt-2">Changez de modèle à tout moment en 1 clic</p>
+      <p class="text-xs text-gray-400 mt-2">10 modèles inclus — changez à tout moment en 1 clic</p>
     </div>
   </div>
 </section>

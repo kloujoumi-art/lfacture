@@ -150,7 +150,9 @@ class DashboardController {
     const invoice = Invoice.findById(req.params.id);
     if (!invoice || invoice.user_id !== req.user.id) return res.redirect('/dashboard/invoices');
     const { db } = require('../database/db');
-    db.get('invoices').find({ id: invoice.id }).assign({ template: req.body.template || 'classic' }).write();
+    const allowed = ['classic','modern','minimal','blue','green','orange','red','navy','slate','creative'];
+    const tpl = allowed.includes(req.body.template) ? req.body.template : 'classic';
+    db.get('invoices').find({ id: invoice.id }).assign({ template: tpl }).write();
     res.redirect(`/dashboard/invoices/${invoice.id}`);
   }
 
