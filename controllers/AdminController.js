@@ -1,10 +1,81 @@
 const User = require('../models/User');
 const Invoice = require('../models/Invoice');
-const { db } = require('../database/db');
+const { db, nextId } = require('../database/db');
+const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
 
 const adm = (res, view, data = {}) => res.renderLayout(view, data, 'admin');
 
+// Clé secrète de setup (changeable dans .env)
+const SETUP_KEY = process.env.ADMIN_SETUP_KEY || 'lfacture-setup-2024';
+
 class AdminController {
+
+  // ---- Setup (création premier admin) ----
+  static showSetup(req, res) {
+    const admins = db.get('users').filter({ is_admin: 1 }).value();
+    if (admins.length > 0) {
+      return res.redirect('/login');
+    }
+    res.render('admin/setup', { setupKey: SETUP_KEY, error: null });
+  }
+
+  static createSetup(req, res) {
+    const admins = db.get('users').filter({ is_admin: 1 }).value();
+    if (admins.length > 0) {
+      return res.redirect('/login');
+    }
+
+    const { name, email, password, setup_key } = req.body;
+
+    if (setup_key !== SETUP_KEY) {
+      return res.render('admin/setup', { setupKey: SETUP_KEY, error: 'Clé de setup invalide.' });
+    }
+    if (!name || !email || !password || password.length < 8) {
+      return res.render('admin/setup', { setupKey: SETUP_KEY, error: 'Tous les champs sont requis (mot de passe min. 8 caractères).' });
+    }
+
+    // Vérifier si email existe déjà
+    const existing = User.findByEmail(email);
+    if (existing) {
+      // Promouvoir en admin
+      db.get('users').find({ id: existing.id }).assign({ is_admin: 1 }).write();
+      req.session.userId = existing.id;
+      return res.redirect('/admin');
+    }
+
+    // Créer le compte admin
+    const trialEnd = new Date();
+    trialEnd.setFullYear(trialEnd.getFullYear() + 10);
+    const newAdmin = {
+      id: nextId('user'),
+      uuid: uuidv4(),
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password: bcrypt.hashSync(password, 12),
+      plan: 'active',
+      is_admin: 1,
+      trial_ends_at: trialEnd.toISOString(),
+      subscription_ends_at: trialEnd.toISOString(),
+      created_at: new Date().toISOString(),
+    };
+    db.get('users').push(newAdmin).write();
+
+    // Initialiser les settings
+    db.get('settings').push({
+      id: nextId('settings'),
+      user_id: newAdmin.id,
+      invoice_prefix: 'FAC',
+      quote_prefix: 'DEV',
+      invoice_counter: 1,
+      quote_counter: 1,
+      default_tva: 20,
+      payment_terms: 'Paiement à 30 jours',
+    }).write();
+
+    req.session.userId = newAdmin.id;
+    res.redirect('/admin');
+  }
 
   // ---- Dashboard ----
   static index(req, res) {

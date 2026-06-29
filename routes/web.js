@@ -43,6 +43,10 @@ router.delete('/dashboard/invoices/:id', requireAccess, DashboardController.dele
 router.get('/dashboard/settings', requireAuth, DashboardController.showSettings);
 router.post('/dashboard/settings', requireAuth, DashboardController.updateSettings);
 
+// ---- Admin setup (sans auth — seulement si 0 admin existe) ----
+router.get('/admin/setup', AdminController.showSetup);
+router.post('/admin/setup', AdminController.createSetup);
+
 // ---- Admin routes ----
 router.get('/admin', requireAdmin, AdminController.index);
 router.get('/admin/users', requireAdmin, AdminController.listUsers);
