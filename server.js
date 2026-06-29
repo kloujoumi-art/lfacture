@@ -76,6 +76,25 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`\n✅ LFacture est en ligne sur http://localhost:${PORT}\n`);
+
+  // Auto-setup admin via variables d'environnement
+  if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+    const { db, nextId } = require('./database/db');
+    const bcrypt = require('bcryptjs');
+    const { v4: uuidv4 } = require('uuid');
+    const adminEmail = process.env.ADMIN_EMAIL.toLowerCase().trim();
+    const existing = db.get('users').find(u => u.email === adminEmail).value();
+    const hashedPass = bcrypt.hashSync(process.env.ADMIN_PASSWORD, 12);
+    const farFuture = new Date(Date.now() + 10 * 365 * 24 * 60 * 60 * 1000).toISOString();
+    if (existing) {
+      db.get('users').find({ id: existing.id }).assign({ is_admin: 1, password: hashedPass, plan: 'active', email_verified: 1, subscription_ends_at: farFuture }).write();
+      console.log(`[Admin] Compte admin mis à jour : ${adminEmail}`);
+    } else {
+      db.get('users').push({ id: nextId('user'), uuid: uuidv4(), name: 'Admin', email: adminEmail, password: hashedPass, plan: 'active', is_admin: 1, email_verified: 1, subscription_ends_at: farFuture, created_at: new Date().toISOString() }).write();
+      console.log(`[Admin] Compte admin créé : ${adminEmail}`);
+    }
+  }
+
   // Démarre le scheduler funnel (emails automatiques)
   const { startFunnelScheduler } = require('./services/FunnelService');
   startFunnelScheduler();
