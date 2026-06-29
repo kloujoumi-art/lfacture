@@ -66,8 +66,8 @@ async function fetchCoverImage(keyword, image_source, language) {
 }
 
 async function generateArticle({ keyword, language = 'fr' }) {
-  const OPENAI_KEY = process.env.OPENAI_API_KEY;
-  if (!OPENAI_KEY) throw new Error('OPENAI_API_KEY manquant dans les variables d\'environnement');
+  const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
+  if (!ANTHROPIC_KEY) throw new Error('ANTHROPIC_API_KEY manquant dans les variables d\'environnement Render');
 
   const langMap = { fr: 'français', en: 'anglais', ar: 'arabe' };
   const lang = langMap[language] || 'français';
@@ -93,18 +93,18 @@ Réponds UNIQUEMENT avec un objet JSON valide (sans markdown, sans \`\`\`) :
   "content": "<h2>...</h2><p>...</p>... (HTML complet, 800+ mots, structure complète avec FAQ)"
 }`;
 
-  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENAI_KEY}`,
+      'x-api-key': ANTHROPIC_KEY,
+      'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini',
+      model: 'claude-haiku-4-5-20251001',
       max_tokens: 4096,
-      response_format: { type: 'json_object' },
+      system: systemPrompt,
       messages: [
-        { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
       ],
     }),
@@ -112,11 +112,11 @@ Réponds UNIQUEMENT avec un objet JSON valide (sans markdown, sans \`\`\`) :
 
   if (!resp.ok) {
     const errText = await resp.text().catch(() => '');
-    throw new Error(`OpenAI API ${resp.status}: ${errText.slice(0, 200)}`);
+    throw new Error(`Anthropic API ${resp.status}: ${errText.slice(0, 200)}`);
   }
 
   const data = await resp.json();
-  const text = (data.choices?.[0]?.message?.content || '').trim();
+  const text = (data.content?.[0]?.text || '').trim();
 
   let article;
   try {
@@ -125,13 +125,13 @@ Réponds UNIQUEMENT avec un objet JSON valide (sans markdown, sans \`\`\`) :
     const match = text.match(/\{[\s\S]+\}/);
     if (match) {
       try { article = JSON.parse(match[0]); }
-      catch { throw new Error('Format JSON invalide dans la réponse OpenAI'); }
+      catch { throw new Error('Format JSON invalide dans la réponse Claude'); }
     } else {
-      throw new Error('Aucun JSON trouvé dans la réponse OpenAI');
+      throw new Error('Aucun JSON trouvé dans la réponse Claude');
     }
   }
 
-  if (!article.title || !article.content) throw new Error('Réponse OpenAI incomplète (title ou content manquant)');
+  if (!article.title || !article.content) throw new Error('Réponse Claude incomplète (title ou content manquant)');
   return article;
 }
 
