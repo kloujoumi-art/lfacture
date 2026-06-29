@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LFacture — Créez vos factures et devis professionnels en quelques secondes." />
+  <title><%= typeof title !== 'undefined' ? title : 'LFacture' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#eef2ff',100:'#e0e7ff',200:'#c7d2fe',300:'#a5b4fc',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca',800:'#3730a3',900:'#312e81' },
+            brand: { DEFAULT:'#4F46E5', dark:'#4338ca', light:'#6366f1' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, #4F46E5, #7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .btn-primary { background: linear-gradient(135deg, #4F46E5, #7C3AED); transition: all 0.2s; box-shadow: 0 4px 15px rgba(79,70,229,0.3); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 25px rgba(79,70,229,0.4); }
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 20px rgba(0,0,0,0.06); }
+    .flash-success { background:#ecfdf5; border:1px solid #6ee7b7; color:#065f46; }
+    .flash-error { background:#fef2f2; border:1px solid #fca5a5; color:#991b1b; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(-8px)} to{opacity:1;transform:translateY(0)} }
+    .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 inset-x-0 z-50 bg-white/80 backdrop-blur-lg border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg btn-primary flex items-center justify-center">
+            <span class="text-white font-black text-sm">L</span>
+          </div>
+          <span class="text-xl font-black text-gray-900">LFacture</span>
+        </a>
+
+        <!-- Nav links -->
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/features" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Fonctionnalités</a>
+          <a href="/pricing" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Tarifs</a>
+          <% if (user) { %>
+            <a href="/dashboard" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Dashboard</a>
+            <form action="/logout" method="POST" class="inline">
+              <button type="submit" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Déconnexion</button>
+            </form>
+          <% } else { %>
+            <a href="/login" class="text-sm font-medium text-gray-600 hover:text-gray-900 transition">Connexion</a>
+            <a href="/register" class="btn-primary text-white text-sm font-semibold px-4 py-2 rounded-lg">Essai gratuit</a>
+          <% } %>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-3">
+      <a href="/features" class="block text-sm font-medium text-gray-700">Fonctionnalités</a>
+      <a href="/pricing" class="block text-sm font-medium text-gray-700">Tarifs</a>
+      <% if (user) { %>
+        <a href="/dashboard" class="block text-sm font-medium text-gray-700">Dashboard</a>
+      <% } else { %>
+        <a href="/login" class="block text-sm font-medium text-gray-700">Connexion</a>
+        <a href="/register" class="block btn-primary text-white text-sm font-semibold px-4 py-2 rounded-lg text-center">Essai gratuit</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <!-- Flash messages -->
+  <div class="fixed top-20 right-4 z-50 space-y-2 max-w-sm w-full" id="flashContainer">
+    <% if (success && success.length > 0) { success.forEach(msg => { %>
+      <div class="flash-success rounded-xl p-4 flex items-start gap-3 animate-fade-in shadow-lg">
+        <svg class="w-5 h-5 mt-0.5 flex-shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+        <p class="text-sm font-medium"><%= msg %></p>
+      </div>
+    <% }); } %>
+    <% if (error && error.length > 0) { error.forEach(msg => { %>
+      <div class="flash-error rounded-xl p-4 flex items-start gap-3 animate-fade-in shadow-lg">
+        <svg class="w-5 h-5 mt-0.5 flex-shrink-0 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
+        <p class="text-sm font-medium"><%= msg %></p>
+      </div>
+    <% }); } %>
+  </div>
+
+  <!-- Main content -->
+  <main class="pt-16">
+    <%- body %>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-gray-400 mt-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+        <div class="md:col-span-2">
+          <a href="/" class="flex items-center gap-2 mb-4">
+            <div class="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
+              <span class="text-white font-black text-sm">L</span>
+            </div>
+            <span class="text-xl font-black text-white">LFacture</span>
+          </a>
+          <p class="text-sm leading-relaxed max-w-xs">Créez vos factures et devis professionnels en quelques secondes. La solution de facturation pensée pour les indépendants et PME françaises.</p>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold text-sm mb-4">Produit</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/features" class="hover:text-white transition">Fonctionnalités</a></li>
+            <li><a href="/pricing" class="hover:text-white transition">Tarifs</a></li>
+            <li><a href="/register" class="hover:text-white transition">Essai gratuit</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold text-sm mb-4">Compte</h3>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/login" class="hover:text-white transition">Connexion</a></li>
+            <li><a href="/register" class="hover:text-white transition">Inscription</a></li>
+            <li><a href="/dashboard" class="hover:text-white transition">Dashboard</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-sm">© <%= new Date().getFullYear() %> LFacture — Tous droits réservés</p>
+        <p class="text-sm">Fait avec ❤️ pour les entrepreneurs français</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('mobileMenuBtn')?.addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+    // Auto-dismiss flash messages
+    setTimeout(() => {
+      document.querySelectorAll('#flashContainer > div').forEach(el => {
+        el.style.transition = 'opacity 0.5s';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 500);
+      });
+    }, 4000);
+  </script>
+</body>
+</html>

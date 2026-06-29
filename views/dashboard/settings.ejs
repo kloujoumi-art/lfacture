@@ -1,0 +1,123 @@
+<div class="max-w-3xl">
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+    <form action="/dashboard/settings" method="POST" class="space-y-8">
+
+      <!-- Company info -->
+      <div>
+        <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Informations de l'entreprise</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nom de l'entreprise / Nom complet</label>
+            <input type="text" name="company_name" value="<%= settings && settings.company_name ? settings.company_name : '' %>"
+              placeholder="Marie Dupont Consulting"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Adresse</label>
+            <input type="text" name="company_address" value="<%= settings && settings.company_address ? settings.company_address : '' %>"
+              placeholder="12 rue de la Paix"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Code postal</label>
+            <input type="text" name="company_postal" value="<%= settings && settings.company_postal ? settings.company_postal : '' %>"
+              placeholder="75001"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Ville</label>
+            <input type="text" name="company_city" value="<%= settings && settings.company_city ? settings.company_city : '' %>"
+              placeholder="Paris"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Téléphone</label>
+            <input type="tel" name="company_phone" value="<%= settings && settings.company_phone ? settings.company_phone : '' %>"
+              placeholder="06 00 00 00 00"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email professionnel</label>
+            <input type="email" name="company_email" value="<%= settings && settings.company_email ? settings.company_email : '' %>"
+              placeholder="contact@exemple.fr"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">SIRET</label>
+            <input type="text" name="company_siret" value="<%= settings && settings.company_siret ? settings.company_siret : '' %>"
+              placeholder="12345678901234"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Numéro de TVA intracommunautaire</label>
+            <input type="text" name="company_tva" value="<%= settings && settings.company_tva ? settings.company_tva : '' %>"
+              placeholder="FR12345678901"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+        </div>
+      </div>
+
+      <!-- Invoice settings -->
+      <div>
+        <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Paramètres de facturation</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Préfixe factures</label>
+            <input type="text" name="invoice_prefix" value="<%= settings && settings.invoice_prefix ? settings.invoice_prefix : 'FAC' %>"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Préfixe devis</label>
+            <input type="text" name="quote_prefix" value="<%= settings && settings.quote_prefix ? settings.quote_prefix : 'DEV' %>"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">TVA par défaut (%)</label>
+            <select name="default_tva" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-white">
+              <option value="0" <%= (settings && settings.default_tva == 0) ? 'selected' : '' %>>0% (exonéré)</option>
+              <option value="5.5" <%= (settings && settings.default_tva == 5.5) ? 'selected' : '' %>>5,5%</option>
+              <option value="10" <%= (settings && settings.default_tva == 10) ? 'selected' : '' %>>10%</option>
+              <option value="20" <%= (!settings || settings.default_tva == 20) ? 'selected' : '' %>>20% (standard)</option>
+            </select>
+          </div>
+          <div class="md:col-span-3">
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Conditions de paiement par défaut</label>
+            <input type="text" name="payment_terms" value="<%= settings && settings.payment_terms ? settings.payment_terms : 'Paiement à 30 jours' %>"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+        </div>
+      </div>
+
+      <!-- Bank details -->
+      <div>
+        <h3 class="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">Coordonnées bancaires</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">Banque</label>
+            <input type="text" name="bank_name" value="<%= settings && settings.bank_name ? settings.bank_name : '' %>"
+              placeholder="BNP Paribas"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+          </div>
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">IBAN</label>
+            <input type="text" name="bank_iban" value="<%= settings && settings.bank_iban ? settings.bank_iban : '' %>"
+              placeholder="FR76 1234 5678 9012 3456 7890 123"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-mono">
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-1.5">BIC / SWIFT</label>
+            <input type="text" name="bank_bic" value="<%= settings && settings.bank_bic ? settings.bank_bic : '' %>"
+              placeholder="BNPAFRPPXXX"
+              class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm font-mono">
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary text-white font-bold px-8 py-3 rounded-xl">
+        Enregistrer les paramètres
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>.btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);transition:all .2s;box-shadow:0 4px 12px rgba(79,70,229,.25)}.btn-primary:hover{transform:translateY(-1px)}</style>

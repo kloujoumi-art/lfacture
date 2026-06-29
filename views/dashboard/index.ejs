@@ -1,0 +1,137 @@
+<!-- Stats -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+  <div class="stat-card">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-sm font-medium text-gray-500">Factures</p>
+      <div class="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+      </div>
+    </div>
+    <p class="text-3xl font-black text-gray-900"><%= stats.invoices %></p>
+    <p class="text-xs text-gray-400 mt-1">Total créées</p>
+  </div>
+  <div class="stat-card">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-sm font-medium text-gray-500">Devis</p>
+      <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center">
+        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      </div>
+    </div>
+    <p class="text-3xl font-black text-gray-900"><%= stats.quotes %></p>
+    <p class="text-xs text-gray-400 mt-1">Total créés</p>
+  </div>
+  <div class="stat-card">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-sm font-medium text-gray-500">Clients</p>
+      <div class="w-9 h-9 rounded-xl bg-green-50 flex items-center justify-center">
+        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      </div>
+    </div>
+    <p class="text-3xl font-black text-gray-900"><%= stats.clients %></p>
+    <p class="text-xs text-gray-400 mt-1">Enregistrés</p>
+  </div>
+  <div class="stat-card">
+    <div class="flex items-center justify-between mb-3">
+      <p class="text-sm font-medium text-gray-500">CA encaissé</p>
+      <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center">
+        <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+    </div>
+    <p class="text-3xl font-black text-gray-900"><%= stats.revenue.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) %> €</p>
+    <p class="text-xs text-gray-400 mt-1">Factures payées</p>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+  <a href="/dashboard/invoices/create?type=invoice" class="bg-white border-2 border-dashed border-gray-200 rounded-xl p-6 flex items-center gap-4 hover:border-primary-400 hover:bg-primary-50 transition-all group">
+    <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style="background:linear-gradient(135deg,#4F46E5,#7C3AED)">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    </div>
+    <div>
+      <p class="font-bold text-gray-900 group-hover:text-primary-700">Nouvelle facture</p>
+      <p class="text-sm text-gray-500">Créer une facture PDF</p>
+    </div>
+  </a>
+  <a href="/dashboard/invoices/create?type=quote" class="bg-white border-2 border-dashed border-gray-200 rounded-xl p-6 flex items-center gap-4 hover:border-purple-400 hover:bg-purple-50 transition-all group">
+    <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform" style="background:linear-gradient(135deg,#7C3AED,#9333ea)">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    </div>
+    <div>
+      <p class="font-bold text-gray-900 group-hover:text-purple-700">Nouveau devis</p>
+      <p class="text-sm text-gray-500">Créer un devis PDF</p>
+    </div>
+  </a>
+  <a href="/dashboard/clients/create" class="bg-white border-2 border-dashed border-gray-200 rounded-xl p-6 flex items-center gap-4 hover:border-green-400 hover:bg-green-50 transition-all group">
+    <div class="w-12 h-12 rounded-xl bg-green-500 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+      <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+    </div>
+    <div>
+      <p class="font-bold text-gray-900 group-hover:text-green-700">Nouveau client</p>
+      <p class="text-sm text-gray-500">Ajouter un client</p>
+    </div>
+  </a>
+</div>
+
+<!-- Recent Invoices -->
+<div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+  <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
+    <h2 class="font-bold text-gray-900">Documents récents</h2>
+    <a href="/dashboard/invoices" class="text-sm text-primary-600 font-semibold hover:underline">Voir tout →</a>
+  </div>
+  <% if (recentInvoices && recentInvoices.length > 0) { %>
+  <div class="divide-y divide-gray-50">
+    <% recentInvoices.forEach(invoice => { %>
+    <div class="px-6 py-4 flex items-center justify-between table-row">
+      <div class="flex items-center gap-4">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 <%= invoice.type === 'invoice' ? 'bg-blue-50' : 'bg-purple-50' %>">
+          <svg class="w-5 h-5 <%= invoice.type === 'invoice' ? 'text-blue-600' : 'text-purple-600' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <div>
+          <p class="font-semibold text-gray-900 text-sm"><%= invoice.invoice_number %></p>
+          <p class="text-xs text-gray-400"><%= invoice.client_name || 'Sans client' %></p>
+        </div>
+      </div>
+      <div class="flex items-center gap-4">
+        <span class="text-sm font-bold text-gray-900"><%= invoice.total.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) %> €</span>
+        <span class="text-xs font-semibold px-2.5 py-1 rounded-full <%=
+          invoice.status === 'paid' ? 'bg-green-100 text-green-700' :
+          invoice.status === 'sent' ? 'bg-blue-100 text-blue-700' :
+          invoice.status === 'cancelled' ? 'bg-red-100 text-red-700' :
+          'bg-gray-100 text-gray-600'
+        %>">
+          <%=
+            invoice.status === 'paid' ? 'Payée' :
+            invoice.status === 'sent' ? 'Envoyée' :
+            invoice.status === 'cancelled' ? 'Annulée' : 'Brouillon'
+          %>
+        </span>
+        <a href="/dashboard/invoices/<%= invoice.id %>" class="text-xs text-gray-400 hover:text-primary-600 font-medium">Voir →</a>
+      </div>
+    </div>
+    <% }); %>
+  </div>
+  <% } else { %>
+  <div class="py-16 text-center">
+    <div class="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    </div>
+    <p class="text-gray-500 font-medium mb-2">Aucun document pour le moment</p>
+    <p class="text-sm text-gray-400 mb-6">Créez votre première facture en quelques secondes</p>
+    <a href="/dashboard/invoices/create?type=invoice" class="btn-primary text-white font-semibold px-6 py-2.5 rounded-lg text-sm inline-block">+ Créer une facture</a>
+  </div>
+  <% } %>
+</div>
+
+<!-- Pending amount -->
+<% if (stats.pending > 0) { %>
+<div class="mt-4 bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center gap-3">
+  <svg class="w-5 h-5 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+  <p class="text-amber-800 text-sm font-medium"><strong><%= stats.pending.toLocaleString('fr-FR', {minimumFractionDigits:2}) %> €</strong> en attente de paiement</p>
+</div>
+<% } %>
+
+<style>
+.btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);transition:all .2s;box-shadow:0 4px 12px rgba(79,70,229,.25)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(79,70,229,.35)}
+</style>

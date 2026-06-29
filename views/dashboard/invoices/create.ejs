@@ -1,0 +1,176 @@
+<div class="max-w-4xl">
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
+    <form action="/dashboard/invoices" method="POST" id="invoiceForm" class="space-y-8">
+      <input type="hidden" name="type" value="<%= type %>">
+
+      <!-- Header info -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Client</label>
+          <select name="client_id" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-white">
+            <option value="">Sans client</option>
+            <% if (clients && clients.length > 0) { clients.forEach(c => { %>
+            <option value="<%= c.id %>"><%= c.name %><%= c.company ? ' — ' + c.company : '' %></option>
+            <% }); } %>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Date d'émission</label>
+          <input type="date" name="issue_date" value="<%= new Date().toISOString().split('T')[0] %>" required
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Date d'échéance</label>
+          <input type="date" name="due_date"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+        </div>
+      </div>
+
+      <!-- Items -->
+      <div>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-900">Lignes</h3>
+          <button type="button" id="addLine" class="text-sm text-primary-600 font-semibold hover:underline">+ Ajouter une ligne</button>
+        </div>
+
+        <!-- Table header -->
+        <div class="hidden md:grid grid-cols-12 gap-3 mb-2 px-3">
+          <div class="col-span-5 text-xs font-semibold text-gray-500 uppercase">Description</div>
+          <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase">Qté</div>
+          <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase">PU HT (€)</div>
+          <div class="col-span-2 text-xs font-semibold text-gray-500 uppercase">TVA %</div>
+          <div class="col-span-1 text-xs font-semibold text-gray-500 uppercase">Total</div>
+        </div>
+
+        <div id="itemsContainer" class="space-y-3">
+          <!-- Default row -->
+          <div class="item-row grid grid-cols-12 gap-3 items-center bg-gray-50 rounded-xl p-3">
+            <div class="col-span-12 md:col-span-5">
+              <input type="text" name="items_desc[]" placeholder="Description du service ou produit" required
+                class="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+            </div>
+            <div class="col-span-4 md:col-span-2">
+              <input type="number" name="items_qty[]" value="1" min="0.01" step="0.01" placeholder="Qté"
+                class="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm" onchange="calcTotal(this)">
+            </div>
+            <div class="col-span-4 md:col-span-2">
+              <input type="number" name="items_price[]" value="0" min="0" step="0.01" placeholder="Prix HT"
+                class="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm" onchange="calcTotal(this)">
+            </div>
+            <div class="col-span-3 md:col-span-2">
+              <select name="items_tva[]" class="w-full px-3 py-2.5 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-white" onchange="calcTotal(this)">
+                <option value="0">0%</option>
+                <option value="5.5">5,5%</option>
+                <option value="10">10%</option>
+                <option value="20" selected>20%</option>
+              </select>
+            </div>
+            <div class="col-span-1 flex items-center gap-2">
+              <span class="line-total text-sm font-bold text-gray-900">0,00 €</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Total -->
+        <div class="mt-6 flex justify-end">
+          <div class="w-64 space-y-2">
+            <div class="flex justify-between text-sm text-gray-600"><span>Total HT</span><span id="totalHT" class="font-semibold">0,00 €</span></div>
+            <div class="flex justify-between text-sm text-gray-600"><span>TVA</span><span id="totalTVA" class="font-semibold">0,00 €</span></div>
+            <div class="flex justify-between text-base font-black text-gray-900 border-t border-gray-200 pt-2"><span>Total TTC</span><span id="totalTTC">0,00 €</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Conditions de paiement</label>
+          <select name="payment_terms" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-white">
+            <option value="">Aucune</option>
+            <option value="Paiement à réception">À réception</option>
+            <option value="Paiement à 15 jours">15 jours</option>
+            <option value="Paiement à 30 jours" selected>30 jours</option>
+            <option value="Paiement à 45 jours">45 jours</option>
+            <option value="Paiement à 60 jours">60 jours</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Modèle</label>
+          <select name="template" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm bg-white">
+            <option value="classic">Classique</option>
+            <option value="modern">Moderne</option>
+            <option value="minimal">Minimaliste</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5">Notes / Mentions légales</label>
+          <textarea name="notes" rows="3" placeholder="TVA non applicable, art. 293 B du CGI — ou notes pour votre client..."
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm resize-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex gap-3">
+        <button type="submit" class="btn-primary text-white font-bold px-8 py-3 rounded-xl">
+          Créer <%= type === 'invoice' ? 'la facture' : 'le devis' %>
+        </button>
+        <a href="<%= type === 'invoice' ? '/dashboard/invoices' : '/dashboard/quotes' %>" class="btn-secondary font-semibold px-6 py-3 rounded-xl">Annuler</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function calcTotal(el) {
+  const row = el.closest('.item-row');
+  const qty = parseFloat(row.querySelector('[name="items_qty[]"]').value) || 0;
+  const price = parseFloat(row.querySelector('[name="items_price[]"]').value) || 0;
+  const tva = parseFloat(row.querySelector('[name="items_tva[]"]').value) || 0;
+  const ht = qty * price;
+  const ttc = ht * (1 + tva / 100);
+  row.querySelector('.line-total').textContent = ttc.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+  updateGrandTotal();
+}
+
+function updateGrandTotal() {
+  let totalHT = 0, totalTVA = 0;
+  document.querySelectorAll('.item-row').forEach(row => {
+    const qty = parseFloat(row.querySelector('[name="items_qty[]"]').value) || 0;
+    const price = parseFloat(row.querySelector('[name="items_price[]"]').value) || 0;
+    const tva = parseFloat(row.querySelector('[name="items_tva[]"]').value) || 0;
+    const ht = qty * price;
+    totalHT += ht;
+    totalTVA += ht * tva / 100;
+  });
+  const fmt = v => v.toLocaleString('fr-FR', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+  document.getElementById('totalHT').textContent = fmt(totalHT);
+  document.getElementById('totalTVA').textContent = fmt(totalTVA);
+  document.getElementById('totalTTC').textContent = fmt(totalHT + totalTVA);
+}
+
+document.getElementById('addLine').addEventListener('click', () => {
+  const row = document.querySelector('.item-row').cloneNode(true);
+  row.querySelectorAll('input').forEach(i => { i.value = i.name.includes('qty') ? '1' : i.name.includes('price') ? '0' : ''; });
+  row.querySelector('.line-total').textContent = '0,00 €';
+  row.querySelectorAll('input, select').forEach(el => el.addEventListener('change', () => calcTotal(el)));
+
+  // Add remove button
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.innerHTML = '×';
+  removeBtn.className = 'ml-2 text-red-400 hover:text-red-600 text-lg font-bold';
+  removeBtn.onclick = () => { row.remove(); updateGrandTotal(); };
+  row.querySelector('.line-total').after(removeBtn);
+
+  document.getElementById('itemsContainer').appendChild(row);
+});
+
+// Bind initial row
+document.querySelectorAll('.item-row input, .item-row select').forEach(el => {
+  el.addEventListener('change', () => calcTotal(el));
+});
+</script>
+
+<style>
+.btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);transition:all .2s;box-shadow:0 4px 12px rgba(79,70,229,.25)}.btn-primary:hover{transform:translateY(-1px)}
+.btn-secondary{background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center}.btn-secondary:hover{background:#e2e8f0}
+</style>

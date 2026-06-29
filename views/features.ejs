@@ -1,0 +1,35 @@
+<section class="pt-20 pb-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h1 class="text-5xl font-black text-gray-900 mb-4">Toutes les fonctionnalités</h1>
+      <p class="text-xl text-gray-500 max-w-2xl mx-auto">LFacture vous donne tous les outils pour gérer votre facturation de façon professionnelle.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% const features = [
+        { icon: '📄', title: 'Factures illimitées', desc: 'Créez autant de factures que vous voulez avec numérotation automatique, TVA intégrée et mise en page professionnelle.' },
+        { icon: '📋', title: 'Devis illimités', desc: 'Transformez facilement vos devis acceptés en factures en un seul clic.' },
+        { icon: '🖨️', title: 'Export PDF & Impression', desc: 'Téléchargez vos documents en PDF haute qualité ou imprimez-les directement depuis l\'application.' },
+        { icon: '👥', title: 'Carnet de clients', desc: 'Gérez vos clients avec toutes leurs informations : SIRET, numéro de TVA, adresse, contacts.' },
+        { icon: '🎨', title: 'Logo & Personnalisation', desc: 'Ajoutez votre logo, personnalisez les couleurs et les informations de votre entreprise.' },
+        { icon: '🖼️', title: 'Modèles multiples', desc: 'Choisissez parmi plusieurs modèles de factures et devis pour correspondre à votre image.' },
+        { icon: '📊', title: 'Tableau de bord', desc: 'Visualisez votre CA, vos factures payées, en attente et en retard en temps réel.' },
+        { icon: '🔢', title: 'Calcul TVA automatique', desc: 'La TVA est calculée automatiquement. Gérez les taux de TVA par ligne, par client ou globalement.' },
+        { icon: '💳', title: 'Coordonnées bancaires', desc: 'Intégrez vos coordonnées IBAN/BIC directement sur vos factures pour faciliter le paiement.' },
+        { icon: '📧', title: 'Support par email', desc: 'Notre équipe française est disponible pour vous aider. Support prioritaire avec l\'offre annuelle.' },
+        { icon: '🔒', title: 'Sauvegardes automatiques', desc: 'Vos données sont sauvegardées quotidiennement. Disponible avec l\'offre annuelle.' },
+        { icon: '📱', title: 'Responsive', desc: 'Accédez à votre facturation depuis votre ordinateur, tablette ou smartphone.' },
+      ]; %>
+      <% features.forEach(f => { %>
+      <div class="bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-md transition-shadow duration-200">
+        <div class="text-4xl mb-4"><%= f.icon %></div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2"><%= f.title %></h3>
+        <p class="text-gray-500 text-sm leading-relaxed"><%= f.desc %></p>
+      </div>
+      <% }); %>
+    </div>
+    <div class="text-center mt-16">
+      <a href="/register" class="btn-primary text-white font-bold text-lg px-8 py-4 rounded-xl inline-block">Essayer gratuitement 7 jours →</a>
+    </div>
+  </div>
+</section>
+<style>.btn-primary{background:linear-gradient(135deg,#4F46E5,#7C3AED);transition:all .2s;box-shadow:0 4px 15px rgba(79,70,229,.3)}.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(79,70,229,.4)}</style>
