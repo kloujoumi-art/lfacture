@@ -93,6 +93,7 @@ router.post('/dashboard/invoices', requireAccess, DashboardController.createInvo
 router.get('/dashboard/invoices/:id', requireAccess, DashboardController.showInvoice);
 router.post('/dashboard/invoices/:id/status', requireAccess, DashboardController.updateInvoiceStatus);
 router.post('/dashboard/invoices/:id/template', requireAccess, DashboardController.updateTemplate);
+router.get('/dashboard/invoices/:id/print', requireAccess, DashboardController.printInvoice);
 router.delete('/dashboard/invoices/:id', requireAccess, DashboardController.deleteInvoice);
 
 // Settings

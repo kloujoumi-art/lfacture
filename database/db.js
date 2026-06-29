@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-// Sur Render (production), utilise /tmp pour le stockage temporaire
-// En production réelle, remplacer par MongoDB Atlas ou PlanetScale
-const DB_FILE = process.env.NODE_ENV === 'production'
-  ? '/tmp/lfacture.json'
-  : path.resolve(__dirname, 'lfacture.json');
+// DB_PATH (env var) → Render Disk persistent
+// Sinon production → /tmp (perdu au redémarrage)
+// Dev → ./database/lfacture.json
+const DB_FILE = process.env.DB_PATH
+  || (process.env.NODE_ENV === 'production' ? '/tmp/lfacture.json' : path.resolve(__dirname, 'lfacture.json'));
 
 const DEFAULTS = {
   users: [],

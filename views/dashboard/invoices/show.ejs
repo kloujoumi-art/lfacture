@@ -42,9 +42,13 @@
     <button type="submit" class="btn-secondary text-sm font-semibold px-4 py-2 rounded-lg">Mettre à jour</button>
   </form>
 
+  <a href="/dashboard/invoices/<%= invoice.id %>/print" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;font-weight:700;font-size:13px;padding:9px 18px;border-radius:10px;text-decoration:none;box-shadow:0 2px 8px rgba(79,70,229,.35);">
+    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    Télécharger PDF
+  </a>
   <button onclick="window.print()" class="btn-secondary text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-    Imprimer / PDF
+    Imprimer
   </button>
 </div>
 
@@ -64,7 +68,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
   <div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:32px 40px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;">
       <div>
-        <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:56px;max-width:160px;object-fit:contain;margin-bottom:8px;display:block;filter:brightness(0) invert(1);"/><%}%>
+        <% if(settings&&settings.company_logo){%><div style="display:inline-block;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;margin-bottom:8px;"><img src="<%=settings.company_logo%>" style="max-height:72px;max-width:180px;object-fit:contain;display:block;"/></div><%}%>
         <p style="color:#fff;font-size:20px;font-weight:900;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
         <% if(settings&&settings.company_address){%><p style="color:rgba(255,255,255,.7);font-size:12px;margin:2px 0 0;"><%=settings.company_address%></p><%}%>
         <% if(settings&&settings.company_city){%><p style="color:rgba(255,255,255,.7);font-size:12px;margin:0;"><%=settings.company_postal||''%> <%=settings.company_city%></p><%}%>
@@ -132,7 +136,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
 <div id="invoiceDoc" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08),0 4px 20px rgba(0,0,0,.08);display:flex;min-height:700px;">
   <div style="width:210px;background:#1e293b;flex-shrink:0;padding:32px 22px;display:flex;flex-direction:column;gap:22px;">
     <div>
-      <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:44px;max-width:150px;object-fit:contain;margin-bottom:8px;filter:brightness(0) invert(1);display:block;"/><%}%>
+      <% if(settings&&settings.company_logo){%><div style="display:inline-block;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;margin-bottom:8px;"><img src="<%=settings.company_logo%>" style="max-height:64px;max-width:150px;object-fit:contain;display:block;"/></div><%}%>
       <p style="color:#fff;font-weight:900;font-size:14px;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
       <% if(settings&&settings.company_address){%><p style="color:#94a3b8;font-size:11px;margin:2px 0 0;"><%=settings.company_address%></p><%}%>
       <% if(settings&&settings.company_city){%><p style="color:#94a3b8;font-size:11px;margin:0;"><%=settings.company_postal||''%> <%=settings.company_city%></p><%}%>
@@ -215,7 +219,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
 <div id="invoiceDoc" style="background:#fff;border-radius:16px;padding:52px;box-shadow:0 1px 3px rgba(0,0,0,.08),0 4px 20px rgba(0,0,0,.08);">
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #000;">
     <div>
-      <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:56px;max-width:170px;object-fit:contain;margin-bottom:8px;display:block;"/><%}%>
+      <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:80px;max-width:200px;object-fit:contain;margin-bottom:8px;display:block;"/><%}%>
       <p style="font-size:20px;font-weight:900;color:#000;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
       <% if(settings&&settings.company_address){%><p style="color:#6b7280;font-size:12px;margin:2px 0 0;"><%=settings.company_address%></p><%}%>
       <% if(settings&&settings.company_city){%><p style="color:#6b7280;font-size:12px;margin:0;"><%=settings.company_postal||''%> <%=settings.company_city%></p><%}%>
@@ -285,7 +289,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
 <div id="invoiceDoc" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08),0 4px 20px rgba(0,0,0,.08);">
   <div style="background:linear-gradient(135deg,#1d4ed8,#2563eb);padding:28px 40px;display:flex;justify-content:space-between;align-items:center;">
     <div>
-      <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:48px;max-width:150px;object-fit:contain;margin-bottom:6px;display:block;filter:brightness(0) invert(1);"/><%}%>
+      <% if(settings&&settings.company_logo){%><div style="display:inline-block;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;margin-bottom:8px;"><img src="<%=settings.company_logo%>" style="max-height:68px;max-width:175px;object-fit:contain;display:block;"/></div><%}%>
       <p style="color:#fff;font-size:18px;font-weight:900;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
       <% if(settings&&settings.company_address){%><p style="color:rgba(255,255,255,.75);font-size:12px;margin:2px 0 0;"><%=settings.company_address%><% if(settings.company_city){%> — <%=settings.company_postal||''%> <%=settings.company_city%><%}%></p><%}%>
     </div>
@@ -360,7 +364,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
     <div style="flex:1;padding:40px 44px;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:36px;">
         <div>
-          <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:52px;max-width:160px;object-fit:contain;margin-bottom:8px;display:block;"/><%}%>
+          <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:80px;max-width:200px;object-fit:contain;margin-bottom:8px;display:block;"/><%}%>
           <p style="font-size:20px;font-weight:900;color:#064e3b;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
           <% if(settings&&settings.company_address){%><p style="color:#6b7280;font-size:12px;margin:2px 0 0;"><%=settings.company_address%></p><%}%>
           <% if(settings&&settings.company_city){%><p style="color:#6b7280;font-size:12px;margin:0;"><%=settings.company_postal||''%> <%=settings.company_city%></p><%}%>
@@ -430,7 +434,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
   <div style="background:linear-gradient(135deg,#f97316,#ea580c);padding:0 40px;">
     <div style="display:flex;justify-content:space-between;align-items:center;padding:24px 0;">
       <div>
-        <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:44px;max-width:140px;object-fit:contain;margin-bottom:6px;display:block;filter:brightness(0) invert(1);"/><%}%>
+        <% if(settings&&settings.company_logo){%><div style="display:inline-block;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;margin-bottom:8px;"><img src="<%=settings.company_logo%>" style="max-height:64px;max-width:160px;object-fit:contain;display:block;"/></div><%}%>
         <p style="color:#fff;font-size:17px;font-weight:900;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
       </div>
       <div style="text-align:right;">
@@ -505,7 +509,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
   <div style="flex:1;padding:40px 44px;">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
       <div>
-        <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:52px;max-width:160px;object-fit:contain;margin-bottom:8px;display:block;"/><%}%>
+        <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:80px;max-width:200px;object-fit:contain;margin-bottom:8px;display:block;"/><%}%>
         <p style="font-size:20px;font-weight:900;color:#1e293b;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
         <% if(settings&&settings.company_address){%><p style="font-size:12px;color:#6b7280;margin:2px 0 0;"><%=settings.company_address%></p><%}%>
         <% if(settings&&settings.company_city){%><p style="font-size:12px;color:#6b7280;margin:0;"><%=settings.company_postal||''%> <%=settings.company_city%></p><%}%>
@@ -571,7 +575,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
   <div style="background:#0f172a;padding:36px 44px;">
     <div style="display:flex;justify-content:space-between;align-items:center;">
       <div>
-        <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:48px;max-width:150px;object-fit:contain;margin-bottom:8px;display:block;filter:brightness(0) invert(1);"/><%}%>
+        <% if(settings&&settings.company_logo){%><div style="display:inline-block;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;margin-bottom:8px;"><img src="<%=settings.company_logo%>" style="max-height:68px;max-width:175px;object-fit:contain;display:block;"/></div><%}%>
         <p style="color:#f59e0b;font-size:22px;font-weight:900;margin:0;letter-spacing:-.5px;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
         <% if(settings&&settings.company_address){%><p style="color:#94a3b8;font-size:12px;margin:3px 0 0;"><%=settings.company_address%><% if(settings.company_city){%> — <%=settings.company_postal||''%> <%=settings.company_city%><%}%></p><%}%>
         <% if(settings&&settings.company_siret){%><p style="color:#64748b;font-size:11px;margin:3px 0 0;">SIRET : <%=settings.company_siret%></p><%}%>
@@ -640,7 +644,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
 <div id="invoiceDoc" style="background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08),0 4px 20px rgba(0,0,0,.08);">
   <div style="background:linear-gradient(135deg,#334155,#475569);padding:28px 40px;display:flex;justify-content:space-between;align-items:center;">
     <div>
-      <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:44px;max-width:140px;object-fit:contain;margin-bottom:6px;display:block;filter:brightness(0) invert(1);"/><%}%>
+      <% if(settings&&settings.company_logo){%><div style="display:inline-block;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;margin-bottom:8px;"><img src="<%=settings.company_logo%>" style="max-height:64px;max-width:160px;object-fit:contain;display:block;"/></div><%}%>
       <p style="color:#fff;font-size:17px;font-weight:900;margin:0;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
       <% if(settings&&settings.company_address){%><p style="color:rgba(255,255,255,.65);font-size:11px;margin:2px 0 0;"><%=settings.company_address%><% if(settings.company_city){%>, <%=settings.company_postal||''%> <%=settings.company_city%><%}%></p><%}%>
     </div>
@@ -716,7 +720,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
     <div style="position:absolute;bottom:-40px;left:60px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.06);"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;position:relative;">
       <div>
-        <% if(settings&&settings.company_logo){%><img src="<%=settings.company_logo%>" style="max-height:48px;max-width:150px;object-fit:contain;margin-bottom:8px;display:block;filter:brightness(0) invert(1);"/><%}%>
+        <% if(settings&&settings.company_logo){%><div style="display:inline-block;background:rgba(255,255,255,.92);border-radius:8px;padding:5px 10px;margin-bottom:8px;"><img src="<%=settings.company_logo%>" style="max-height:68px;max-width:175px;object-fit:contain;display:block;"/></div><%}%>
         <p style="color:#fff;font-size:20px;font-weight:900;margin:0;letter-spacing:-.5px;"><%=settings&&settings.company_name?settings.company_name:'Mon Entreprise'%></p>
         <% if(settings&&settings.company_address){%><p style="color:rgba(255,255,255,.7);font-size:12px;margin:3px 0 0;"><%=settings.company_address%><% if(settings.company_city){%> · <%=settings.company_postal||''%> <%=settings.company_city%><%}%></p><%}%>
         <% if(settings&&settings.company_siret){%><p style="color:rgba(255,255,255,.5);font-size:11px;margin:3px 0 0;">SIRET : <%=settings.company_siret%></p><%}%>
@@ -778,6 +782,7 @@ const statusStyle = s => s==='paid'?'background:#d1fae5;color:#065f46':s==='sent
 .btn-secondary{background:#f1f5f9;color:#374151;border:1px solid #e2e8f0;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none}.btn-secondary:hover{background:#e2e8f0}
 
 /* ══ IMPRESSION — masque tout sauf la facture ══ */
+@page { size: A4; margin: 1.5cm; }
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
   html, body { visibility: hidden !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }

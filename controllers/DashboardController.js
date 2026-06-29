@@ -146,6 +146,13 @@ class DashboardController {
     dash(res, 'dashboard/invoices/show', { pageTitle: `${label} ${invoice.invoice_number}`, activePage: invoice.type === 'invoice' ? 'invoices' : 'quotes', invoice, settings });
   }
 
+  static printInvoice(req, res) {
+    const invoice = Invoice.findById(req.params.id);
+    if (!invoice || invoice.user_id !== req.user.id) return res.status(404).send('Document introuvable.');
+    const settings = getSettings(req.user.id);
+    res.render('dashboard/invoices/print', { invoice, settings });
+  }
+
   static updateTemplate(req, res) {
     const invoice = Invoice.findById(req.params.id);
     if (!invoice || invoice.user_id !== req.user.id) return res.redirect('/dashboard/invoices');
