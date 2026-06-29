@@ -5,6 +5,7 @@ const DashboardController = require('../controllers/DashboardController');
 const AdminController = require('../controllers/AdminController');
 const PaddleController = require('../controllers/PaddleController');
 const BlogAdminController = require('../controllers/BlogAdminController');
+const WordController = require('../controllers/WordController');
 const AdminAnalyticsController = require('../controllers/AdminAnalyticsController');
 const BlogController = require('../controllers/BlogController');
 const { requireAuth, requireAccess, requireInvoiceQuota, requireQuoteQuota, guestOnly } = require('../middleware/auth');
@@ -105,6 +106,7 @@ router.get('/dashboard/invoices/:id', requireAccess, DashboardController.showInv
 router.post('/dashboard/invoices/:id/status', requireAccess, DashboardController.updateInvoiceStatus);
 router.post('/dashboard/invoices/:id/template', requireAccess, DashboardController.updateTemplate);
 router.get('/dashboard/invoices/:id/print', requireAccess, DashboardController.printInvoice);
+router.get('/dashboard/invoices/:id/word', requireAccess, WordController.download);
 router.delete('/dashboard/invoices/:id', requireAccess, DashboardController.deleteInvoice);
 
 // Settings
