@@ -28,11 +28,11 @@ class BlogAdminController {
 
   static async createCampaign(req, res) {
     try {
-      const { name, keywords_raw, language, frequency } = req.body;
+      const { name, keywords_raw, language, frequency, image_source } = req.body;
       if (!name || !keywords_raw) return res.status(400).json({ error: 'Nom et keywords requis' });
       const keywords = keywords_raw.split(/[,\n]+/).map(k => k.trim()).filter(Boolean);
       if (!keywords.length) return res.status(400).json({ error: 'Au moins un keyword requis' });
-      const campaign = BlogCampaign.create({ name, keywords, language: language || 'fr', frequency: frequency || 'daily' });
+      const campaign = BlogCampaign.create({ name, keywords, language: language || 'fr', frequency: frequency || 'daily', image_source: image_source || 'pexels' });
       res.status(201).json(campaign);
     } catch (e) {
       res.status(500).json({ error: e.message });
@@ -59,7 +59,7 @@ class BlogAdminController {
   static updateCampaign(req, res) {
     const campaign = BlogCampaign.findById(req.params.id);
     if (!campaign) return res.status(404).json({ error: 'Campagne introuvable' });
-    const { name, keywords_raw, language, frequency } = req.body;
+    const { name, keywords_raw, language, frequency, image_source } = req.body;
     const keywords = (keywords_raw || '').split(/[,\n]+/).map(k => k.trim()).filter(Boolean);
     if (!name || !keywords.length) return res.status(400).json({ error: 'Nom et keywords requis' });
     const updated = BlogCampaign.update(campaign.id, {
@@ -67,6 +67,7 @@ class BlogAdminController {
       keywords: JSON.stringify(keywords),
       language: language || campaign.language,
       frequency: frequency || campaign.frequency,
+      image_source: image_source || campaign.image_source || 'pexels',
     });
     res.json(updated);
   }

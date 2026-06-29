@@ -168,6 +168,13 @@
           <option value="ten_daily">10 articles / jour</option>
         </select>
       </div>
+      <div>
+        <label style="display:block;color:#94a3b8;font-size:12px;font-weight:600;margin-bottom:6px;">Source des images</label>
+        <select id="f-img" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;font-size:13px;padding:9px 12px;border-radius:8px;outline:none;">
+          <option value="pexels">📷 Pexels (photos gratuites)</option>
+          <option value="fal">🎨 FAL AI (images générées IA)</option>
+        </select>
+      </div>
       <div style="grid-column:span 2;">
         <label style="display:block;color:#94a3b8;font-size:12px;font-weight:600;margin-bottom:6px;">Keywords * <span style="color:#475569;font-weight:400;">(séparés par virgule ou saut de ligne)</span></label>
         <textarea id="f-keywords" rows="4" placeholder="logiciel facturation PME, créer facture en ligne, devis gratuit artisan, comptabilité micro-entreprise..."
@@ -211,6 +218,9 @@
               <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:rgba(99,102,241,.1);color:#818cf8;font-weight:600;"><%= camp.freq_label %></span>
               <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:#0f172a;color:#64748b;border:1px solid #334155;">
                 <%= camp.language === 'fr' ? '🇫🇷 FR' : camp.language === 'ar' ? '🇲🇦 AR' : '🇬🇧 EN' %>
+              </span>
+              <span style="font-size:11px;padding:2px 8px;border-radius:4px;background:<%- camp.image_source === 'fal' ? 'rgba(251,146,60,.08)' : 'rgba(30,41,59,1)' %>;color:<%- camp.image_source === 'fal' ? '#fb923c' : '#64748b' %>;border:1px solid <%- camp.image_source === 'fal' ? 'rgba(251,146,60,.2)' : '#334155' %>;">
+                <%= camp.image_source === 'fal' ? '🎨 FAL AI' : '📷 Pexels' %>
               </span>
             </div>
             <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;">
@@ -275,6 +285,13 @@
             <option value="ten_daily">10/jour</option>
           </select>
         </div>
+        <div>
+          <label style="display:block;color:#94a3b8;font-size:12px;font-weight:600;margin-bottom:5px;">Source images</label>
+          <select id="edit-img" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;font-size:13px;padding:8px 12px;border-radius:8px;outline:none;">
+            <option value="pexels">📷 Pexels</option>
+            <option value="fal">🎨 FAL AI</option>
+          </select>
+        </div>
         <div style="grid-column:span 2;">
           <label style="display:block;color:#94a3b8;font-size:12px;font-weight:600;margin-bottom:5px;">Keywords *</label>
           <textarea id="edit-keywords" rows="3" style="width:100%;background:#0f172a;border:1px solid #334155;color:#e2e8f0;font-size:13px;padding:8px 12px;border-radius:8px;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
@@ -328,6 +345,7 @@ async function createCampaign() {
   const keywords_raw = document.getElementById('f-keywords').value.trim();
   const language = document.getElementById('f-lang').value;
   const frequency = document.getElementById('f-freq').value;
+  const image_source = document.getElementById('f-img').value;
   if (!name || !keywords_raw) { showMsg('❌ Nom et keywords requis', false); return; }
 
   const btn = event.target;
@@ -337,7 +355,7 @@ async function createCampaign() {
     const r = await fetch('/api/admin/campaigns', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, keywords_raw, language, frequency }),
+      body: JSON.stringify({ name, keywords_raw, language, frequency, image_source }),
     });
     const d = await r.json();
     if (!r.ok) { showMsg('❌ ' + (d.error || 'Erreur'), false); return; }
@@ -396,11 +414,12 @@ async function saveEditCamp() {
   const keywords_raw = document.getElementById('edit-keywords').value.trim();
   const language = document.getElementById('edit-lang').value;
   const frequency = document.getElementById('edit-freq').value;
+  const image_source = document.getElementById('edit-img').value;
   if (!name || !keywords_raw) { showMsg('❌ Nom et keywords requis', false); return; }
   const r = await fetch('/api/admin/campaigns/' + id + '/update', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name, keywords_raw, language, frequency }),
+    body: JSON.stringify({ name, keywords_raw, language, frequency, image_source }),
   });
   if (r.ok) { closeEditModal(); showMsg('✅ Campagne modifiée', true); setTimeout(() => location.reload(), 1000); }
   else { const d = await r.json(); showMsg('❌ ' + (d.error||'Erreur'), false); }

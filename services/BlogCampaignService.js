@@ -9,6 +9,62 @@ const FREQ_MS = {
   ten_daily:   2  * 60 * 60 * 1000 + 24 * 60 * 1000,
 };
 
+async function fetchImageFal(keyword, language) {
+  const FAL_KEY = process.env.FAL_API_KEY;
+  if (!FAL_KEY) throw new Error('FAL_API_KEY manquant');
+
+  const langHint = language === 'ar' ? 'Arabic style, ' : language === 'en' ? '' : 'French professional, ';
+  const prompt = `${langHint}professional blog cover image about "${keyword}", invoicing software, modern clean minimalist flat design, business, blue and purple tones, no text, high quality`;
+
+  const resp = await fetch('https://fal.run/fal-ai/flux/schnell', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Key ${FAL_KEY}`,
+    },
+    body: JSON.stringify({
+      prompt,
+      image_size: 'landscape_4_3',
+      num_inference_steps: 4,
+      num_images: 1,
+    }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.text().catch(() => '');
+    throw new Error(`FAL AI ${resp.status}: ${err.slice(0, 150)}`);
+  }
+
+  const data = await resp.json();
+  const url = data.images?.[0]?.url;
+  if (!url) throw new Error('FAL AI: aucune image retournée');
+  return url;
+}
+
+async function fetchImagePexels(keyword) {
+  const PEXELS_KEY = process.env.PEXELS_API_KEY;
+  if (!PEXELS_KEY) return null;
+
+  const query = encodeURIComponent(keyword.split(' ').slice(0, 3).join(' '));
+  const resp = await fetch(`https://api.pexels.com/v1/search?query=${query}&per_page=3&orientation=landscape`, {
+    headers: { Authorization: PEXELS_KEY },
+  });
+
+  if (!resp.ok) return null;
+  const data = await resp.json();
+  return data.photos?.[0]?.src?.large2x || data.photos?.[0]?.src?.large || null;
+}
+
+async function fetchCoverImage(keyword, image_source, language) {
+  try {
+    if (image_source === 'fal') return await fetchImageFal(keyword, language);
+    return await fetchImagePexels(keyword);
+  } catch (e) {
+    console.warn(`[BlogCampaign] Image fetch failed (${image_source}): ${e.message}`);
+    return null;
+  }
+}
+
 async function generateArticle({ keyword, language = 'fr' }) {
   const OPENAI_KEY = process.env.OPENAI_API_KEY;
   if (!OPENAI_KEY) throw new Error('OPENAI_API_KEY manquant dans les variables d\'environnement');
@@ -62,13 +118,13 @@ Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de balises \
     const match = text.match(/\{[\s\S]+\}/);
     if (match) {
       try { article = JSON.parse(match[0]); }
-      catch { throw new Error('Format JSON invalide dans la réponse Claude'); }
+      catch { throw new Error('Format JSON invalide dans la réponse OpenAI'); }
     } else {
-      throw new Error('Aucun JSON trouvé dans la réponse Claude');
+      throw new Error('Aucun JSON trouvé dans la réponse OpenAI');
     }
   }
 
-  if (!article.title || !article.content) throw new Error('Réponse Claude incomplète (title ou content manquant)');
+  if (!article.title || !article.content) throw new Error('Réponse OpenAI incomplète (title ou content manquant)');
   return article;
 }
 
@@ -77,7 +133,13 @@ async function runCampaign(campaign) {
   if (!keywords || !keywords.length) throw new Error('Aucun keyword configuré');
 
   const keyword = keywords[campaign.keyword_index % keywords.length];
-  const article = await generateArticle({ keyword, language: campaign.language });
+  const image_source = campaign.image_source || 'pexels';
+
+  // Génération article + image en parallèle
+  const [article, coverImage] = await Promise.all([
+    generateArticle({ keyword, language: campaign.language }),
+    fetchCoverImage(keyword, image_source, campaign.language),
+  ]);
 
   const post = Post.create({
     title: article.title,
@@ -85,6 +147,7 @@ async function runCampaign(campaign) {
     content: article.content,
     tags: article.tags || keyword,
     meta_desc: article.excerpt || '',
+    cover_image: coverImage || '',
     source: 'campaign',
     published: true,
   });
@@ -101,7 +164,7 @@ async function runCampaign(campaign) {
     next_run_at: new Date(Date.now() + freqMs).toISOString(),
   });
 
-  console.log(`[BlogCampaign] ✅ Article généré : "${post.title}" (keyword: ${keyword})`);
+  console.log(`[BlogCampaign] ✅ "${post.title}" | image: ${image_source} | keyword: ${keyword}`);
   return { post, keyword };
 }
 
@@ -133,7 +196,7 @@ async function runDueCampaigns() {
 }
 
 function startCampaignScheduler() {
-  const INTERVAL = 30 * 60 * 1000; // vérification toutes les 30 min
+  const INTERVAL = 30 * 60 * 1000;
   setInterval(() => {
     runDueCampaigns().catch(e => console.error('[BlogCampaign scheduler]', e.message));
   }, INTERVAL);

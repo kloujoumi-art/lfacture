@@ -14,7 +14,7 @@ const FREQ_LABELS = {
 };
 
 class BlogCampaign {
-  static create({ name, keywords, language = 'fr', frequency = 'daily', tone = 'professional' }) {
+  static create({ name, keywords, language = 'fr', frequency = 'daily', tone = 'professional', image_source = 'pexels' }) {
     const now = new Date();
     const nextRunAt = new Date(now.getTime() + (FREQ_MS[frequency] || FREQ_MS.daily));
     const campaign = {
@@ -24,6 +24,7 @@ class BlogCampaign {
       language,
       frequency,
       tone,
+      image_source,
       is_active: true,
       keyword_index: 0,
       run_count: 0,
