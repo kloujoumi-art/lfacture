@@ -359,20 +359,27 @@ class AdminController {
       created_at: new Date().toISOString(),
     }).write();
 
-    // Envoyer email de bienvenue avec magic link
+    // Générer magic link et tenter l'envoi email
+    const token = User.generateMagicToken(user.id);
+    db.get('users').find({ id: user.id }).assign({
+      magic_token_expires_at: new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString(),
+    }).write();
+    const APP_URL = process.env.APP_URL || 'https://lfacture.com';
+    const magicLink = `${APP_URL}/auth/magic/${token}`;
+
+    let emailOk = false;
     try {
-      const token = User.generateMagicToken(user.id);
-      db.get('users').find({ id: user.id }).assign({
-        magic_token_expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      }).write();
-      const APP_URL = process.env.APP_URL || 'https://lfacture.com';
-      const magicLink = `${APP_URL}/auth/magic/${token}`;
       await FunnelService.sendSubscriptionActivated(user, isNew, magicLink, plainPassword);
+      emailOk = true;
     } catch (e) {
       console.error('[Admin manualPayment] email error:', e.message);
     }
 
-    req.flash('success', `✅ Compte ${cleanEmail} activé (${months} mois). Email envoyé.`);
+    if (emailOk) {
+      req.flash('success', `✅ Compte ${cleanEmail} activé (${months} mois). Email envoyé avec lien de connexion.`);
+    } else {
+      req.flash('success', `✅ Compte ${cleanEmail} activé (${months} mois). ⚠️ Erreur email — Lien manuel (valide 72h) : ${magicLink}`);
+    }
     res.redirect('/admin/payments');
   }
 
