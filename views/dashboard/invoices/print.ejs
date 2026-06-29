@@ -335,21 +335,20 @@ const accentColor =
   </div>
 </div>
 
-<!-- ══ PIED DE PAGE ══ -->
-<div style="border-top:1px solid #f1f5f9;padding-top:14px;font-size:11px;color:#64748b;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+<!-- ══ PIED DE PAGE — toujours visible ══ -->
+<div style="border-top:2px solid <%=accentColor%>;padding-top:12px;font-size:11px;color:#64748b;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:8px;">
   <div>
-    <% if(invoice.payment_terms){ %><p style="margin:0 0 2px;"><strong>Conditions :</strong> <%=invoice.payment_terms%></p><% } %>
-    <% if(invoice.notes){ %><p style="margin:0;"><%=invoice.notes%></p><% } %>
-    <% if(settings&&settings.company_siret&&tpl!=='classic'&&tpl!=='minimal'){ %><p style="margin-top:4px;color:#9ca3af;font-size:10px;">SIRET : <%=settings.company_siret%><% if(settings.company_tva){ %> · N° TVA : <%=settings.company_tva%><% } %></p><% } %>
+    <p style="margin:0 0 3px;"><strong style="color:#374151;">Conditions :</strong> <%=invoice.payment_terms||'Paiement à 30 jours'%></p>
+    <% if(invoice.notes){ %><p style="margin:0 0 3px;color:#64748b;"><%=invoice.notes%></p><% } %>
+    <% if(settings&&settings.company_siret){ %><p style="margin-top:6px;color:#9ca3af;font-size:10px;">SIRET : <%=settings.company_siret%><% if(settings&&settings.company_tva){ %> · N° TVA : <%=settings.company_tva%><% } %></p><% } %>
   </div>
-  <% if(settings&&settings.bank_iban){ %>
   <div style="text-align:right;">
-    <p style="font-size:9px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1px;margin:0 0 4px;">Coordonnées bancaires</p>
-    <% if(settings.bank_name){ %><p style="margin:0 0 2px;font-weight:600;color:#374151;"><%=settings.bank_name%></p><% } %>
-    <p style="margin:0 0 2px;font-family:monospace;"><%=settings.bank_iban%></p>
-    <% if(settings.bank_bic){ %><p style="margin:0;font-family:monospace;">BIC : <%=settings.bank_bic%></p><% } %>
+    <p style="font-size:9px;font-weight:700;color:<%=accentColor%>;text-transform:uppercase;letter-spacing:1px;margin:0 0 5px;">Coordonnées bancaires</p>
+    <% if(settings&&settings.bank_name){ %><p style="margin:0 0 2px;font-weight:700;color:#374151;"><%=settings.bank_name%></p><% } %>
+    <% if(settings&&settings.bank_iban){ %><p style="margin:0 0 2px;font-family:monospace;color:#374151;"><%=settings.bank_iban%></p><% } %>
+    <% if(settings&&settings.bank_bic){ %><p style="margin:0;font-family:monospace;color:#374151;">BIC : <%=settings.bank_bic%></p><% } %>
+    <% if(!(settings&&(settings.bank_iban||settings.bank_name))){ %><p style="margin:0;color:#d1d5db;font-style:italic;font-size:10px;">À configurer dans les paramètres</p><% } %>
   </div>
-  <% } %>
 </div>
 
 </div><!-- fin .page -->

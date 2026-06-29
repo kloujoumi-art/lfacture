@@ -1,8 +1,8 @@
 <%
-  const tpl = invoice.template || 'classic';
+  const tplRaw = invoice.template || 'classic';
+  const tpl = tplRaw === 'modern' ? 'classic' : tplRaw;
   const templates = [
     { id:'classic',  label:'Classique',   color:'#4F46E5' },
-    { id:'modern',   label:'Moderne',     color:'#1e293b' },
     { id:'minimal',  label:'Épuré',       color:'#000000' },
     { id:'blue',     label:'Bleu Pro',    color:'#2563eb' },
     { id:'green',    label:'Vert',        color:'#059669' },
