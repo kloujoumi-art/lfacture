@@ -39,6 +39,19 @@ app.use(session({
 // Flash messages
 app.use(flash());
 
+// Language middleware — persiste la préférence EN/FR via session
+app.use((req, res, next) => {
+  // Si l'URL commence par /en, mémorise lang=en en session
+  if (req.path === '/en' || req.path.startsWith('/en/')) {
+    req.session.lang = 'en';
+  }
+  // Si l'URL est la racine FR, reset la langue en session
+  if (req.path === '/' || req.path === '/pricing' || req.path === '/features' || req.path === '/about') {
+    req.session.lang = 'fr';
+  }
+  next();
+});
+
 // Global locals
 const { renderWithLayout } = require('./helpers/render');
 app.use((req, res, next) => {
@@ -50,6 +63,8 @@ app.use((req, res, next) => {
   res.locals.isOnTrial = false;
   res.locals.trialDaysLeft = 0;
   res.locals.hasAccess = false;
+  // Langue persistée depuis la session
+  res.locals.lang = req.session.lang || 'fr';
   // Attach layout renderer
   res.renderLayout = (view, data = {}, layout = 'main') => renderWithLayout(res, view, data, layout);
   next();
