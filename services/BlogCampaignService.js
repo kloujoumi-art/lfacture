@@ -72,18 +72,25 @@ async function generateArticle({ keyword, language = 'fr' }) {
   const langMap = { fr: 'français', en: 'anglais', ar: 'arabe' };
   const lang = langMap[language] || 'français';
 
-  const systemPrompt = `Tu es un expert en comptabilité, facturation et gestion d'entreprise. Tu écris des articles de blog SEO optimisés pour LFacture, un logiciel de facturation en ligne pour TPE/PME. Tes articles sont professionnels, concrets et bien structurés en HTML propre.`;
+  const systemPrompt = `Tu es un expert SEO et rédacteur spécialisé en comptabilité, facturation et gestion d'entreprise pour TPE/PME françaises. Tu rédiges des articles de blog pour LFacture (lfacture.com), un logiciel de facturation en ligne. Tes articles sont optimisés Google, bien structurés, naturels et utiles.`;
 
-  const userPrompt = `Écris un article de blog complet en ${lang} sur le sujet : "${keyword}".
+  const userPrompt = `Rédige un article de blog SEO complet en ${lang} sur le mot-clé cible : "${keyword}".
 
-Cible : propriétaires de TPE/PME, artisans, freelances, commerçants qui cherchent à mieux gérer leur facturation.
+CONTEXTE : LFacture est un logiciel de facturation en ligne pour TPE/PME, artisans, freelances et auto-entrepreneurs français. L'article doit aider ces personnes ET les inciter à essayer LFacture.
 
-Réponds UNIQUEMENT avec un objet JSON valide (pas de markdown, pas de balises \`\`\`) dans ce format exact :
+RÈGLES SEO STRICTES :
+1. Le mot-clé "${keyword}" doit apparaître dans le titre H1, dans les 100 premiers mots, dans au moins 2 sous-titres H2, et naturellement dans le texte (densité 1-2%).
+2. Structure obligatoire : introduction (accrocheuse avec le keyword), 4-6 sections H2, sous-sections H3 si nécessaire, section FAQ (3-4 questions fréquentes), conclusion avec appel à l'action.
+3. Minimum 800 mots de contenu réel, utile et non générique.
+4. HTML propre : uniquement <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <blockquote>. PAS de <h1> (déjà dans la page), PAS de <div>, PAS de style inline.
+5. La conclusion mentionne naturellement LFacture comme solution.
+
+Réponds UNIQUEMENT avec un objet JSON valide (sans markdown, sans \`\`\`) :
 {
-  "title": "Titre SEO accrocheur (50-65 caractères)",
-  "excerpt": "Description courte 1-2 phrases pour la meta description (max 155 caractères)",
-  "tags": "tag1,tag2,tag3,tag4",
-  "content": "<article HTML avec h2, h3, p, ul, li — minimum 600 mots, style professionnel>"
+  "title": "Titre H1 optimisé SEO contenant le keyword (55-65 caractères max)",
+  "excerpt": "Meta description percutante avec le keyword, 145-155 caractères exactement",
+  "tags": "tag1,tag2,tag3,tag4,tag5",
+  "content": "<h2>...</h2><p>...</p>... (HTML complet, 800+ mots, structure complète avec FAQ)"
 }`;
 
   const resp = await fetch('https://api.openai.com/v1/chat/completions', {

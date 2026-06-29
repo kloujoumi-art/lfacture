@@ -184,7 +184,7 @@
       </div>
     </div>
     <div style="display:flex;gap:10px;">
-      <button onclick="createCampaign()" style="padding:9px 20px;background:#8b5cf6;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">
+      <button onclick="createCampaign(this)" style="padding:9px 20px;background:#8b5cf6;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">
         🚀 Lancer la campagne
       </button>
       <button onclick="toggleNewForm()" style="padding:9px 16px;background:#334155;color:#94a3b8;border:none;border-radius:8px;font-size:13px;cursor:pointer;">
@@ -207,7 +207,14 @@
     <% } else { %>
     <div id="camp-cards" style="display:flex;flex-direction:column;gap:12px;">
       <% campaigns.forEach(camp => { %>
-      <div class="camp-card" data-id="<%= camp.id %>" style="background:#1e293b;border:1px solid <%- camp.is_active ? 'rgba(139,92,246,.3)' : '#334155' %>;border-radius:12px;padding:16px 20px;">
+      <div class="camp-card"
+        data-id="<%= camp.id %>"
+        data-name="<%- (camp.name||'').replace(/"/g,'&quot;') %>"
+        data-keywords="<%- (camp.keywords||[]).join(', ').replace(/"/g,'&quot;') %>"
+        data-language="<%= camp.language || 'fr' %>"
+        data-frequency="<%= camp.frequency || 'daily' %>"
+        data-img="<%= camp.image_source || 'pexels' %>"
+        style="background:#1e293b;border:1px solid <%- camp.is_active ? 'rgba(139,92,246,.3)' : '#334155' %>;border-radius:12px;padding:16px 20px;">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;">
           <div style="flex:1;min-width:0;">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap;">
@@ -243,12 +250,12 @@
             </div>
           </div>
           <div style="display:flex;gap:6px;flex-shrink:0;flex-wrap:wrap;">
-            <button onclick="runCampaign(<%= camp.id %>)" style="font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid rgba(20,184,166,.3);background:rgba(20,184,166,.08);color:#5eead4;cursor:pointer;font-weight:600;">▶ Lancer</button>
-            <button onclick="toggleCampaign(<%= camp.id %>)" style="font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid <%- camp.is_active ? 'rgba(245,158,11,.3)' : 'rgba(16,185,129,.3)' %>;background:<%- camp.is_active ? 'rgba(245,158,11,.08)' : 'rgba(16,185,129,.08)' %>;color:<%- camp.is_active ? '#fbbf24' : '#6ee7b7' %>;cursor:pointer;font-weight:600;">
+            <button onclick="runCampaign(this,<%= camp.id %>)" style="font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid rgba(20,184,166,.3);background:rgba(20,184,166,.08);color:#5eead4;cursor:pointer;font-weight:600;">▶ Lancer</button>
+            <button onclick="toggleCampaign(this,<%= camp.id %>)" style="font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid <%- camp.is_active ? 'rgba(245,158,11,.3)' : 'rgba(16,185,129,.3)' %>;background:<%- camp.is_active ? 'rgba(245,158,11,.08)' : 'rgba(16,185,129,.08)' %>;color:<%- camp.is_active ? '#fbbf24' : '#6ee7b7' %>;cursor:pointer;font-weight:600;">
               <%= camp.is_active ? '⏸ Pause' : '▶ Activer' %>
             </button>
             <button onclick="openEditCamp(<%= camp.id %>)" style="font-size:11px;padding:6px 12px;border-radius:6px;border:1px solid rgba(99,102,241,.3);background:rgba(99,102,241,.08);color:#818cf8;cursor:pointer;font-weight:600;">✏️ Modifier</button>
-            <button onclick="deleteCampaign(<%= camp.id %>)" style="font-size:11px;padding:6px 10px;border-radius:6px;border:1px solid rgba(239,68,68,.2);background:rgba(239,68,68,.07);color:#f87171;cursor:pointer;">🗑️</button>
+            <button onclick="deleteCampaign(this,<%= camp.id %>)" style="font-size:11px;padding:6px 10px;border-radius:6px;border:1px solid rgba(239,68,68,.2);background:rgba(239,68,68,.07);color:#f87171;cursor:pointer;">🗑️</button>
           </div>
         </div>
       </div>
@@ -340,7 +347,7 @@ function toggleNewForm() {
 }
 
 // ── Create campaign ──
-async function createCampaign() {
+async function createCampaign(btn) {
   const name = document.getElementById('f-name').value.trim();
   const keywords_raw = document.getElementById('f-keywords').value.trim();
   const language = document.getElementById('f-lang').value;
@@ -348,7 +355,7 @@ async function createCampaign() {
   const image_source = document.getElementById('f-img').value;
   if (!name || !keywords_raw) { showMsg('❌ Nom et keywords requis', false); return; }
 
-  const btn = event.target;
+  const orig = btn.textContent;
   btn.textContent = '⏳ Création...'; btn.disabled = true;
 
   try {
@@ -359,52 +366,60 @@ async function createCampaign() {
     });
     const d = await r.json();
     if (!r.ok) { showMsg('❌ ' + (d.error || 'Erreur'), false); return; }
-    showMsg('✅ Campagne créée et démarrée !', true);
+    showMsg('✅ Campagne créée ! Le premier article sera généré automatiquement.', true);
     document.getElementById('f-name').value = '';
     document.getElementById('f-keywords').value = '';
     toggleNewForm();
-    setTimeout(() => location.reload(), 1200);
+    setTimeout(() => location.reload(), 1500);
   } catch(e) { showMsg('❌ ' + e.message, false); }
-  finally { btn.textContent = '🚀 Lancer la campagne'; btn.disabled = false; }
+  finally { btn.textContent = orig; btn.disabled = false; }
 }
 
 // ── Toggle active ──
-async function toggleCampaign(id) {
+async function toggleCampaign(btn, id) {
+  const orig = btn.textContent;
+  btn.disabled = true;
   const r = await fetch('/api/admin/campaigns/' + id + '/toggle', { method: 'POST' });
   if (r.ok) setTimeout(() => location.reload(), 300);
+  else { btn.disabled = false; btn.textContent = orig; }
 }
 
 // ── Run now ──
-async function runCampaign(id) {
-  const btn = event.target;
-  btn.textContent = '⏳'; btn.disabled = true;
-  showMsg('🤖 Génération de l\'article en cours...', true);
+async function runCampaign(btn, id) {
+  const orig = btn.textContent;
+  btn.textContent = '⏳ En cours...'; btn.disabled = true;
+  showMsg('🤖 Génération SEO en cours — peut prendre 15-30 secondes...', true);
   try {
     const r = await fetch('/api/admin/campaigns/' + id + '/run', { method: 'POST' });
     const d = await r.json();
     if (r.ok) {
-      showMsg('✅ Article généré : "' + d.title + '"', true);
-      setTimeout(() => location.reload(), 2000);
+      showMsg('✅ Article généré et publié : "' + d.title + '" — keyword: ' + d.keyword, true);
+      setTimeout(() => location.reload(), 2500);
     } else {
-      showMsg('❌ ' + (d.error || 'Erreur'), false);
+      showMsg('❌ ' + (d.error || 'Erreur serveur'), false);
     }
   } catch(e) { showMsg('❌ ' + e.message, false); }
-  finally { btn.textContent = '▶ Lancer'; btn.disabled = false; }
+  finally { btn.textContent = orig; btn.disabled = false; }
 }
 
 // ── Delete ──
-async function deleteCampaign(id) {
+async function deleteCampaign(btn, id) {
   if (!confirm('Supprimer cette campagne ?')) return;
+  btn.disabled = true;
   await fetch('/api/admin/campaigns/' + id + '/delete', { method: 'POST' });
   setTimeout(() => location.reload(), 300);
 }
 
-// ── Edit modal ──
+// ── Edit modal — pré-remplit depuis les data-attributes de la card ──
 function openEditCamp(id) {
   const card = document.querySelector('.camp-card[data-id="' + id + '"]');
   if (!card) return;
   document.getElementById('edit-id').value = id;
-  // We reload data from server — for now pre-fill from DOM text
+  document.getElementById('edit-name').value = card.dataset.name || '';
+  document.getElementById('edit-keywords').value = card.dataset.keywords || '';
+  document.getElementById('edit-lang').value = card.dataset.language || 'fr';
+  document.getElementById('edit-freq').value = card.dataset.frequency || 'daily';
+  document.getElementById('edit-img').value = card.dataset.img || 'pexels';
   document.getElementById('edit-modal').style.display = 'flex';
 }
 function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
