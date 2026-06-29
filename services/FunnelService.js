@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 const { db, nextId } = require('../database/db');
 
-const APP_URL = () => process.env.APP_URL || 'http://localhost:3000';
+const APP_URL = () => process.env.APP_URL || 'https://lfacture.com';
 const FROM = () => `"${process.env.MAIL_FROM_NAME || 'LFacture'}" <${process.env.MAIL_FROM_EMAIL || process.env.MAIL_USER}>`;
 
 function transporter() {
