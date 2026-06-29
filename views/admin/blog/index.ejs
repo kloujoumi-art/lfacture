@@ -364,6 +364,7 @@ async function createCampaign(btn) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, keywords_raw, language, frequency, image_source }),
     });
+    if (r.status === 401) { showMsg('❌ Session expirée — <a href="/login" style="color:#60a5fa">reconnectez-vous</a>', false); return; }
     const d = await r.json();
     if (!r.ok) { showMsg('❌ ' + (d.error || 'Erreur'), false); return; }
     showMsg('✅ Campagne créée ! Le premier article sera généré automatiquement.', true);
@@ -371,7 +372,7 @@ async function createCampaign(btn) {
     document.getElementById('f-keywords').value = '';
     toggleNewForm();
     setTimeout(() => location.reload(), 1500);
-  } catch(e) { showMsg('❌ ' + e.message, false); }
+  } catch(e) { showMsg('❌ Erreur réseau : ' + e.message, false); }
   finally { btn.textContent = orig; btn.disabled = false; }
 }
 
@@ -391,6 +392,7 @@ async function runCampaign(btn, id) {
   showMsg('🤖 Génération SEO en cours — peut prendre 15-30 secondes...', true);
   try {
     const r = await fetch('/api/admin/campaigns/' + id + '/run', { method: 'POST' });
+    if (r.status === 401) { showMsg('❌ Session expirée — <a href="/login" style="color:#60a5fa">reconnectez-vous</a>', false); return; }
     const d = await r.json();
     if (r.ok) {
       showMsg('✅ Article généré et publié : "' + d.title + '" — keyword: ' + d.keyword, true);
@@ -398,7 +400,7 @@ async function runCampaign(btn, id) {
     } else {
       showMsg('❌ ' + (d.error || 'Erreur serveur'), false);
     }
-  } catch(e) { showMsg('❌ ' + e.message, false); }
+  } catch(e) { showMsg('❌ Erreur réseau : ' + e.message, false); }
   finally { btn.textContent = orig; btn.disabled = false; }
 }
 

@@ -80,12 +80,14 @@ app.use('/', webRoutes);
 
 // 404
 app.use((req, res) => {
+  if (req.path.startsWith('/api/')) return res.status(404).json({ error: 'Route introuvable' });
   res.status(404).renderLayout('errors/404', { title: 'Page introuvable — LFacture' });
 });
 
 // Error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
+  if (req.path.startsWith('/api/')) return res.status(500).json({ error: err.message || 'Erreur serveur' });
   res.status(500).renderLayout('errors/500', { title: 'Erreur — LFacture' });
 });
 
