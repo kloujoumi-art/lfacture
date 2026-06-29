@@ -1,0 +1,152 @@
+<%
+  const now = new Date();
+  const isActiveTrial = targetUser.plan === 'trial' && new Date(targetUser.trial_ends_at) > now;
+  const isActive = targetUser.plan === 'active' && targetUser.subscription_ends_at && new Date(targetUser.subscription_ends_at) > now;
+  const daysLeft = targetUser.plan === 'trial'
+    ? Math.max(0, Math.ceil((new Date(targetUser.trial_ends_at) - now) / 86400000))
+    : (targetUser.subscription_ends_at ? Math.max(0, Math.ceil((new Date(targetUser.subscription_ends_at) - now) / 86400000)) : 0);
+%>
+
+<div style="margin-bottom:16px;">
+  <a href="/admin/users" style="font-size:13px;color:#64748b;text-decoration:none;">← Retour aux utilisateurs</a>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start;">
+
+  <!-- Left column -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <!-- User info card -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:<%= targetUser.is_admin ? '#ef4444' : isActive ? '#10b981' : isActiveTrial ? '#f59e0b' : '#475569' %>;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:22px;flex-shrink:0;">
+          <%= targetUser.name.charAt(0).toUpperCase() %>
+        </div>
+        <div>
+          <h2 style="font-size:20px;font-weight:800;color:#f1f5f9;"><%= targetUser.name %><% if(targetUser.is_admin){ %> 👑<% } %></h2>
+          <p style="font-size:13px;color:#64748b;"><%= targetUser.email %></p>
+          <p style="font-size:11px;color:#475569;margin-top:2px;">ID #<%= targetUser.id %> • Inscrit le <%= new Date(targetUser.created_at).toLocaleDateString('fr-FR') %></p>
+        </div>
+        <div style="margin-left:auto;">
+          <span style="font-size:12px;font-weight:700;padding:6px 14px;border-radius:20px;<%=
+            isActiveTrial ? 'background:rgba(245,158,11,.15);color:#fbbf24;border:1px solid rgba(245,158,11,.3);' :
+            isActive ? 'background:rgba(16,185,129,.15);color:#34d399;border:1px solid rgba(16,185,129,.3);' :
+            targetUser.plan === 'suspended' ? 'background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.3);' :
+            'background:rgba(100,116,139,.15);color:#94a3b8;border:1px solid rgba(100,116,139,.3);'
+          %>">
+            <%= isActiveTrial ? '⏳ Essai — ' + daysLeft + 'j restants' : isActive ? '✅ Abonné — ' + daysLeft + 'j restants' : targetUser.plan === 'suspended' ? '🚫 Suspendu' : '❌ Expiré' %>
+          </span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
+          <p style="font-size:24px;font-weight:900;color:#3b82f6;"><%= stats.invoices %></p>
+          <p style="font-size:11px;color:#64748b;">Factures</p>
+        </div>
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
+          <p style="font-size:24px;font-weight:900;color:#8b5cf6;"><%= stats.quotes %></p>
+          <p style="font-size:11px;color:#64748b;">Devis</p>
+        </div>
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
+          <p style="font-size:24px;font-weight:900;color:#10b981;"><%= stats.clients %></p>
+          <p style="font-size:11px;color:#64748b;">Clients</p>
+        </div>
+        <div style="background:#0f172a;border-radius:8px;padding:14px;text-align:center;">
+          <p style="font-size:18px;font-weight:900;color:#f59e0b;"><%= stats.revenue.toLocaleString('fr-FR',{minimumFractionDigits:0}) %>€</p>
+          <p style="font-size:11px;color:#64748b;">CA encaissé</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent invoices -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;overflow:hidden;">
+      <div style="padding:14px 20px;border-bottom:1px solid #334155;">
+        <h3 style="font-size:13px;font-weight:700;color:#f1f5f9;">Documents récents</h3>
+      </div>
+      <% if (invoices && invoices.length > 0) { %>
+      <table style="width:100%;border-collapse:collapse;">
+        <tbody>
+          <% invoices.forEach(inv => { %>
+          <tr style="border-top:1px solid #0f172a;">
+            <td style="padding:10px 20px;">
+              <p style="font-size:12px;font-weight:600;color:#94a3b8;"><%= inv.invoice_number %></p>
+              <p style="font-size:11px;color:#475569;"><%= inv.client_name || 'Sans client' %></p>
+            </td>
+            <td style="padding:10px 20px;text-align:right;">
+              <p style="font-size:13px;font-weight:700;color:#f1f5f9;"><%= inv.total.toLocaleString('fr-FR',{minimumFractionDigits:2}) %> €</p>
+              <span style="font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600;<%=
+                inv.status==='paid'?'background:rgba(16,185,129,.15);color:#34d399;':
+                inv.status==='sent'?'background:rgba(59,130,246,.15);color:#60a5fa;':
+                'background:rgba(100,116,139,.15);color:#64748b;'
+              %>"><%= inv.status==='paid'?'Payée':inv.status==='sent'?'Envoyée':'Brouillon' %></span>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } else { %>
+      <p style="padding:24px;text-align:center;color:#475569;font-size:13px;">Aucun document</p>
+      <% } %>
+    </div>
+  </div>
+
+  <!-- Right column — Actions -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+
+    <!-- Change plan -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <h3 style="font-size:13px;font-weight:700;color:#f1f5f9;margin-bottom:16px;">Modifier le plan</h3>
+      <form action="/admin/users/<%= targetUser.id %>/plan" method="POST" style="space-y:12px;">
+        <div style="margin-bottom:12px;">
+          <label style="font-size:12px;font-weight:600;color:#94a3b8;display:block;margin-bottom:6px;">Type de plan</label>
+          <select name="plan" style="width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 12px;color:#f1f5f9;font-size:13px;outline:none;">
+            <option value="trial" <%= targetUser.plan==='trial'?'selected':'' %>>⏳ Essai gratuit</option>
+            <option value="active" <%= targetUser.plan==='active'?'selected':'' %>>✅ Abonné actif</option>
+            <option value="suspended">🚫 Suspendu</option>
+          </select>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="font-size:12px;font-weight:600;color:#94a3b8;display:block;margin-bottom:6px;">Durée (jours)</label>
+          <input type="number" name="days" value="30" min="1" max="3650"
+            style="width:100%;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 12px;color:#f1f5f9;font-size:13px;outline:none;">
+        </div>
+        <button type="submit" class="btn-blue" style="width:100%;padding:10px;font-size:13px;">Appliquer le plan</button>
+      </form>
+    </div>
+
+    <!-- Extend trial -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <h3 style="font-size:13px;font-weight:700;color:#f1f5f9;margin-bottom:16px;">Prolonger l'essai</h3>
+      <form action="/admin/users/<%= targetUser.id %>/extend" method="POST" style="display:flex;gap:8px;">
+        <input type="number" name="days" value="7" min="1" max="365"
+          style="flex:1;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:10px 12px;color:#f1f5f9;font-size:13px;outline:none;">
+        <span style="display:flex;align-items:center;color:#64748b;font-size:12px;">jours</span>
+        <button type="submit" class="btn-green" style="padding:10px 16px;">+</button>
+      </form>
+    </div>
+
+    <!-- Admin toggle -->
+    <div style="background:#1e293b;border:1px solid #334155;border-radius:12px;padding:20px;">
+      <h3 style="font-size:13px;font-weight:700;color:#f1f5f9;margin-bottom:8px;">Droits administrateur</h3>
+      <p style="font-size:12px;color:#64748b;margin-bottom:12px;">
+        <%= targetUser.is_admin ? 'Cet utilisateur est administrateur.' : 'Cet utilisateur n\'est pas administrateur.' %>
+      </p>
+      <form action="/admin/users/<%= targetUser.id %>/toggle-admin" method="POST">
+        <button type="submit" class="<%= targetUser.is_admin ? 'btn-red' : 'btn-gray' %>" style="width:100%;padding:10px;">
+          <%= targetUser.is_admin ? '🚫 Retirer les droits admin' : '👑 Promouvoir administrateur' %>
+        </button>
+      </form>
+    </div>
+
+    <!-- Delete -->
+    <div style="background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:20px;">
+      <h3 style="font-size:13px;font-weight:700;color:#f87171;margin-bottom:8px;">Zone dangereuse</h3>
+      <p style="font-size:12px;color:#64748b;margin-bottom:12px;">Supprime l'utilisateur et toutes ses données (factures, clients, devis).</p>
+      <form action="/admin/users/<%= targetUser.id %>/delete" method="POST" onsubmit="return confirm('Supprimer définitivement <%= targetUser.name %> et toutes ses données ?')">
+        <button type="submit" class="btn-red" style="width:100%;padding:10px;">🗑️ Supprimer l'utilisateur</button>
+      </form>
+    </div>
+
+  </div>
+</div>

@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const AuthController = require('../controllers/AuthController');
 const DashboardController = require('../controllers/DashboardController');
+const AdminController = require('../controllers/AdminController');
 const { requireAuth, requireAccess, guestOnly } = require('../middleware/auth');
+const { requireAdmin } = require('../middleware/admin');
 
 // ---- Public routes ----
 router.get('/', (req, res) => res.renderLayout('index', { title: 'LFacture — Créez vos factures et devis en quelques secondes' }));
@@ -40,5 +42,15 @@ router.delete('/dashboard/invoices/:id', requireAccess, DashboardController.dele
 // Settings
 router.get('/dashboard/settings', requireAuth, DashboardController.showSettings);
 router.post('/dashboard/settings', requireAuth, DashboardController.updateSettings);
+
+// ---- Admin routes ----
+router.get('/admin', requireAdmin, AdminController.index);
+router.get('/admin/users', requireAdmin, AdminController.listUsers);
+router.get('/admin/users/:id', requireAdmin, AdminController.showUser);
+router.post('/admin/users/:id/plan', requireAdmin, AdminController.updateUserPlan);
+router.post('/admin/users/:id/extend', requireAdmin, AdminController.extendTrial);
+router.post('/admin/users/:id/toggle-admin', requireAdmin, AdminController.toggleAdmin);
+router.post('/admin/users/:id/delete', requireAdmin, AdminController.deleteUser);
+router.get('/admin/invoices', requireAdmin, AdminController.listInvoices);
 
 module.exports = router;

@@ -17,6 +17,7 @@ class User {
       email: email.toLowerCase().trim(),
       password: hashedPassword,
       plan: 'trial',
+      is_admin: 0,
       trial_ends_at: trialEndsAt.toISOString(),
       subscription_ends_at: null,
       created_at: new Date().toISOString(),
@@ -55,6 +56,50 @@ class User {
     if (!user || !user.trial_ends_at) return 0;
     const diff = new Date(user.trial_ends_at) - new Date();
     return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  }
+
+  static makeAdmin(email) {
+    db.get('users').find(u => u.email === email.toLowerCase()).assign({ is_admin: 1 }).write();
+  }
+
+  static updatePlan(id, plan, daysFromNow = null) {
+    const patch = { plan };
+    if (daysFromNow !== null) {
+      const d = new Date();
+      d.setDate(d.getDate() + daysFromNow);
+      patch.subscription_ends_at = d.toISOString();
+    }
+    db.get('users').find({ id: Number(id) }).assign(patch).write();
+  }
+
+  static delete(id) {
+    db.get('users').remove({ id: Number(id) }).write();
+    db.get('clients').remove({ user_id: Number(id) }).write();
+    db.get('invoices').remove({ user_id: Number(id) }).write();
+    db.get('settings').remove({ user_id: Number(id) }).write();
+  }
+
+  static all() {
+    return db.get('users').sortBy(u => -new Date(u.created_at).getTime()).value();
+  }
+
+  static globalStats() {
+    const users = db.get('users').value();
+    const invoices = db.get('invoices').value();
+    const now = new Date();
+    return {
+      total_users: users.length,
+      trial_users: users.filter(u => u.plan === 'trial' && new Date(u.trial_ends_at) > now).length,
+      active_users: users.filter(u => u.plan === 'active' && u.subscription_ends_at && new Date(u.subscription_ends_at) > now).length,
+      expired_users: users.filter(u => {
+        if (u.plan === 'trial') return new Date(u.trial_ends_at) <= now;
+        if (u.plan === 'active') return !u.subscription_ends_at || new Date(u.subscription_ends_at) <= now;
+        return false;
+      }).length,
+      total_invoices: invoices.filter(i => i.type === 'invoice').length,
+      total_quotes: invoices.filter(i => i.type === 'quote').length,
+      new_today: users.filter(u => new Date(u.created_at).toDateString() === now.toDateString()).length,
+    };
   }
 
   static getStats(userId) {

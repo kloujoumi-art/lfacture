@@ -1,0 +1,53 @@
+<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;">
+  <div class="stat-card" style="display:flex;align-items:center;gap:14px;">
+    <div style="width:40px;height:40px;border-radius:8px;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg style="width:20px;height:20px;color:#3b82f6;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+    </div>
+    <div><p style="font-size:24px;font-weight:900;color:#f1f5f9;"><%= totalInvoices %></p><p style="font-size:12px;color:#64748b;">Factures</p></div>
+  </div>
+  <div class="stat-card" style="display:flex;align-items:center;gap:14px;">
+    <div style="width:40px;height:40px;border-radius:8px;background:rgba(139,92,246,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <svg style="width:20px;height:20px;color:#8b5cf6;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+    </div>
+    <div><p style="font-size:24px;font-weight:900;color:#f1f5f9;"><%= totalQuotes %></p><p style="font-size:12px;color:#64748b;">Devis</p></div>
+  </div>
+</div>
+
+<div style="background:#1e293b;border:1px solid #334155;border-radius:12px;overflow:hidden;">
+  <table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="background:rgba(255,255,255,.03);">
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">Numéro</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">Utilisateur</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">Client</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">Montant</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">Statut</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% invoices.forEach(inv => { %>
+      <tr style="border-top:1px solid #0f172a;">
+        <td style="padding:11px 20px;">
+          <span style="font-size:12px;font-weight:600;color:<%= inv.type==='invoice'?'#60a5fa':'#a78bfa' %>"><%= inv.invoice_number %></span>
+        </td>
+        <td style="padding:11px 20px;font-size:12px;color:#94a3b8;"><%= inv.user_name %></td>
+        <td style="padding:11px 20px;font-size:12px;color:#64748b;"><%= inv.client_name || '—' %></td>
+        <td style="padding:11px 20px;font-size:13px;font-weight:700;color:#f1f5f9;"><%= inv.total.toLocaleString('fr-FR',{minimumFractionDigits:2}) %> €</td>
+        <td style="padding:11px 20px;">
+          <span style="font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;<%=
+            inv.status==='paid'?'background:rgba(16,185,129,.15);color:#34d399;':
+            inv.status==='sent'?'background:rgba(59,130,246,.15);color:#60a5fa;':
+            inv.status==='cancelled'?'background:rgba(239,68,68,.15);color:#f87171;':
+            'background:rgba(100,116,139,.15);color:#64748b;'
+          %>"><%= inv.status==='paid'?'Payée':inv.status==='sent'?'Envoyée':inv.status==='cancelled'?'Annulée':'Brouillon' %></span>
+        </td>
+        <td style="padding:11px 20px;font-size:12px;color:#475569;"><%= new Date(inv.created_at).toLocaleDateString('fr-FR') %></td>
+      </tr>
+      <% }); %>
+      <% if (!invoices || invoices.length === 0) { %>
+      <tr><td colspan="6" style="padding:40px;text-align:center;color:#475569;font-size:13px;">Aucune facture</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>

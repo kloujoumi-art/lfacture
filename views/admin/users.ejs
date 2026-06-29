@@ -1,0 +1,84 @@
+<!-- Stats bar -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+  <a href="/admin/users?filter=all" style="background:#1e293b;border:1px solid <%= filter==='all'?'#3b82f6':'#334155' %>;border-radius:10px;padding:14px;display:block;text-decoration:none;">
+    <p style="font-size:22px;font-weight:900;color:#f1f5f9;"><%= stats.total_users %></p>
+    <p style="font-size:11px;color:#64748b;margin-top:2px;">Total</p>
+  </a>
+  <a href="/admin/users?filter=trial" style="background:#1e293b;border:1px solid <%= filter==='trial'?'#f59e0b':'#334155' %>;border-radius:10px;padding:14px;display:block;text-decoration:none;">
+    <p style="font-size:22px;font-weight:900;color:#f59e0b;"><%= stats.trial_users %></p>
+    <p style="font-size:11px;color:#64748b;margin-top:2px;">En essai</p>
+  </a>
+  <a href="/admin/users?filter=active" style="background:#1e293b;border:1px solid <%= filter==='active'?'#10b981':'#334155' %>;border-radius:10px;padding:14px;display:block;text-decoration:none;">
+    <p style="font-size:22px;font-weight:900;color:#10b981;"><%= stats.active_users %></p>
+    <p style="font-size:11px;color:#64748b;margin-top:2px;">Actifs</p>
+  </a>
+  <a href="/admin/users?filter=expired" style="background:#1e293b;border:1px solid <%= filter==='expired'?'#ef4444':'#334155' %>;border-radius:10px;padding:14px;display:block;text-decoration:none;">
+    <p style="font-size:22px;font-weight:900;color:#ef4444;"><%= stats.expired_users %></p>
+    <p style="font-size:11px;color:#64748b;margin-top:2px;">Expirés</p>
+  </a>
+</div>
+
+<!-- Search -->
+<form method="GET" action="/admin/users" style="margin-bottom:16px;display:flex;gap:10px;">
+  <input type="hidden" name="filter" value="<%= filter %>">
+  <input type="text" name="q" value="<%= search %>" placeholder="Rechercher par nom ou email…"
+    style="flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:10px 14px;color:#f1f5f9;font-size:13px;outline:none;">
+  <button type="submit" class="btn-blue">Chercher</button>
+</form>
+
+<!-- Table -->
+<div style="background:#1e293b;border:1px solid #334155;border-radius:12px;overflow:hidden;">
+  <table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="background:rgba(255,255,255,.03);">
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;">Utilisateur</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;">Plan / Statut</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;">Expiration</th>
+        <th style="text-align:left;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;">Inscrit</th>
+        <th style="text-align:right;padding:12px 20px;font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.5px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% users.forEach(u => {
+        const now = new Date();
+        const isActiveTrial = u.plan === 'trial' && new Date(u.trial_ends_at) > now;
+        const isActive = u.plan === 'active' && u.subscription_ends_at && new Date(u.subscription_ends_at) > now;
+        const expiryDate = u.plan === 'trial' ? u.trial_ends_at : u.subscription_ends_at;
+      %>
+      <tr style="border-top:1px solid #0f172a;">
+        <td style="padding:12px 20px;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div style="width:34px;height:34px;border-radius:50%;background:<%= u.is_admin ? '#ef4444' : (isActive ? '#10b981' : isActiveTrial ? '#f59e0b' : '#475569') %>;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px;flex-shrink:0;">
+              <%= u.name.charAt(0).toUpperCase() %>
+            </div>
+            <div>
+              <p style="font-size:13px;font-weight:600;color:#f1f5f9;"><%= u.name %><% if(u.is_admin){ %> <span style="font-size:10px;background:rgba(239,68,68,.2);color:#f87171;padding:2px 6px;border-radius:4px;font-weight:700;">ADMIN</span><% } %></p>
+              <p style="font-size:11px;color:#64748b;"><%= u.email %></p>
+            </div>
+          </div>
+        </td>
+        <td style="padding:12px 20px;">
+          <span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;<%=
+            isActiveTrial ? 'background:rgba(245,158,11,.15);color:#fbbf24;' :
+            isActive ? 'background:rgba(16,185,129,.15);color:#34d399;' :
+            u.plan === 'suspended' ? 'background:rgba(239,68,68,.15);color:#f87171;' :
+            'background:rgba(100,116,139,.15);color:#94a3b8;'
+          %>">
+            <%= isActiveTrial ? '⏳ Essai actif' : isActive ? '✅ Abonné' : u.plan === 'suspended' ? '🚫 Suspendu' : '❌ Expiré' %>
+          </span>
+        </td>
+        <td style="padding:12px 20px;font-size:12px;color:<%= expiryDate && new Date(expiryDate) > now ? '#94a3b8' : '#ef4444' %>;">
+          <%= expiryDate ? new Date(expiryDate).toLocaleDateString('fr-FR') : '—' %>
+        </td>
+        <td style="padding:12px 20px;font-size:12px;color:#64748b;"><%= new Date(u.created_at).toLocaleDateString('fr-FR') %></td>
+        <td style="padding:12px 20px;text-align:right;">
+          <a href="/admin/users/<%= u.id %>" class="btn-gray" style="padding:6px 12px;font-size:12px;">Gérer</a>
+        </td>
+      </tr>
+      <% }); %>
+      <% if (!users || users.length === 0) { %>
+      <tr><td colspan="5" style="padding:40px;text-align:center;color:#475569;font-size:13px;">Aucun utilisateur trouvé</td></tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
