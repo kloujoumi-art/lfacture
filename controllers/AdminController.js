@@ -188,6 +188,25 @@ class AdminController {
     res.redirect(`/admin/users/${req.params.id}`);
   }
 
+  static async sendMagicLink(req, res) {
+    const user = User.findById(req.params.id);
+    if (!user) {
+      req.flash('error', 'Utilisateur introuvable.');
+      return res.redirect('/admin/users');
+    }
+    const token = User.generateMagicToken(user.id);
+    const appUrl = process.env.APP_URL || 'http://localhost:3000';
+    const magicLink = `${appUrl}/auth/magic/${token}`;
+    try {
+      await FunnelService.sendMagicLoginEmail(user, magicLink);
+      req.flash('success', `Lien de connexion envoyé à ${user.email}.`);
+    } catch (e) {
+      console.error('[Admin] Magic link email error:', e.message);
+      req.flash('error', `Erreur envoi email. Lien manuel : ${magicLink}`);
+    }
+    res.redirect(`/admin/users/${req.params.id}`);
+  }
+
   static deleteUser(req, res) {
     const user = User.findById(req.params.id);
     if (!user) return res.redirect('/admin/users');

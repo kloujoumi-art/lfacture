@@ -1,6 +1,7 @@
 const { db, nextId } = require('../database/db');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 const FREE_INVOICE_LIMIT = 8;
 const FREE_QUOTE_LIMIT = 8;
@@ -106,6 +107,42 @@ class User {
       invoices: { used: invoices, max: FREE_INVOICE_LIMIT, remaining: Math.max(0, FREE_INVOICE_LIMIT - invoices), reached: invoices >= FREE_INVOICE_LIMIT },
       quotes:   { used: quotes,   max: FREE_QUOTE_LIMIT,   remaining: Math.max(0, FREE_QUOTE_LIMIT - quotes),     reached: quotes >= FREE_QUOTE_LIMIT   },
     };
+  }
+
+  // Activation immédiate (sans OTP) — utilisé quand SMTP n'est pas disponible
+  static activateFree(id) {
+    db.get('users').find({ id: Number(id) }).assign({
+      email_verified: 1,
+      plan: 'free',
+      verification_token: null,
+      verification_expires_at: null,
+    }).write();
+    return db.get('users').find({ id: Number(id) }).value();
+  }
+
+  // Magic link — lien de connexion unique envoyé par l'admin
+  static generateMagicToken(id) {
+    const token = crypto.randomBytes(32).toString('hex');
+    const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString(); // 1h
+    db.get('users').find({ id: Number(id) }).assign({
+      magic_token: token,
+      magic_token_expires_at: expires,
+    }).write();
+    return token;
+  }
+
+  static findByMagicToken(token) {
+    const user = db.get('users').find(u => u.magic_token === token).value();
+    if (!user) return null;
+    if (user.magic_token_expires_at && new Date(user.magic_token_expires_at) < new Date()) return null;
+    return user;
+  }
+
+  static clearMagicToken(id) {
+    db.get('users').find({ id: Number(id) }).assign({
+      magic_token: null,
+      magic_token_expires_at: null,
+    }).write();
   }
 
   static makeAdmin(email) {

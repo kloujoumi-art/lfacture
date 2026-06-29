@@ -324,6 +324,47 @@ async function sendLastChanceDiscount(user) {
   } catch (e) { console.error('[Funnel] discount error:', e.message); }
 }
 
+// ── Email Admin : Lien de connexion magique ───────────────────────────────
+async function sendMagicLoginEmail(user, magicLink) {
+  const html = `
+<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Votre lien de connexion LFacture</title></head>
+<body style="margin:0;padding:0;background:#f4f7f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7f6;padding:40px 20px;">
+  <tr><td align="center">
+    <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
+      <tr><td style="background:linear-gradient(135deg,#4F46E5,#7C3AED);padding:36px 40px;text-align:center;">
+        <h1 style="color:#fff;margin:0;font-size:28px;font-weight:900;">LFacture</h1>
+        <p style="color:rgba(255,255,255,.8);margin:6px 0 0;font-size:14px;">Logiciel de facturation gratuit</p>
+      </td></tr>
+      <tr><td style="padding:48px 40px;">
+        <h2 style="color:#1a1a2e;margin:0 0 8px;font-size:22px;font-weight:800;">Bonjour ${user.name} 👋</h2>
+        <p style="color:#6b7280;font-size:15px;line-height:1.6;margin:0 0 28px;">Voici votre lien de connexion direct à votre espace LFacture. Cliquez sur le bouton ci-dessous pour accéder immédiatement à votre tableau de bord.</p>
+
+        <div style="text-align:center;margin:0 0 28px;">
+          <a href="${magicLink}" style="display:inline-block;background:linear-gradient(135deg,#4F46E5,#7C3AED);color:#fff;text-decoration:none;padding:18px 48px;border-radius:10px;font-weight:800;font-size:16px;box-shadow:0 4px 15px rgba(79,70,229,.3);">
+            🔑 Accéder à mon espace →
+          </a>
+        </div>
+
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:24px;text-align:center;">
+          <p style="margin:0;color:#9ca3af;font-size:13px;">⏰ Ce lien est valable <strong>1 heure</strong> et ne peut être utilisé qu'une seule fois.</p>
+        </div>
+
+        <p style="color:#9ca3af;font-size:13px;text-align:center;word-break:break-all;">Ou copiez ce lien : ${magicLink}</p>
+
+        <p style="color:#9ca3af;font-size:13px;text-align:center;margin-top:24px;">Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
+      </td></tr>
+      <tr><td style="background:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
+        <p style="margin:0;color:#9ca3af;font-size:13px;">© ${new Date().getFullYear()} LFacture — logiciel de facturation gratuit</p>
+      </td></tr>
+    </table>
+  </td></tr>
+</table>
+</body></html>`;
+  await transporter().sendMail({ from: FROM(), to: user.email, subject: '🔑 Votre lien de connexion LFacture', html });
+  console.log(`[Admin] Magic login link → ${user.email}`);
+}
+
 // ── Ajouter dans la liste de contacts ─────────────────────────────────────
 function addToContacts(user) {
   const existing = db.get('contacts').find(c => c.email === user.email).value();
@@ -393,6 +434,7 @@ function startFunnelScheduler() {
 module.exports = {
   sendVerificationEmail,
   sendWelcomeEmail,
+  sendMagicLoginEmail,
   sendTrialEndingSoon,
   sendTrialExpired,
   sendFollowUp,

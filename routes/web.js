@@ -71,6 +71,9 @@ router.get('/verify-email', AuthController.showVerifyEmail);
 router.post('/verify-email', AuthController.verifyEmail);
 router.post('/verify-email/resend', AuthController.resendCode);
 
+// ---- Magic login link (envoyé par admin) ----
+router.get('/auth/magic/:token', AuthController.loginWithMagicToken);
+
 // ---- Dashboard routes ----
 router.get('/dashboard', requireAuth, (req, res, next) => { res.locals.pageTitle = 'Tableau de bord'; next(); }, DashboardController.index);
 
@@ -108,6 +111,7 @@ router.post('/admin/users/:id/plan', requireAdmin, AdminController.updateUserPla
 router.post('/admin/users/:id/extend', requireAdmin, AdminController.extendTrial);
 router.post('/admin/users/:id/toggle-admin', requireAdmin, AdminController.toggleAdmin);
 router.post('/admin/users/:id/delete', requireAdmin, AdminController.deleteUser);
+router.post('/admin/users/:id/magic-link', requireAdmin, AdminController.sendMagicLink);
 router.get('/admin/invoices', requireAdmin, AdminController.listInvoices);
 router.get('/admin/trial', requireAdmin, AdminController.listTrialUsers);
 router.get('/admin/mailing', requireAdmin, AdminController.listMailing);

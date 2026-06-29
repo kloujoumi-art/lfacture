@@ -29,7 +29,7 @@ class AuthController {
     try {
       const user = User.create({ name: name.trim(), email: email.toLowerCase().trim(), password });
 
-      // Initialise les paramètres par défaut
+      // Paramètres par défaut
       db.get('settings').push({
         id: nextId('settings'),
         user_id: user.id,
@@ -41,14 +41,16 @@ class AuthController {
         payment_terms: 'Paiement à 30 jours',
       }).write();
 
-      // Envoie l'email avec le code OTP 6 chiffres
-      FunnelService.sendVerificationEmail(user).catch(() => {});
+      // Activation immédiate — pas de blocage par email
+      User.activateFree(user.id);
 
-      res.renderLayout('auth/verify-pending', {
-        title: 'Vérifiez votre email — LFacture',
-        email: user.email,
-        name: user.name,
-      });
+      // Email de bienvenue en arrière-plan (non bloquant)
+      FunnelService.sendWelcomeEmail(user).catch(() => {});
+      FunnelService.addToContacts(user);
+
+      req.session.userId = user.id;
+      req.flash('success', `Bienvenue ${user.name} ! Votre compte gratuit est activé — 8 factures + 8 devis offerts.`);
+      res.redirect('/dashboard');
     } catch (err) {
       console.error('Registration error:', err);
       return res.renderLayout('auth/register', { title: 'Créer un compte — LFacture', errors: ['Erreur lors de la création du compte. Réessayez.'], old: { name, email } });
@@ -144,6 +146,20 @@ class AuthController {
 
     req.session.userId = user.id;
     req.flash('success', `Bon retour, ${user.name} !`);
+    res.redirect('/dashboard');
+  }
+
+  // GET /auth/magic/:token — connexion directe via lien magique (envoyé par admin)
+  static loginWithMagicToken(req, res) {
+    const { token } = req.params;
+    const user = User.findByMagicToken(token);
+    if (!user) {
+      req.flash('error', 'Ce lien de connexion est invalide ou a expiré.');
+      return res.redirect('/login');
+    }
+    User.clearMagicToken(user.id);
+    req.session.userId = user.id;
+    req.flash('success', `Bienvenue ${user.name} !`);
     res.redirect('/dashboard');
   }
 
