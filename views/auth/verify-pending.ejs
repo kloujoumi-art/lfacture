@@ -1,39 +1,4 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title><%= typeof title !== 'undefined' ? title : 'Vérification email — LFacture' %></title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family:'Inter',sans-serif; }
-    .otp-card { background:#fff; border-radius:24px; padding:40px 32px; max-width:440px; width:100%; box-shadow:0 32px 80px rgba(0,0,0,.25); box-sizing:border-box; }
-    .otp-row { display:flex; justify-content:center; gap:clamp(4px,2vw,8px); margin-bottom:28px; }
-    .otp-input {
-      width:clamp(32px,9.5vw,52px); height:clamp(44px,13vw,64px); text-align:center;
-      font-size:clamp(18px,5.5vw,28px); font-weight:900;
-      border:2px solid #e0e7ff; border-radius:14px;
-      background:#f8faff; color:#4F46E5;
-      outline:none; transition:border-color .15s, box-shadow .15s;
-      caret-color: #4F46E5;
-      min-width:0; flex-shrink:1;
-    }
-    .otp-input:focus {
-      border-color:#4F46E5;
-      box-shadow:0 0 0 3px rgba(79,70,229,.15);
-      background:#fff;
-    }
-    .otp-input.filled {
-      border-color:#7C3AED;
-      background:#faf5ff;
-    }
-    @media (max-width:380px) {
-      .otp-card { padding:32px 16px; }
-    }
-  </style>
-</head>
-<body style="background:linear-gradient(135deg,#4F46E5 0%,#7C3AED 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;">
+<div style="background:linear-gradient(135deg,#4F46E5 0%,#7C3AED 100%);min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;padding:32px 16px;">
 
   <div class="otp-card">
 
@@ -124,56 +89,81 @@
       <a href="/login" style="color:#9ca3af;font-size:13px;text-decoration:none;">← Retour à la connexion</a>
     </div>
   </div>
+</div>
 
-  <script>
-    const inputs = [d1,d2,d3,d4,d5,d6];
+<style>
+  .otp-card { background:#fff; border-radius:24px; padding:40px 32px; max-width:440px; width:100%; box-shadow:0 32px 80px rgba(0,0,0,.25); box-sizing:border-box; }
+  .otp-row { display:flex; justify-content:center; gap:clamp(4px,2vw,8px); margin-bottom:28px; }
+  .otp-input {
+    width:clamp(32px,9.5vw,52px); height:clamp(44px,13vw,64px); text-align:center;
+    font-size:clamp(18px,5.5vw,28px); font-weight:900;
+    border:2px solid #e0e7ff; border-radius:14px;
+    background:#f8faff; color:#4F46E5;
+    outline:none; transition:border-color .15s, box-shadow .15s;
+    caret-color: #4F46E5;
+    min-width:0; flex-shrink:1;
+  }
+  .otp-input:focus {
+    border-color:#4F46E5;
+    box-shadow:0 0 0 3px rgba(79,70,229,.15);
+    background:#fff;
+  }
+  .otp-input.filled {
+    border-color:#7C3AED;
+    background:#faf5ff;
+  }
+  @media (max-width:380px) {
+    .otp-card { padding:32px 16px; }
+  }
+</style>
 
-    // Auto-focus premier champ
-    d1.focus();
+<script>
+  const inputs = [d1,d2,d3,d4,d5,d6];
 
-    inputs.forEach((el, i) => {
-      el.addEventListener('input', (e) => {
-        const val = e.target.value.replace(/\D/g,'');
-        e.target.value = val.slice(-1);
+  // Auto-focus premier champ
+  d1.focus();
 
-        if (val) {
-          el.classList.add('filled');
-          if (i < inputs.length - 1) inputs[i+1].focus();
-          // Auto-submit si tous remplis
-          if (inputs.every(inp => inp.value.match(/\d/))) {
-            setTimeout(() => document.getElementById('otpForm').submit(), 150);
-          }
-        } else {
-          el.classList.remove('filled');
+  inputs.forEach((el, i) => {
+    el.addEventListener('input', (e) => {
+      const val = e.target.value.replace(/\D/g,'');
+      e.target.value = val.slice(-1);
+
+      if (val) {
+        el.classList.add('filled');
+        if (i < inputs.length - 1) inputs[i+1].focus();
+        // Auto-submit si tous remplis
+        if (inputs.every(inp => inp.value.match(/\d/))) {
+          setTimeout(() => document.getElementById('otpForm').submit(), 150);
         }
-      });
-
-      // Backspace : retour arrière
-      el.addEventListener('keydown', (e) => {
-        if (e.key === 'Backspace' && !el.value && i > 0) {
-          inputs[i-1].focus();
-          inputs[i-1].value = '';
-          inputs[i-1].classList.remove('filled');
-        }
-        // Flèche gauche/droite
-        if (e.key === 'ArrowLeft' && i > 0) inputs[i-1].focus();
-        if (e.key === 'ArrowRight' && i < inputs.length - 1) inputs[i+1].focus();
-      });
-
-      // Coller le code complet depuis le presse-papiers
-      el.addEventListener('paste', (e) => {
-        e.preventDefault();
-        const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
-        if (pasted.length === 6) {
-          pasted.split('').forEach((c, j) => {
-            inputs[j].value = c;
-            inputs[j].classList.add('filled');
-          });
-          inputs[5].focus();
-          setTimeout(() => document.getElementById('otpForm').submit(), 200);
-        }
-      });
+      } else {
+        el.classList.remove('filled');
+      }
     });
-  </script>
-</body>
-</html>
+
+    // Backspace : retour arrière
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !el.value && i > 0) {
+        inputs[i-1].focus();
+        inputs[i-1].value = '';
+        inputs[i-1].classList.remove('filled');
+      }
+      // Flèche gauche/droite
+      if (e.key === 'ArrowLeft' && i > 0) inputs[i-1].focus();
+      if (e.key === 'ArrowRight' && i < inputs.length - 1) inputs[i+1].focus();
+    });
+
+    // Coller le code complet depuis le presse-papiers
+    el.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      if (pasted.length === 6) {
+        pasted.split('').forEach((c, j) => {
+          inputs[j].value = c;
+          inputs[j].classList.add('filled');
+        });
+        inputs[5].focus();
+        setTimeout(() => document.getElementById('otpForm').submit(), 200);
+      }
+    });
+  });
+</script>
