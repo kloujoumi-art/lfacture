@@ -25,9 +25,14 @@
       </div>
     </div>
   </div>
-  <a href="https://skacollection.com/pay-lfacture?plan=annual" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#4F46E5;color:#fff;padding:8px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:12px;white-space:nowrap;">
-    💳 Passer Premium →
-  </a>
+  <div style="display:flex;gap:8px;">
+    <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Bonjour, je souhaite passer Premium (plan Annuel) sur LFacture. Mon compte : ' + (typeof user !== 'undefined' && user ? user.email : '')) %>" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#25D366;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:700;font-size:12px;white-space:nowrap;">
+      💬 WhatsApp
+    </a>
+    <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Passage Premium - LFacture') %>&body=<%= encodeURIComponent('Bonjour, je souhaite passer Premium (plan Annuel) sur LFacture. Mon compte : ' + (typeof user !== 'undefined' && user ? user.email : '')) %>" style="display:inline-flex;align-items:center;gap:6px;background:#4F46E5;color:#fff;padding:8px 16px;border-radius:8px;text-decoration:none;font-weight:700;font-size:12px;white-space:nowrap;">
+      📧 Email
+    </a>
+  </div>
 </div>
 <% } %>
 

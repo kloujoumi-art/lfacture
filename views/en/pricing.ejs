@@ -86,9 +86,14 @@
           <li class="flex gap-2"><span class="check">✓</span> <span class="text-gray-700">Company logo</span></li>
           <li class="flex gap-2"><span class="check">✓</span> <span class="text-gray-700">Priority support</span></li>
         </ul>
-        <a href="https://skacollection.com/pay-lfacture?plan=monthly" class="block text-center py-3.5 px-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition text-sm">
-          Choose Monthly →
-        </a>
+        <div class="flex gap-2">
+          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Hi, I would like to subscribe to the Monthly plan ($5/month) on LFacture.') %>" target="_blank" class="flex-1 flex items-center justify-center gap-1.5 text-center py-3.5 px-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition text-sm">
+            💬 WhatsApp
+          </a>
+          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Monthly plan subscription - LFacture') %>&body=<%= encodeURIComponent('Hi, I would like to subscribe to the Monthly plan ($5/month) on LFacture.') %>" class="flex-1 flex items-center justify-center gap-1.5 text-center py-3.5 px-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded-xl transition text-sm">
+            📧 Email
+          </a>
+        </div>
       </div>
 
       <!-- SEMI-ANNUAL -->
@@ -114,9 +119,14 @@
           <li class="flex gap-2"><span class="check">✓</span> <span class="text-gray-700">Priority support</span></li>
           <li class="flex gap-2"><span class="check">✓</span> <span class="text-gray-700">6 months access</span></li>
         </ul>
-        <a href="https://skacollection.com/pay-lfacture?plan=semi" style="display:block;text-align:center;padding:14px 16px;background:linear-gradient(135deg,#7C3AED,#6d28d9);color:#fff;font-weight:700;border-radius:12px;font-size:14px;text-decoration:none;">
-          Choose Semi-Annual →
-        </a>
+        <div style="display:flex;gap:8px;">
+          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Hi, I would like to subscribe to the Semi-Annual plan ($30/6 months) on LFacture.') %>" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;padding:14px 4px;background:#25D366;color:#fff;font-weight:700;border-radius:12px;font-size:13px;text-decoration:none;">
+            💬 WhatsApp
+          </a>
+          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Semi-Annual plan subscription - LFacture') %>&body=<%= encodeURIComponent('Hi, I would like to subscribe to the Semi-Annual plan ($30/6 months) on LFacture.') %>" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;padding:14px 4px;background:linear-gradient(135deg,#7C3AED,#6d28d9);color:#fff;font-weight:700;border-radius:12px;font-size:13px;text-decoration:none;">
+            📧 Email
+          </a>
+        </div>
       </div>
 
       <!-- ANNUAL — starred -->
@@ -145,16 +155,21 @@
           <li class="flex gap-2"><span class="check">✓</span> <span class="text-gray-700">Priority support</span></li>
           <li class="flex gap-2"><span class="check">✓</span> <span class="text-gray-700 font-bold">12 months access</span></li>
         </ul>
-        <a href="https://skacollection.com/pay-lfacture?plan=annual" class="block text-center py-3.5 px-4 btn-primary text-white font-bold rounded-xl text-sm">
-          Choose Annual — Best Deal →
-        </a>
+        <div class="flex gap-2">
+          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Hi, I would like to subscribe to the Annual plan ($50/year) on LFacture.') %>" target="_blank" class="flex-1 flex items-center justify-center gap-1.5 text-center py-3.5 px-2 font-bold rounded-xl text-sm text-white" style="background:#25D366;">
+            💬 WhatsApp
+          </a>
+          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Annual plan subscription - LFacture') %>&body=<%= encodeURIComponent('Hi, I would like to subscribe to the Annual plan ($50/year) on LFacture.') %>" class="flex-1 flex items-center justify-center gap-1.5 text-center py-3.5 px-2 btn-primary text-white font-bold rounded-xl text-sm">
+            📧 Email
+          </a>
+        </div>
       </div>
 
     </div>
 
     <!-- Trust signals -->
     <div class="flex flex-wrap justify-center gap-6 mt-10 text-sm text-gray-500">
-      <span>🔒 Secure payment via Paddle</span>
+      <span>🔒 Secure payment via WhatsApp or Email</span>
       <span>⚡ Instant account activation</span>
       <span>📧 Support within 24h</span>
       <span>✓ No automatic renewal</span>
@@ -212,11 +227,11 @@
     <div class="space-y-4">
       <% [
         { q:'Is the free invoice generator really free forever?', a:'Yes. The free plan never expires. You can create up to 8 invoices and 8 quotes for free, forever — no credit card required.' },
-        { q:'What payment methods are accepted?', a:'Payments are processed securely by Paddle. You can pay by credit card (Visa, Mastercard, Amex) or PayPal. All transactions are SSL-encrypted.' },
+        { q:'What payment methods are accepted?', a:'To subscribe, contact us via WhatsApp or Email using the buttons on this page. We\'ll guide you through the payment and activate your account manually.' },
         { q:'Does the plan renew automatically?', a:'No. LFacture plans are one-time payments for the chosen duration (1 month, 6 months, 12 months). There is no automatic renewal — you keep full control.' },
         { q:'Can I upgrade from free to paid at any time?', a:'Yes. You can upgrade to any paid plan at any time. Your existing invoices and data are always preserved.' },
         { q:'Is there a refund policy?', a:'If you experience any technical issue with the platform, contact us within 7 days of payment and we\'ll sort it out.' },
-        { q:'Do prices include tax?', a:'Prices shown are in USD. Local taxes (VAT) may apply depending on your country and are calculated at checkout by Paddle.' },
+        { q:'Do prices include tax?', a:'Prices shown are in USD. Local taxes (VAT) may apply depending on your country.' },
       ].forEach(item=>{ %>
       <details class="border border-gray-200 rounded-2xl">
         <summary class="flex items-center justify-between p-5 font-bold text-gray-900 cursor-pointer" style="list-style:none;">

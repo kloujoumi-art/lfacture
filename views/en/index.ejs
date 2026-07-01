@@ -373,7 +373,10 @@
           <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> All free features</li>
           <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Priority support</li>
         </ul>
-        <a href="https://skacollection.com/pay-lfacture?plan=monthly" class="block text-center py-3 px-4 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition text-sm">Choose Monthly →</a>
+        <div class="flex gap-2">
+          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Hi, I would like to subscribe to the Monthly plan ($5/month) on LFacture.') %>" target="_blank" class="flex-1 text-center py-3 px-2 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition text-sm">💬 WhatsApp</a>
+          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Monthly plan subscription - LFacture') %>&body=<%= encodeURIComponent('Hi, I would like to subscribe to the Monthly plan ($5/month) on LFacture.') %>" class="flex-1 text-center py-3 px-2 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition text-sm">📧 Email</a>
+        </div>
       </div>
 
       <!-- Semi-annual -->
@@ -391,7 +394,10 @@
           <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> All features</li>
           <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Priority support</li>
         </ul>
-        <a href="https://skacollection.com/pay-lfacture?plan=semi" style="display:block;text-align:center;padding:12px 16px;background:linear-gradient(135deg,#7C3AED,#6d28d9);color:#fff;font-weight:700;border-radius:12px;font-size:14px;text-decoration:none;">Choose Semi-Annual →</a>
+        <div style="display:flex;gap:8px;">
+          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Hi, I would like to subscribe to the Semi-Annual plan ($30/6 months) on LFacture.') %>" target="_blank" style="flex:1;display:block;text-align:center;padding:12px 4px;background:#25D366;color:#fff;font-weight:700;border-radius:12px;font-size:13px;text-decoration:none;">💬 WhatsApp</a>
+          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Semi-Annual plan subscription - LFacture') %>&body=<%= encodeURIComponent('Hi, I would like to subscribe to the Semi-Annual plan ($30/6 months) on LFacture.') %>" style="flex:1;display:block;text-align:center;padding:12px 4px;background:linear-gradient(135deg,#7C3AED,#6d28d9);color:#fff;font-weight:700;border-radius:12px;font-size:13px;text-decoration:none;">📧 Email</a>
+        </div>
       </div>
 
       <!-- Annual — highlighted -->
@@ -411,11 +417,14 @@
           <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> Priority support</li>
           <li class="flex gap-2"><span class="text-green-500 font-bold">✓</span> 1 year access</li>
         </ul>
-        <a href="https://skacollection.com/pay-lfacture?plan=annual" class="block text-center py-3 px-4 btn-primary text-white font-bold rounded-xl text-sm">Choose Annual → Best Deal</a>
+        <div class="flex gap-2">
+          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Hi, I would like to subscribe to the Annual plan ($50/year) on LFacture.') %>" target="_blank" class="flex-1 text-center py-3 px-2 font-bold rounded-xl text-sm text-white" style="background:#25D366;">💬 WhatsApp</a>
+          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Annual plan subscription - LFacture') %>&body=<%= encodeURIComponent('Hi, I would like to subscribe to the Annual plan ($50/year) on LFacture.') %>" class="flex-1 text-center py-3 px-2 btn-primary text-white font-bold rounded-xl text-sm">📧 Email</a>
+        </div>
       </div>
 
     </div>
-    <p class="text-center text-sm text-gray-400 mt-6">✓ Secure payment via Paddle &nbsp;·&nbsp; ✓ Cancel anytime &nbsp;·&nbsp; ✓ Instant activation</p>
+    <p class="text-center text-sm text-gray-400 mt-6">✓ Pay via WhatsApp or Email &nbsp;·&nbsp; ✓ Cancel anytime &nbsp;·&nbsp; ✓ Instant activation</p>
   </div>
 </section>
 
