@@ -8,13 +8,16 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { font-family:'Inter',sans-serif; }
+    .otp-card { background:#fff; border-radius:24px; padding:40px 32px; max-width:440px; width:100%; box-shadow:0 32px 80px rgba(0,0,0,.25); box-sizing:border-box; }
+    .otp-row { display:flex; justify-content:center; gap:clamp(4px,2vw,8px); margin-bottom:28px; }
     .otp-input {
-      width:52px; height:64px; text-align:center;
-      font-size:28px; font-weight:900;
+      width:clamp(32px,9.5vw,52px); height:clamp(44px,13vw,64px); text-align:center;
+      font-size:clamp(18px,5.5vw,28px); font-weight:900;
       border:2px solid #e0e7ff; border-radius:14px;
       background:#f8faff; color:#4F46E5;
       outline:none; transition:border-color .15s, box-shadow .15s;
       caret-color: #4F46E5;
+      min-width:0; flex-shrink:1;
     }
     .otp-input:focus {
       border-color:#4F46E5;
@@ -25,14 +28,14 @@
       border-color:#7C3AED;
       background:#faf5ff;
     }
-    @media (max-width:400px) {
-      .otp-input { width:42px; height:54px; font-size:22px; border-radius:10px; }
+    @media (max-width:380px) {
+      .otp-card { padding:32px 16px; }
     }
   </style>
 </head>
 <body style="background:linear-gradient(135deg,#4F46E5 0%,#7C3AED 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;">
 
-  <div style="background:#fff;border-radius:24px;padding:40px 32px;max-width:440px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.25);">
+  <div class="otp-card">
 
     <!-- Icon -->
     <div style="text-align:center;margin-bottom:24px;">
@@ -87,7 +90,7 @@
       <input type="hidden" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>"/>
 
       <!-- 6 cases OTP -->
-      <div style="display:flex;justify-content:center;gap:8px;margin-bottom:28px;">
+      <div class="otp-row">
         <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d1" id="d1" autocomplete="one-time-code" placeholder="·"/>
         <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d2" id="d2" placeholder="·"/>
         <input class="otp-input" type="text" inputmode="numeric" maxlength="1" name="d3" id="d3" placeholder="·"/>
