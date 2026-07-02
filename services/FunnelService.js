@@ -103,13 +103,13 @@ async function sendWelcomeEmail(user) {
         <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:24px;margin-bottom:28px;">
           <table width="100%" cellpadding="0" cellspacing="0">
             <tr><td style="padding:8px 0;color:#6b7280;font-size:14px;width:140px;">Email :</td><td style="padding:8px 0;color:#1a1a2e;font-weight:700;font-size:14px;">${user.email}</td></tr>
-            <tr><td style="padding:8px 0;color:#6b7280;font-size:14px;">Plan :</td><td style="padding:8px 0;color:#4F46E5;font-weight:700;font-size:14px;">Gratuit — 8 factures + 8 devis</td></tr>
+            <tr><td style="padding:8px 0;color:#6b7280;font-size:14px;">Plan :</td><td style="padding:8px 0;color:#4F46E5;font-weight:700;font-size:14px;">Gratuit — factures et devis illimités</td></tr>
           </table>
         </div>
 
         <div style="background:linear-gradient(135deg,#eef2ff,#e0e7ff);border:1px solid #c7d2fe;border-radius:12px;padding:20px;margin-bottom:28px;text-align:center;">
           <p style="margin:0;color:#4338ca;font-weight:800;font-size:16px;">✅ Plan gratuit activé</p>
-          <p style="margin:8px 0 0;color:#4F46E5;font-size:14px;">8 factures + 8 devis professionnels offerts</p>
+          <p style="margin:8px 0 0;color:#4F46E5;font-size:14px;">Factures et devis professionnels illimités</p>
         </div>
 
         <div style="text-align:center;margin-bottom:28px;">
@@ -119,8 +119,8 @@ async function sendWelcomeEmail(user) {
         </div>
 
         <table width="100%" cellpadding="0" cellspacing="0">
-          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📄 8 factures professionnelles offertes</td></tr>
-          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📋 8 devis professionnels offerts</td></tr>
+          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📄 Factures professionnelles illimitées</td></tr>
+          <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📋 Devis professionnels illimités</td></tr>
           <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">📥 Téléchargement PDF instantané</td></tr>
           <tr><td style="padding:8px 0;color:#374151;font-size:14px;border-bottom:1px solid #f3f4f6;">👥 Gestion des clients</td></tr>
           <tr><td style="padding:8px 0;color:#374151;font-size:14px;">🎨 Logo + 3 modèles de factures</td></tr>

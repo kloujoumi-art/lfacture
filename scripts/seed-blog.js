@@ -47,7 +47,7 @@ const articles = [
 <h2>LFacture : le logiciel de facturation gratuit français</h2>
 <p><strong>LFacture</strong> est un logiciel de facturation en ligne gratuit conçu spécifiquement pour les indépendants et PME françaises. Il vous offre :</p>
 <ul>
-<li>8 factures + 8 devis gratuits pour démarrer</li>
+<li>factures et devis illimités pour démarrer</li>
 <li>3 modèles de factures professionnels (Classique, Moderne, Épuré)</li>
 <li>Export PDF en un clic</li>
 <li>Gestion complète de vos clients</li>
@@ -116,7 +116,7 @@ const articles = [
 <p>Un bon <strong>logiciel de facturation en ligne</strong> vous permet de convertir facilement un devis accepté en facture, sans ressaisir les informations. Cela vous fait gagner un temps précieux et évite les erreurs de saisie.</p>
 
 <h2>Commencez à créer vos devis et factures gratuitement</h2>
-<p>LFacture vous offre 8 devis + 8 factures gratuits pour démarrer. <a href="/register">Créez votre compte gratuit</a> et émettez votre premier document professionnel en moins de 5 minutes.</p>`,
+<p>LFacture vous offre des factures et devis illimités pour démarrer. <a href="/register">Créez votre compte gratuit</a> et émettez votre premier document professionnel en moins de 5 minutes.</p>`,
   },
   {
     title: 'Quel logiciel pour faire ses factures ? Comparatif 2025',
@@ -163,7 +163,7 @@ const articles = [
 
 <p>Ce que vous obtenez avec LFacture :</p>
 <ul>
-<li><strong>Plan gratuit</strong> : 8 factures + 8 devis sans limite de temps</li>
+<li><strong>Plan gratuit</strong> : factures et devis illimités</li>
 <li><strong>3 modèles de factures</strong> : Classique, Moderne, Épuré</li>
 <li><strong>PDF en un clic</strong> : qualité professionnelle avec votre logo</li>
 <li><strong>Gestion des clients</strong> : carnet d'adresses intégré</li>
@@ -180,7 +180,7 @@ const articles = [
 <li>Créez votre première facture et téléchargez-la en PDF</li>
 </ol>
 
-<p><a href="/register">Essayez LFacture gratuitement</a> — 8 factures offertes, sans carte bancaire.</p>`,
+<p><a href="/register">Essayez LFacture gratuitement</a> — factures illimitées, sans carte bancaire.</p>`,
   },
   {
     title: 'Logicielle facturation : tout comprendre sur la facturation électronique en France',
@@ -236,7 +236,7 @@ const articles = [
 <h2>LFacture, votre solution de facturation en ligne</h2>
 <p><strong>LFacture</strong> est une <strong>logicielle facturation</strong> française, simple et complète, adaptée aux indépendants et PME. Elle vous permet de créer vos factures et devis professionnels en ligne, conformes aux exigences légales françaises.</p>
 
-<p>Commencez avec notre <a href="/register">plan gratuit (8 factures + 8 devis)</a> et découvrez la simplicité d'une vraie solution de facturation en ligne.</p>
+<p>Commencez avec notre <a href="/register">plan gratuit (illimité)</a> et découvrez la simplicité d'une vraie solution de facturation en ligne.</p>
 
 <h2>Conclusion</h2>
 <p>La <strong>logicielle facturation</strong> n'est plus un luxe réservé aux grandes entreprises : c'est devenu un outil essentiel pour tout professionnel souhaitant gérer sa facturation efficacement, se conformer à la loi française et gagner du temps au quotidien. Choisissez une solution adaptée à votre taille et testez-la gratuitement avant de vous engager.</p>`,

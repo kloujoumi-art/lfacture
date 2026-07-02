@@ -3,8 +3,8 @@ const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const crypto = require('crypto');
 
-const FREE_INVOICE_LIMIT = 8;
-const FREE_QUOTE_LIMIT = 8;
+const FREE_INVOICE_LIMIT = Infinity;
+const FREE_QUOTE_LIMIT = Infinity;
 
 class User {
   static generateOTP() {

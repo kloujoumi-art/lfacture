@@ -92,7 +92,7 @@
         <!-- Badge -->
         <div class="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-100 rounded-full px-4 py-1.5 mb-5">
           <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse flex-shrink-0"></span>
-          <span class="text-sm font-semibold text-indigo-700">Plan gratuit — 8 factures + 8 devis offerts</span>
+          <span class="text-sm font-semibold text-indigo-700">100% gratuit — factures et devis illimités</span>
         </div>
 
         <h1 class="text-4xl sm:text-5xl lg:text-[3.4rem] font-black text-gray-900 tracking-tight leading-[1.08] mb-5">
@@ -680,99 +680,26 @@ const tplPreviews = [
 </section>
 
 <!-- ══════════════════════════════════════════════════════════
-     9. TARIFS (mini table)
+     9. GRATUIT
 ══════════════════════════════════════════════════════════ -->
 <section class="py-12 sm:py-16 bg-gray-50">
-  <div class="max-w-5xl mx-auto px-4 sm:px-6">
-    <div class="text-center mb-8">
-      <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2">Des tarifs clairs, sans surprise</h2>
-      <p class="text-gray-500">Commencez gratuitement. Passez Premium quand vous êtes prêt.</p>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+    <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2">100% gratuit, sans limite</h2>
+    <p class="text-gray-500 mb-8">Créez autant de factures et de devis que vous voulez, sans carte bancaire.</p>
+    <div style="background:#fff;border:2px solid #e8edf3;border-radius:20px;padding:32px;max-width:420px;margin:0 auto;">
+      <div style="font-size:13px;font-weight:700;color:#10b981;background:#f0fdf4;border:1px solid #bbf7d0;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">GRATUIT</div>
+      <div style="font-size:36px;font-weight:900;color:#1e293b;line-height:1;margin-bottom:16px;">0 €</div>
+      <ul class="space-y-2 mb-6 text-left">
+        <% ['Factures illimitées','Devis illimités','Clients illimités','PDF haute qualité','Logo personnalisé'].forEach(f=>{ %>
+        <li class="flex items-center gap-2 text-sm text-gray-700">
+          <span style="color:#10b981;font-weight:700;">✓</span><%= f %>
+        </li>
+        <% }); %>
+      </ul>
+      <a href="/register" class="inline-flex items-center gap-2 text-white font-bold px-6 py-3 rounded-xl" style="background:linear-gradient(135deg,#4F46E5,#7C3AED);">
+        Commencer gratuitement →
+      </a>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      <!-- Gratuit -->
-      <div style="background:#fff;border:2px solid #e8edf3;border-radius:20px;padding:24px;">
-        <div style="font-size:13px;font-weight:700;color:#10b981;background:#f0fdf4;border:1px solid #bbf7d0;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">GRATUIT</div>
-        <div style="font-size:36px;font-weight:900;color:#1e293b;line-height:1;margin-bottom:4px;">0 €</div>
-        <div style="font-size:13px;color:#94a3b8;margin-bottom:16px;">pour toujours</div>
-        <ul class="space-y-2 mb-6">
-          <% ['8 factures offertes','8 devis offerts','PDF haute qualité','3 modèles inclus','Logo personnalisé'].forEach(f=>{ %>
-          <li class="flex items-center gap-2 text-sm text-gray-700">
-            <span style="color:#10b981;font-weight:700;">✓</span><%= f %>
-          </li>
-          <% }); %>
-        </ul>
-        <a href="/register" style="display:block;text-align:center;background:#f8fafc;border:1.5px solid #e2e8f0;color:#1e293b;font-weight:700;font-size:14px;padding:11px;border-radius:10px;text-decoration:none;" class="hover:bg-gray-100 transition">
-          Commencer gratuit
-        </a>
-      </div>
-      <!-- Mensuel -->
-      <div style="background:#fff;border:2px solid #e8edf3;border-radius:20px;padding:24px;">
-        <div style="font-size:13px;font-weight:700;color:#4F46E5;background:#eef2ff;border:1px solid #c7d2fe;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">MENSUEL</div>
-        <div style="font-size:36px;font-weight:900;color:#1e293b;line-height:1;margin-bottom:4px;">5 €</div>
-        <div style="font-size:13px;color:#94a3b8;margin-bottom:16px;">par mois</div>
-        <ul class="space-y-2 mb-6">
-          <% ['Factures illimitées','Devis illimités','Clients illimités','Support email','Mises à jour incluses'].forEach(f=>{ %>
-          <li class="flex items-center gap-2 text-sm text-gray-700">
-            <span style="color:#4F46E5;font-weight:700;">✓</span><%= f %>
-          </li>
-          <% }); %>
-        </ul>
-        <div style="display:flex;gap:8px;">
-          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Bonjour, je souhaite souscrire au plan Mensuel (5€/mois) sur LFacture.') %>" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;background:#25D366;color:#fff;font-weight:700;font-size:13px;padding:11px 4px;border-radius:10px;text-decoration:none;">
-            💬 WhatsApp
-          </a>
-          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Souscription plan Mensuel - LFacture') %>&body=<%= encodeURIComponent('Bonjour, je souhaite souscrire au plan Mensuel (5€/mois) sur LFacture.') %>" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;background:#4F46E5;color:#fff;font-weight:700;font-size:13px;padding:11px 4px;border-radius:10px;text-decoration:none;">
-            📧 Email
-          </a>
-        </div>
-      </div>
-      <!-- Annuel populaire -->
-      <div style="background:linear-gradient(135deg,#4F46E5,#7C3AED);border:2px solid transparent;border-radius:20px;padding:24px;position:relative;box-shadow:0 16px 40px rgba(79,70,229,.3);">
-        <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#78350f;font-size:11px;font-weight:800;padding:4px 14px;border-radius:20px;white-space:nowrap;">⭐ LE PLUS POPULAIRE</div>
-        <div style="font-size:13px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">ANNUEL</div>
-        <div style="font-size:36px;font-weight:900;color:#fff;line-height:1;margin-bottom:2px;">50 €</div>
-        <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:4px;">par an · soit 4,17 €/mois</div>
-        <div style="font-size:11px;font-weight:700;color:#fbbf24;margin-bottom:16px;">Économisez 35% vs mensuel</div>
-        <ul class="space-y-2 mb-6">
-          <% ['Tout du plan mensuel','Support prioritaire','Sauvegardes auto','Nouvelles fonctions en avant-première','Sans engagement annuel'].forEach(f=>{ %>
-          <li class="flex items-center gap-2 text-sm text-white">
-            <span style="color:#a5f3fc;font-weight:700;">✓</span><%= f %>
-          </li>
-          <% }); %>
-        </ul>
-        <div style="display:flex;gap:8px;">
-          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Bonjour, je souhaite souscrire au plan Annuel (50€/an) sur LFacture.') %>" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;background:#25D366;color:#fff;font-weight:800;font-size:13px;padding:12px 4px;border-radius:10px;text-decoration:none;">
-            💬 WhatsApp
-          </a>
-          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Souscription plan Annuel - LFacture') %>&body=<%= encodeURIComponent('Bonjour, je souhaite souscrire au plan Annuel (50€/an) sur LFacture.') %>" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;background:#fff;color:#4F46E5;font-weight:800;font-size:13px;padding:12px 4px;border-radius:10px;text-decoration:none;border:2px solid rgba(255,255,255,.3);">
-            📧 Email
-          </a>
-        </div>
-      </div>
-      <!-- Semestriel -->
-      <div style="background:#fff;border:2px solid #e8edf3;border-radius:20px;padding:24px;">
-        <div style="font-size:13px;font-weight:700;color:#7C3AED;background:#f5f3ff;border:1px solid #ddd6fe;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:12px;">SEMESTRIEL</div>
-        <div style="font-size:36px;font-weight:900;color:#1e293b;line-height:1;margin-bottom:4px;">30 €</div>
-        <div style="font-size:13px;color:#94a3b8;margin-bottom:4px;">pour 6 mois</div>
-        <div style="font-size:11px;font-weight:700;color:#7C3AED;margin-bottom:16px;">soit 5 €/mois</div>
-        <ul class="space-y-2 mb-6">
-          <% ['Factures illimitées','Devis illimités','Clients illimités','Support email','Mises à jour incluses'].forEach(f=>{ %>
-          <li class="flex items-center gap-2 text-sm text-gray-700">
-            <span style="color:#7C3AED;font-weight:700;">✓</span><%= f %>
-          </li>
-          <% }); %>
-        </ul>
-        <div style="display:flex;gap:8px;">
-          <a href="https://wa.me/212750282154?text=<%= encodeURIComponent('Bonjour, je souhaite souscrire au plan Semestriel (30€/6 mois) sur LFacture.') %>" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;background:#25D366;color:#fff;font-weight:700;font-size:13px;padding:11px 4px;border-radius:10px;text-decoration:none;">
-            💬 WhatsApp
-          </a>
-          <a href="mailto:contact@lfacture.com?subject=<%= encodeURIComponent('Souscription plan Semestriel - LFacture') %>&body=<%= encodeURIComponent('Bonjour, je souhaite souscrire au plan Semestriel (30€/6 mois) sur LFacture.') %>" style="flex:1;display:flex;align-items:center;justify-content:center;gap:5px;text-align:center;background:#7C3AED;color:#fff;font-weight:700;font-size:13px;padding:11px 4px;border-radius:10px;text-decoration:none;">
-            📧 Email
-          </a>
-        </div>
-      </div>
-    </div>
-    <p class="text-center text-xs text-gray-400 mt-5">Tous les plans incluent : PDF, Logo, 3 modèles, TVA automatique, conformité légale.</p>
   </div>
 </section>
 
@@ -787,16 +714,16 @@ const tplPreviews = [
     </div>
     <div class="space-y-2">
       <% [
-        { q:'Le plan gratuit est vraiment gratuit, sans limite de temps ?',
-          a:'Oui, 100% gratuit. Vous créez votre compte sans carte bancaire et vous pouvez créer 8 factures + 8 devis sans aucune limite de temps. Quand vous atteignez la limite, vous choisissez librement de passer en Premium.' },
+        { q:'Le service est-il vraiment gratuit, sans limite ?',
+          a:'Oui, 100% gratuit. Vous créez votre compte sans carte bancaire et vous pouvez créer autant de factures et devis que vous le souhaitez, sans aucune limite.' },
         { q:'Mes factures respectent-elles la loi française ?',
           a:'Oui. LFacture intègre automatiquement toutes les mentions légales obligatoires : numéro séquentiel, date, coordonnées complètes, SIRET, taux de TVA, conditions de paiement, pénalités de retard et indemnité de recouvrement.' },
         { q:'Puis-je ajouter mon logo et mes couleurs ?',
           a:'Oui. Uploadez votre logo depuis les Paramètres (formats PNG, JPG, SVG — max 2 Mo). Il apparaît automatiquement sur tous vos documents, dans les 3 modèles disponibles. La couleur principale s\'adapte à votre charte.' },
         { q:'Puis-je utiliser LFacture depuis mon téléphone ?',
           a:'Oui, l\'interface est 100% responsive. Vous créez et téléchargez des factures depuis votre smartphone ou tablette, avec la même fluidité que sur ordinateur.' },
-        { q:'Que se passe-t-il si j\'atteins la limite du plan gratuit ?',
-          a:'Vous êtes notifié quand il vous reste 2 documents. Vous pouvez alors passer en Premium (5€/mois ou 50€/an) pour un accès illimité. Sans engagement — résiliez quand vous voulez.' },
+        { q:'Y a-t-il une limite au nombre de documents que je peux créer ?',
+          a:'Non. Le plan gratuit permet de créer autant de factures et de devis que nécessaire, sans limite.' },
         { q:'Mes données sont-elles sécurisées et privées ?',
           a:'Oui. Connexion HTTPS chiffrée, mots de passe hashés (bcrypt), données hébergées en France. Aucune donnée revendue à des tiers. Vous êtes propriétaire de vos documents et pouvez les supprimer à tout moment.' },
       ].forEach(faq => { %>
@@ -839,15 +766,12 @@ const tplPreviews = [
           Votre première facture<br/>professionnelle en 2 minutes
         </h2>
         <p class="text-indigo-200 text-base sm:text-lg mb-8 max-w-xl mx-auto">
-          8 factures + 8 devis offerts. Sans carte bancaire. Sans engagement. Conforme à la loi française.
+          Factures et devis illimités. Sans carte bancaire. Sans engagement. Conforme à la loi française.
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a href="/register" style="background:#fff;color:#4F46E5;font-weight:900;font-size:16px;padding:15px 32px;border-radius:14px;text-decoration:none;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.2);" class="hover:bg-gray-50 transition w-full sm:w-auto text-center">
             Commencer gratuitement →
-          </a>
-          <a href="/pricing" class="text-white/70 font-semibold text-sm hover:text-white transition">
-            Voir les tarifs
           </a>
         </div>
 

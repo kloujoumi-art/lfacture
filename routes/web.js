@@ -15,12 +15,12 @@ const upload = require('../middleware/upload');
 // ---- Public routes ----
 router.get('/', (req, res) => res.renderLayout('index', {
   title: 'Logiciel de facturation gratuit en ligne — LFacture',
-  metaDesc: 'LFacture : logiciel de facturation gratuit en ligne pour créer vos factures et devis professionnels en quelques secondes. 8 factures + 8 devis offerts sans carte bancaire.',
+  metaDesc: 'LFacture : logiciel de facturation gratuit en ligne pour créer vos factures et devis professionnels en quelques secondes. Illimité et sans carte bancaire.',
   canonicalPath: '/',
 }));
 router.get('/pricing', (req, res) => res.renderLayout('pricing', {
-  title: 'Tarifs logiciel de facturation — LFacture',
-  metaDesc: 'Découvrez les tarifs de LFacture, logiciel de facturation en ligne. Plan gratuit avec 8 factures + 8 devis, puis à partir de 5€/mois pour une facturation illimitée.',
+  title: 'LFacture est gratuit — logiciel de facturation',
+  metaDesc: 'LFacture est actuellement 100% gratuit. Créez vos factures et devis en illimité, sans carte bancaire.',
   canonicalPath: '/pricing',
 }));
 router.get('/features', (req, res) => res.renderLayout('features', {
@@ -44,13 +44,13 @@ router.post('/contact', AdminController.submitContact);
 // ---- English version (/en) ----
 router.get('/en', (req, res) => res.renderLayout('en/index', {
   title: 'Free Invoice Generator Tool | Create Invoices Online Free — LFacture',
-  metaDesc: 'LFacture: the best free invoice generator online. Create professional PDF invoices and quotes in seconds. 8 free invoices — no credit card required.',
+  metaDesc: 'LFacture: the best free invoice generator online. Create professional PDF invoices and quotes in seconds. Unlimited — no credit card required.',
   canonicalPath: '/en',
   lang: 'en',
 }));
 router.get('/en/pricing', (req, res) => res.renderLayout('en/pricing', {
-  title: 'Invoice Generator Pricing — Free, $5/mo, $50/year | LFacture',
-  metaDesc: 'LFacture pricing: free invoice generator plan with 8 invoices, or upgrade to unlimited for $5/month or $50/year. No credit card on free plan.',
+  title: 'LFacture is Free — Invoice & Quote Generator',
+  metaDesc: 'LFacture is currently 100% free. Create unlimited invoices and quotes online, no credit card required.',
   canonicalPath: '/en/pricing',
   lang: 'en',
 }));

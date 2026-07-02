@@ -103,17 +103,6 @@
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased">
 
-<!-- Trial/Quota Banner -->
-<% if (typeof isFree !== 'undefined' && isFree && typeof quota !== 'undefined' && quota) { %>
-<% const invoiceReached = quota.invoices.reached; const quoteReached = quota.quotes.reached; %>
-<% if (invoiceReached || quoteReached) { %>
-<div class="bg-amber-50 border-b border-amber-200 px-4 py-2 text-center text-sm text-amber-800 font-medium">
-  ⚠️ Limite atteinte sur le plan gratuit —
-  <a href="/pricing" class="underline font-bold hover:text-amber-900">Passer à Premium</a>
-</div>
-<% } %>
-<% } %>
-
 <!-- Mobile sidebar backdrop -->
 <div id="sidebarOverlay" onclick="closeSidebar()"></div>
 
@@ -147,30 +136,10 @@
           <% if (typeof isFree !== 'undefined' && isFree) { %>
             <span class="text-xs text-indigo-600 font-medium">Plan gratuit</span>
           <% } else { %>
-            <span class="text-xs text-green-600 font-medium">✓ Premium actif</span>
+            <span class="text-xs text-green-600 font-medium">✓ Compte actif</span>
           <% } %>
         </div>
       </div>
-      <% if (typeof isFree !== 'undefined' && isFree && typeof quota !== 'undefined' && quota) { %>
-      <div class="mt-3 space-y-1.5">
-        <div>
-          <div class="flex justify-between text-xs text-gray-400 mb-1">
-            <span>Factures</span><span><%= quota.invoices.used %>/<%= quota.invoices.max %></span>
-          </div>
-          <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div class="h-full rounded-full transition-all" style="width:<%= Math.min(100,(quota.invoices.used/quota.invoices.max)*100) %>%;background:<%= quota.invoices.reached ? '#ef4444' : quota.invoices.used/quota.invoices.max >= .75 ? '#f59e0b' : '#4F46E5' %>"></div>
-          </div>
-        </div>
-        <div>
-          <div class="flex justify-between text-xs text-gray-400 mb-1">
-            <span>Devis</span><span><%= quota.quotes.used %>/<%= quota.quotes.max %></span>
-          </div>
-          <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div class="h-full rounded-full transition-all" style="width:<%= Math.min(100,(quota.quotes.used/quota.quotes.max)*100) %>%;background:<%= quota.quotes.reached ? '#ef4444' : quota.quotes.used/quota.quotes.max >= .75 ? '#f59e0b' : '#7C3AED' %>"></div>
-          </div>
-        </div>
-      </div>
-      <% } %>
     </div>
 
     <!-- Navigation -->
@@ -206,11 +175,6 @@
       <a href="/dashboard/settings" class="sidebar-link <%= typeof activePage !== 'undefined' && activePage === 'settings' ? 'active' : '' %>">
         <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         Paramètres
-      </a>
-      <% if (typeof isFree !== 'undefined' && isFree) { %>
-      <a href="/pricing" class="sidebar-link" style="color:#4F46E5;background:#eef2ff;">
-        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
-        Passer Premium
       </a>
       <% } %>
     </nav>

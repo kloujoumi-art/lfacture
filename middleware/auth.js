@@ -14,12 +14,7 @@ function requireAuth(req, res, next) {
   res.locals.user = user;
   res.locals.isFree = User.isFree(user);
   res.locals.hasAccess = User.hasActiveSubscription(user);
-  // Quota pour affichage dans les vues
-  if (User.isFree(user)) {
-    res.locals.quota = User.getQuota(user.id);
-  } else {
-    res.locals.quota = null;
-  }
+  res.locals.quota = null;
   next();
 }
 
